@@ -20,36 +20,22 @@ const filePath = path.join(servicesDir, fileName);
 
 // Template isi service
 const template = `
-// ${name}Service.js
-// Generated automatically
-
 const knex = require('../config/database');
 
 const ${name}Service = {
-  // Fungsi untuk mendapatkan semua data
   getAll: async () => {
-    // return knex('${name.toLowerCase()}').select('*');
-    // Contoh join: return knex('tabel_utama').join('tabel_lain');
   },
 
-  // Fungsi untuk mendapatkan data berdasarkan ID
   getById: async (id) => {
-    // return knex('${name.toLowerCase()}').where({ id }).first();
   },
 
-  // Fungsi untuk membuat data baru
   create: async (data) => {
-    // return knex('${name.toLowerCase()}').insert(data).returning('*');
   },
 
-  // Fungsi untuk memperbarui data
   update: async (id, data) => {
-    // return knex('${name.toLowerCase()}').where({ id }).update(data);
   },
 
-  // Fungsi untuk menghapus data
   del: async (id) => {
-    // return knex('${name.toLowerCase()}').where({ id }).del();
   }
 };
 
