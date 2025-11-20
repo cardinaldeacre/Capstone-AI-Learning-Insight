@@ -20,31 +20,71 @@ const filePath = path.join(controllersDir, fileName);
 
 // template isi controller
 const template = `
-// ${name}Controller.js
-// Generated automatically
+router.get('/', async (req, res) => {
+    try {
+      return res.status(200).json();
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({message: 'Error server'});
+    }
+});
 
-exports.index = async (req, res) => {
-  res.send("${name} index");
-};
+router.post('/', async (req, res) => {
+    try {
+      res.status(201).json({message: ''});
+    } catch (error) {
+      if (error.code === '23505') return res.status(409).json({message: ''});
+  
+      console.error(error);
+      res.status(500).json({message: 'Error server'});
+    }
+});
 
-exports.show = async (req, res) => {
+router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  res.send("${name} show " + id);
-};
+  try {
+    const payload = {};
+    const itemId = parseInt(id);
 
-exports.create = async (req, res) => {
-  res.send("${name} create");
-};
+    const updateItem = await Service.update(itemId, payload);
 
-exports.update = async (req, res) => {
+    if (!updateItem) {
+      return res.status(404).json({message: 'Item tidak ditemukan'});
+    }
+
+    res.status(200).json({message: 'Item berhasil diedit', item: updateItem});
+  } catch (error) {
+    if (error.code === '23505') {
+      return res.status(409).json({message: 'item sudah digunakan.'});
+    }
+
+    console.error(error);
+    res.status(500).json({message: 'Server error'});
+  }
+});
+
+router.delete('/:id', auth.authMiddleware, auth.authorizeRole('owner'), async (req, res) => {
   const { id } = req.params;
-  res.send("${name} update " + id);
-};
 
-exports.delete = async (req, res) => {
-  const { id } = req.params;
-  res.send("${name} delete " + id);
-};
+  try {
+    const itemId = parseInt(id);
+
+    if (isNaN(itemId)) {
+      return res.status(400).json({message: 'ID item tidak valid'});
+    }
+
+    const deletedCount = await Service.delete(itemId);
+
+    if (deletedCount === 0) {
+      return res.status(404).json({message: 'Item tidak ditemukan'});
+    }
+      
+    return res.status(200).json({message: 'Item berhasil dihapus'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({message: 'Server error'});
+  }
+});
 `;
 
 // cek kalo file udah ada
