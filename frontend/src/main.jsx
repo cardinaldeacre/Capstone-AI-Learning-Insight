@@ -16,7 +16,9 @@ createRoot(document.getElementById('root')).render(
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="courses">
             <Route index element={<CourseListPage />} />
-            <Route path=":courseId" element={<CourseDetailPage />} />
+            <Route path=":courseId" element={<CourseDetailPage />}>
+              <Route path="lesson/:lessonId" />
+            </Route>
           </Route>
           <Route path="/profile" element={<Profile />} />
         </Route>

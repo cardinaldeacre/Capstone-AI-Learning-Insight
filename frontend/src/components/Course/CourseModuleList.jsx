@@ -32,7 +32,6 @@ export default function CourseModuleList({ modules, courseId }) {
                 />
               </div>
             </div>
-            <ChevronDown className="h-5 w-5 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
 
           {/*  konten module */}
