@@ -4,7 +4,7 @@ import './index.css';
 import MainLayout from './layouts/MainLayout';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard/Dashboard';
-import Course from './components/Course/Course';
+import CourseListPage from './pages/Course/CourseListPage';
 import Profile from './components/Profile/Profile';
 
 createRoot(document.getElementById('root')).render(
@@ -13,7 +13,9 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/courses" element={<Course />} />
+          <Route path="courses">
+            <Route index element={<CourseListPage />} />
+          </Route>
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
