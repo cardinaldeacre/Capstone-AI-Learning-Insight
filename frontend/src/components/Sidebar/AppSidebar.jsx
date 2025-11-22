@@ -13,12 +13,14 @@ import {
   Settings,
   GraduationCap
 } from 'lucide-react';
+import { Link } from 'react-router';
+import SidebarUserProfile from './SidebarUserProfile';
 
 export default function AppSidebar() {
   const menuItems = [
-    { title: 'Dashboard', icon: LayoutDashboard, url: '#' },
-    { title: 'Courses', icon: BookOpen, url: '#' },
-    { title: 'Schedule', icon: Calendar, url: '#' },
+    { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' },
+    { title: 'Courses', icon: BookOpen, url: '/courses' },
+    { title: 'Schedule', icon: Calendar, url: '/profile' },
     { title: 'Settings', icon: Settings, url: '#' }
   ];
 
@@ -26,7 +28,7 @@ export default function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="border-b p-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-linear-to-br from-teal-400 to-teal-600 flex items-center justify-center">
             <GraduationCap className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -41,15 +43,17 @@ export default function AppSidebar() {
           {menuItems.map(item => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
-                <a href={item.url}>
+                <Link to={item.url}>
                   <item.icon />
                   <span>{item.title}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
       </SidebarContent>
+
+      <SidebarUserProfile />
     </Sidebar>
   );
 }
