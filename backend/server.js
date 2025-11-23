@@ -4,7 +4,10 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 const UserController = require('./controllers/UserController');
+const ClassesRouter = require('./routes/classes');
 
+// Routes
+app.use('/api/classes', ClassesRouter);
 // Middleware
 app.use(express.json());
 app.use(
