@@ -21,12 +21,12 @@ router.post('/login', async (req, res) => {
 			return res.status(400).json({message: 'Pengguna tidak ditemukan'});
 		}
 
-		const isMatch = await bcrypt.compare(password, user.password_hash);
+		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {
 			return res.status(400).json({message: 'Password salah'});
 		}
 
-		delete user.password_hash;
+		delete user.password;
 
 		// JWT
 		const accessToken = jwt.sign(

@@ -21,6 +21,10 @@ const UserService = {
 		return newUser;
 	},
 
+	findUserByEmail: async email => {
+		return knex('users').select('id', 'name', 'password', 'role').where({email}).first();
+	},
+
 	update: async (id, data) => {},
 
 	del: async id => {},
