@@ -7,7 +7,18 @@ const UserService = {
 	getById: async id => {},
 
 	create: async (name, email, password, role) => {
-		const hashedPassword = await bcrypt.hash();
+		const existingUser = await knex('users').where({email}).first();
+		if (existingUser) {
+			throw new Error('Email sudah terdaftar');
+		}
+
+		const hashedPassword = await bcrypt.hash(password, 10);
+		const [newUser] = await knex('users')
+			.insert({name, email, password: hashedPassword, role})
+			.returning(['id', 'name', 'email', 'role', 'created_at']);
+
+		delete newUser.password;
+		return newUser;
 	},
 
 	update: async (id, data) => {},

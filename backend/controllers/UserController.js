@@ -117,18 +117,43 @@ router.get('/', authMiddleware, authorizeRole('teacher', 'admin'), async (req, r
 	}
 });
 
-// create user
-router.post('/', authMiddleware, authorizeRole('teacher', 'admin'), async (req, res) => {
-	const {name, email, password, role} = req.body;
+// create student
+router.post('/student', async (req, res) => {
+	const {name, email, password} = req.body;
 
-	if (!name || !email || !password || !role) {
+	if (!name || !email || !password) {
 		return res.status(400).json({message: 'Semua kolom harus diisi'});
 	}
 
 	try {
-		const newUser = await UserService.createUser(name, email, password, role);
-		res.status(201).json({message: 'User berhasil dibuat', user: newUser});
+		const newUser = await UserService.create(name, email, password, 'student');
+		res.status(201).json({message: 'Registrasi berhasil', user: newUser});
 	} catch (error) {
+		if (error.message === 'EMAIL_EXISTS') {
+			return res.status(409).json({message: 'Email sudah terdaftar'});
+		}
+
+		console.error(error);
+		res.status(500).json({message: 'Server error'});
+	}
+});
+
+// create teacher
+router.post('/teacher', authMiddleware, authorizeRole('admin'), async (req, res) => {
+	const {name, email, password} = req.body;
+
+	if (!name || !email || !password) {
+		return res.status(400).json({message: 'Semua kolom harus diisi'});
+	}
+
+	try {
+		const newUser = await UserService.create(name, email, password, 'teacher');
+		res.status(201).json({message: 'Mentor berhasil dibuat', user: newUser});
+	} catch (error) {
+		if (error.message === 'EMAIL_EXISTS') {
+			return res.status(409).json({message: 'Email sudah terdaftar'});
+		}
+
 		console.error(error);
 		res.status(500).json({message: 'Server error'});
 	}
