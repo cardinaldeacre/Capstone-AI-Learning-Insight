@@ -160,7 +160,7 @@ router.post('/teacher', authMiddleware, authorizeRole('admin'), async (req, res)
 });
 
 // delete user
-router.delete('/:id', authMiddleware, authorizeRole('teacher', 'admin'), async (req, res) => {
+router.delete('/:id', authMiddleware, authorizeRole('admin'), async (req, res) => {
 	const {id} = req.params;
 	try {
 		await UserService.deleteUser(id);
@@ -176,9 +176,20 @@ router.get('/me', authMiddleware, (req, res) => {
 });
 
 // update user
-router.put('/:id', authMiddleware, authorizeRole('teacher', 'admin'), async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
 	const {id} = req.params;
 	const updateData = req.body;
+
+	const requesterId = req.user.id;
+	const requesterRole = req.user.role;
+
+	if (String(requesterId) !== String(id) && requesterRole !== 'admin') {
+		return res.status(403).json({message: 'Akses ditolak'});
+	}
+
+	if (requesterRole !== 'admin' && updateData.role) {
+		return res.status(403).json({message: 'Hanya admin yang dapat mengubah role'});
+	}
 
 	// validasi data tidak kosong
 	if (Object.keys(updateData).length === 0) {
@@ -186,11 +197,17 @@ router.put('/:id', authMiddleware, authorizeRole('teacher', 'admin'), async (req
 	}
 
 	try {
+		if (updateData.password) {
+			updateData.password = await bcrypt.hash(updateData.password, 10);
+		}
+
 		const updatedUser = await UserService.updateUser(id, updateData);
 
 		if (!updatedUser) {
 			return res.status(404).json({message: 'Pengguna tidak ditemukan'});
 		}
+
+		delete updatedUser.password;
 
 		res.status(200).json({
 			message: 'Pengguna berhasil diperbarui',
