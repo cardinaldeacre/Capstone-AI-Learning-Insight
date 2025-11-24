@@ -64,9 +64,9 @@ router.put('/:id', authMiddleware, authorizeRole('teacher', 'admin'), async (req
 	}
 
 	try {
-		const itemId = parseInt(id);
+		const moduleId = parseInt(id);
 
-		const updateItem = await ModulesService.update(itemId, updatedData);
+		const updateItem = await ModulesService.update(moduleId, updatedData);
 
 		if (!updateItem) {
 			return res.status(404).json({message: 'Module tidak ditemukan'});
@@ -87,13 +87,13 @@ router.delete('/:id', authMiddleware, authorizeRole('teacher', 'admin'), async (
 	const {id} = req.params;
 
 	try {
-		const itemId = parseInt(id);
+		const moduleId = parseInt(id);
 
-		if (isNaN(itemId)) {
+		if (isNaN(moduleId)) {
 			return res.status(400).json({message: 'ID Module tidak valid'});
 		}
 
-		const deletedCount = await ModulesService.delete(itemId);
+		const deletedCount = await ModulesService.delete(moduleId);
 
 		if (deletedCount === 0) {
 			return res.status(404).json({message: 'Module tidak ditemukan'});

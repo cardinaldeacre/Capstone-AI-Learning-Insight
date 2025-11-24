@@ -14,13 +14,16 @@ const ModulesService = {
 		return newModule;
 	},
 
-	update: async (id, data) => {
-		const [updatedModule] = await knex('modules').where({id}).update(data).returning('*');
+	update: async (moduleId, updatedData) => {
+		const [updatedModule] = await knex('modules')
+			.where({id: moduleId})
+			.update(updatedData)
+			.returning('*');
 		return updatedModule;
 	},
 
-	delete: async id => {
-		return knex('modules').where({id}).del();
+	delete: async moduleId => {
+		return knex('modules').where({id: moduleId}).del();
 	},
 };
 
