@@ -49,7 +49,7 @@ router.put('/:id', async (req, res) => {
   if (Object.keys(updatedData).length === 0) {
     return res.status(400).json({message: 'Data yang akan diupdate tidak boleh kosong'});
   }
-    
+
   try {
     const payload = {};
     const itemId = parseInt(id);
@@ -71,7 +71,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', auth.authMiddleware, auth.authorizeRole('owner'), async (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
