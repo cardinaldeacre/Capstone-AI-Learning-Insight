@@ -19,7 +19,9 @@ const ModulesService = {
 		return updatedModule;
 	},
 
-	delete: async id => {},
+	delete: async id => {
+		return knex('modules').where({id}).del();
+	},
 };
 
 module.exports = ModulesService;
