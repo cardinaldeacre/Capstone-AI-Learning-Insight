@@ -35,7 +35,7 @@ const ${name}Service = {
   update: async (id, data) => {
   },
 
-  del: async (id) => {
+  delete: async (id) => {
   }
 };
 

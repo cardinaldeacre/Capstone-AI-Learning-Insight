@@ -20,6 +20,8 @@ const filePath = path.join(controllersDir, fileName);
 
 // template isi controller
 const template = `
+const express = require('express');
+const router = express.Router();
 router.get('/', async (req, res) => {
     try {
       return res.status(200).json();
@@ -41,7 +43,13 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  const { id } = req.params;
+  const {id} = req.params;
+	const updatedData = req.body;
+
+  if (Object.keys(updatedData).length === 0) {
+    return res.status(400).json({message: 'Data yang akan diupdate tidak boleh kosong'});
+  }
+
   try {
     const payload = {};
     const itemId = parseInt(id);
@@ -63,7 +71,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', auth.authMiddleware, auth.authorizeRole('owner'), async (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -85,6 +93,8 @@ router.delete('/:id', auth.authMiddleware, auth.authorizeRole('owner'), async (r
     res.status(500).json({message: 'Server error'});
   }
 });
+
+module.exports = router;
 `;
 
 // cek kalo file udah ada
