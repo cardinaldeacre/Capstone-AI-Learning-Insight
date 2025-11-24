@@ -43,7 +43,13 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  const { id } = req.params;
+  const {id} = req.params;
+	const updatedData = req.body;
+
+  if (Object.keys(updatedData).length === 0) {
+    return res.status(400).json({message: 'Data yang akan diupdate tidak boleh kosong'});
+  }
+    
   try {
     const payload = {};
     const itemId = parseInt(id);
