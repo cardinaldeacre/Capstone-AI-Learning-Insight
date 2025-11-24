@@ -5,10 +5,7 @@ const app = express();
 const port = 3000;
 const UserController = require('./controllers/UserController');
 const ModulesController = require('./controllers/ModulesController');
-const ClassesRouter = require('./routes/classes');
 
-// Routes
-app.use('/api/classes', ClassesRouter);
 // Middleware
 app.use(express.json());
 app.use(
@@ -25,7 +22,6 @@ app.get('/api/', (req, res) => {
 
 app.use('/api/users', UserController);
 app.use('/api/modules', ModulesController);
-app.use('/api/classes', ClassesRouter);
 
 // Run server
 app.listen(port, () => {
