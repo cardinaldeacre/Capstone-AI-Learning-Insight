@@ -87,6 +87,8 @@ router.delete('/:id', auth.authMiddleware, auth.authorizeRole('owner'), async (r
     res.status(500).json({message: 'Server error'});
   }
 });
+
+module.exports = router;
 `;
 
 // cek kalo file udah ada
