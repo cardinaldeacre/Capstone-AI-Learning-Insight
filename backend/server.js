@@ -7,6 +7,7 @@ const swaggerUi = require('swagger-ui-express');
 const {swaggerSpec} = require('./swagger');
 const UserController = require('./controllers/UserController');
 const ModulesController = require('./controllers/ModulesController');
+const ModulesProgressController = require('./controllers/ModulesProgressController');
 
 // Middleware
 app.use(express.json());
@@ -24,6 +25,7 @@ app.get('/api/', (req, res) => {
 
 app.use('/api/users', UserController);
 app.use('/api/modules', ModulesController);
+app.use('/api/modules-progress', ModulesProgressController);
 
 // swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
