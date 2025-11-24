@@ -3,7 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
 export default function CourseHeader({ course }) {
-  const firstLesson = course.Header?.[0]?.lesson?.[0];
+  console.log('Course Header received:', course);
+  console.log('Modules array:', course?.modules);
+  console.log('First Lesson:', course?.modules?.[0]?.lessons?.[0]);
+  const firstLesson = course.modules?.[0]?.lessons?.[0];
 
   return (
     <header className="space-y-6">
@@ -20,7 +23,7 @@ export default function CourseHeader({ course }) {
             size="lg"
             className="bg-teal-600 hover:bg-teal-700 text-white shadow-lg whitespace-nowrap"
           >
-            <Link to={`/courses/${course.id}/lessson/${firstLesson.id}`}>
+            <Link to={`/courses/${course.id}/lesson/${firstLesson.id}`}>
               <Play className="mr-2 h-5 w-5" />
               Mulai Belajar Sekarang
             </Link>
