@@ -34,9 +34,18 @@ const ModulesProgressService = {
 	},
 
 	getProgressByClass: async (studentId, classId) => {
-    return knex('modules as m')
-      .leftJoin('modules_progress as mp', function() {
-  },
+		return knex('modules as m')
+			.leftJoin('modules_progress as mp', function() {
+				this.on('m.id', '=', 'mp.module_id').andOn(
+					'mp.student_id',
+					'=',
+					knex.raw('?', [studentId])
+				);
+			})
+			.where('m.class_id', classId)
+			.select('m.id as module_id', 'm.title', 'm.order_number', 'mp.started_at', 'mp.completed_at')
+			.orderBy('m.order_number', 'asc');
+	},
 };
 
 module.exports = ModulesProgressService;
