@@ -3,6 +3,8 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const app = express();
 const port = 3000;
+const swaggerUi = require('swagger-ui-express');
+const {swaggerSpec} = require('./swagger');
 const UserController = require('./controllers/UserController');
 const ModulesController = require('./controllers/ModulesController');
 
@@ -22,6 +24,9 @@ app.get('/api/', (req, res) => {
 
 app.use('/api/users', UserController);
 app.use('/api/modules', ModulesController);
+
+// swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Run server
 app.listen(port, () => {

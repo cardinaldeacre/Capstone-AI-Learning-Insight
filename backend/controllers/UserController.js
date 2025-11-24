@@ -1,4 +1,3 @@
-// UserController.js
 const bcrypt = require('bcrypt');
 const express = require('express');
 const UserService = require('../services/UserService');
