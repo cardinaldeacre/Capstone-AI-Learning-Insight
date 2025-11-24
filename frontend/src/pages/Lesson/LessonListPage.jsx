@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchCourseDetail, fetchLessonDetail } from '@/data/courseMocks'; // Membutuhkan fetchCourseDetail untuk data sidebar
-import LessonSidebar from '@/components/Lesson/LessonSidebar';
+
 import LessonContent from '@/components/Lesson/LessonContent';
 import { Skeleton } from '@/components/ui/skeleton';
+import LessonSidebar from '@/components/Lesson/LessonSIdebar';
+import { useLayout } from '@/hooks/useLayout';
 
 export default function LessonListPage() {
   const { courseId, lessonId } = useParams();
@@ -11,8 +13,14 @@ export default function LessonListPage() {
   const [currentLesson, setCurrentLesson] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { toggleSidebar } = useLayout();
 
   useEffect(() => {
+    toggleSidebar(false);
+    const cleanupLayout = () => {
+      toggleSidebar(true);
+    };
+
     const start = () => {
       setIsLoading(true);
       setError(null);
@@ -37,7 +45,9 @@ export default function LessonListPage() {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [courseId, lessonId]);
+
+    return cleanupLayout;
+  }, [courseId, lessonId, toggleSidebar]);
 
   if (isLoading) {
     return (

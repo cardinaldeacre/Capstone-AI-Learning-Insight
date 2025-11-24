@@ -7,22 +7,31 @@ import Dashboard from './components/Dashboard/Dashboard';
 import CourseListPage from './pages/Course/CourseListPage';
 import Profile from './components/Profile/Profile';
 import CourseDetailPage from './pages/Course/CourseDetailPage';
+import LessonListPage from './pages/Lesson/LessonListPage';
+import { LayoutProvider } from './contexts/LayoutContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="courses">
-            <Route index element={<CourseListPage />} />
-            <Route path=":courseId" element={<CourseDetailPage />}>
-              <Route path="lesson/:lessonId" />
+      <LayoutProvider>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+
+            {/* courses */}
+            <Route path="courses">
+              <Route index element={<CourseListPage />} />
+
+              <Route path=":courseId">
+                <Route index element={<CourseDetailPage />} />
+                <Route path="lesson/:lessonId" element={<LessonListPage />} />
+              </Route>
             </Route>
+
+            <Route path="/profile" element={<Profile />} />
           </Route>
-          <Route path="/profile" element={<Profile />} />
-        </Route>
-      </Routes>
+        </Routes>
+      </LayoutProvider>
     </BrowserRouter>
   </StrictMode>
 );
