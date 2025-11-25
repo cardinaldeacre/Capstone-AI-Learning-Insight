@@ -9,6 +9,7 @@ const UserController = require('./controllers/UserController');
 const ModulesController = require('./controllers/ModulesController');
 const ModulesProgressController = require('./controllers/ModulesProgressController');
 const QuizController = require('./controllers/QuizController');
+const QuizQuestionsController = require('./controllers/QuizQuestionsController');
 
 // Middleware
 app.use(express.json());
@@ -28,6 +29,7 @@ app.use('/api/users', UserController);
 app.use('/api/modules', ModulesController);
 app.use('/api/modules-progress', ModulesProgressController);
 app.use('/api/quizzes', QuizController);
+app.use('/api/quizzes', QuizQuestionsController);
 
 // swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
