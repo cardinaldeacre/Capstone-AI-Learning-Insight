@@ -1,75 +1,106 @@
 const express = require('express');
 const router = express.Router();
-router.get('/', async (req, res) => {
-    try {
-      return res.status(200).json();
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({message: 'Error server'});
-    }
+const QuizQuestionsService = require('../services/QuizQuestionsService');
+const {authMiddleware, authorizeRole} = require('../middleware/auth');
+
+router.get('/quiz/:quizId', authMiddleware, async (req, res) => {
+	const {quizId} = req.params;
+
+	try {
+		const questions = await QuizQuestionsService.getByQuizId(quizId);
+		return res.status(200).json({data: questions});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({message: 'Error server'});
+	}
 });
 
-router.post('/', async (req, res) => {
-    try {
-      res.status(201).json({message: ''});
-    } catch (error) {
-      if (error.code === '23505') return res.status(409).json({message: ''});
-  
-      console.error(error);
-      res.status(500).json({message: 'Error server'});
-    }
+router.get('/:id', authMiddleware, async (req, res) => {
+	const {id} = req.params;
+
+	try {
+		const question = await QuizQuestionsService.getById(id);
+		if (!question) {
+			return res.status(404).json({message: 'Pertanyaan tidak dquestionukan'});
+		}
+		return res.status(200).json({data: question});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({message: 'Error server'});
+	}
 });
 
-router.put('/:id', async (req, res) => {
-  const {id} = req.params;
-	const updatedData = req.body;
+router.post('/', authMiddleware, authorizeRole('teacher', 'admin'), async (req, res) => {
+	const {quiz_id, questions_text} = req.body;
 
-  if (Object.keys(updatedData).length === 0) {
-    return res.status(400).json({message: 'Data yang akan diupdate tidak boleh kosong'});
-  }
+	if (!quiz_id || !questions_text) {
+		return res.status(400).json({message: 'Quiz ID & text pertanyaan harus diisi'});
+	}
 
-  try {
-    const payload = {};
-    const itemId = parseInt(id);
+	try {
+		const newQuestion = await QuizQuestionsService.create({
+			quiz_id,
+			questions_text,
+		});
 
-    const updateItem = await Service.update(itemId, payload);
-
-    if (!updateItem) {
-      return res.status(404).json({message: 'Item tidak ditemukan'});
-    }
-
-    res.status(200).json({message: 'Item berhasil diedit', item: updateItem});
-  } catch (error) {
-    if (error.code === '23505') {
-      return res.status(409).json({message: 'item sudah digunakan.'});
-    }
-
-    console.error(error);
-    res.status(500).json({message: 'Server error'});
-  }
+		res.status(201).json({message: 'Pertanyaan berhasil ditambakan', data: newQuestion});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({message: 'Error server'});
+	}
 });
 
-router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
+router.put('/:id', authMiddleware, authorizeRole('teacher', 'admin'), async (req, res) => {
+	const {id} = req.params;
+	const {question_text} = req.body;
 
-  try {
-    const itemId = parseInt(id);
+	if (!question_text) {
+		return res.status(400).json({message: 'Teks pertanyaan tidak boleh kosong'});
+	}
 
-    if (isNaN(itemId)) {
-      return res.status(400).json({message: 'ID item tidak valid'});
-    }
+	try {
+		const questionId = parseInt(id);
+		if (isNaN(questionId)) {
+			return res.status(400).json({message: 'ID Pertanyaan tidak valid'});
+		}
 
-    const deletedCount = await Service.delete(itemId);
+		const updatedQuestion = await QuizQuestionService.update(questionId, question_text);
 
-    if (deletedCount === 0) {
-      return res.status(404).json({message: 'Item tidak ditemukan'});
-    }
-      
-    return res.status(200).json({message: 'Item berhasil dihapus'});
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({message: 'Server error'});
-  }
+		if (!updatedQuestion) {
+			return res.status(404).json({message: 'Pertanyaan tidak ditemukan'});
+		}
+
+		res.status(200).json({
+			message: 'Pertanyaan berhasil diperbarui',
+			data: updatedQuestion,
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({message: 'Server error saat update pertanyaan'});
+	}
+});
+
+router.delete('/:id', authMiddleware, authorizeRole('teacher', 'admin'), async (req, res) => {
+	const {id} = req.params;
+
+	try {
+		const questionId = parseInt(id);
+
+		if (isNaN(questionId)) {
+			return res.status(400).json({message: 'ID question tidak valid'});
+		}
+
+		const deletedCount = await Service.delete(questionId);
+
+		if (deletedCount === 0) {
+			return res.status(404).json({message: 'Pertanyaan tidak ditemukan'});
+		}
+
+		return res.status(200).json({message: 'Pertanyaan berhasil dihapus'});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({message: 'Server error'});
+	}
 });
 
 module.exports = router;
