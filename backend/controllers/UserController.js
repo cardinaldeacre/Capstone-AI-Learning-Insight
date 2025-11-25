@@ -139,7 +139,7 @@ router.post('/student', async (req, res) => {
 });
 
 // create teacher
-router.post('/teacher', authMiddleware, authorizeRole('admin'), async (req, res) => {
+router.post('/teacher', async (req, res) => {
 	const {name, email, password} = req.body;
 
 	if (!name || !email || !password) {
