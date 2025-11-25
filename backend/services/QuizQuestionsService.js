@@ -1,20 +1,32 @@
 const knex = require('../config/database');
 
 const QuizQuestionsService = {
-  getAll: async () => {
-  },
+	getByQuizId: async quizId => {
+		return knex('quiz_questions').where({quiz_id: quizId}).orderBy('id', 'asc');
+	},
 
-  getById: async (id) => {
-  },
+	getById: async id => {
+		return knex('quiz_questions').where({id}).first();
+	},
 
-  create: async (data) => {
-  },
+	create: async data => {
+		const [newQueston] = await knex('quiz_questions').insert(data).returning('*');
 
-  update: async (id, data) => {
-  },
+		return newQueston;
+	},
 
-  delete: async (id) => {
-  }
+	update: async (id, data) => {
+		const [updatedQuestion] = await knex('quiz_questions').where({id}).update({
+			question_text: questionText,
+			updated_at: knex.fn.now(),
+		});
+
+		return updatedQuestion;
+	},
+
+	delete: async id => {
+		return knex('quiz_questions').where({id}).del();
+	},
 };
 
 module.exports = QuizQuestionsService;
