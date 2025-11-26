@@ -13,9 +13,15 @@ import {
   SidebarMenuItem,
   SidebarMenuButton
 } from '@/components/ui/sidebar';
+import useAuth from '@/hooks/useAuth';
 
 export default function SidebarUserProfile() {
   const userName = 'Rizky Cahyono Putra';
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <SidebarFooter className="p-2 border-t dark:border-gray-800">
@@ -49,7 +55,10 @@ export default function SidebarUserProfile() {
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem className="cursor-pointer p-2 text-red-600">
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Sign out</span>
               </DropdownMenuItem>
