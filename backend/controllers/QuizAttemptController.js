@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const authMiddleware = require('../middleware/auth');
+const {authMiddleware} = require('../middleware/auth');
 const QuizAttemptService = require('../services/QuizAttemptService');
 
 router.get('/', authMiddleware, async (req, res) => {
