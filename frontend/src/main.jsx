@@ -9,29 +9,43 @@ import Profile from './components/Profile/Profile';
 import CourseDetailPage from './pages/Course/CourseDetailPage';
 import LessonListPage from './pages/Lesson/LessonListPage';
 import { LayoutProvider } from './contexts/LayoutContext';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Login from './pages/Auth/LoginPage';
+import { AuthProvider } from './contexts/AuthContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <LayoutProvider>
-        <Routes>
-          <Route element={<MainLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <LayoutProvider>
+          <Routes>
+            {/* publik */}
+            <Route path="/login" element={<Login />} />
 
-            {/* courses */}
-            <Route path="courses">
-              <Route index element={<CourseListPage />} />
+            {/* private */}
+            <Route element={<ProtectedRoute />}>
+              <Route element={<MainLayout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
 
-              <Route path=":courseId">
-                <Route index element={<CourseDetailPage />} />
-                <Route path="lesson/:lessonId" element={<LessonListPage />} />
+                {/* courses */}
+                <Route path="courses">
+                  <Route index element={<CourseListPage />} />
+
+                  <Route path=":courseId">
+                    <Route index element={<CourseDetailPage />} />
+                    <Route
+                      path="lesson/:lessonId"
+                      element={<LessonListPage />}
+                    />
+                  </Route>
+                </Route>
+
+                <Route path="/profile" element={<Profile />} />
               </Route>
             </Route>
-
-            <Route path="/profile" element={<Profile />} />
-          </Route>
-        </Routes>
-      </LayoutProvider>
-    </BrowserRouter>
+          </Routes>
+        </LayoutProvider>
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>
 );
