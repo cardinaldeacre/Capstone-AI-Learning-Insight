@@ -11,6 +11,9 @@ const ModulesProgressController = require('./controllers/ModulesProgressControll
 const QuizController = require('./controllers/QuizController');
 const QuizQuestionsController = require('./controllers/QuizQuestionsController');
 const QuizOptionController = require('./controllers/QuizOptionController');
+const ClassesController = require('./controllers/ClassesController');
+const ClassAssignmentController = require('./controllers/ClassAsignmentControler');
+const ClassSubmissionController = require('./controllers/ClassSubmissionController');
 
 // Middleware
 app.use(express.json());
@@ -32,8 +35,10 @@ app.use('/api/modules-progress', ModulesProgressController);
 app.use('/api/quizzes', QuizController);
 app.use('/api/quiz-question', QuizQuestionsController);
 app.use('/api/quiz-option', QuizOptionController);
+app.use('/api/classes', ClassesController);
+app.use('/api/assignments', ClassAssignmentController);
+app.use('/api/submissions', ClassSubmissionController);
 
-// swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Run server
