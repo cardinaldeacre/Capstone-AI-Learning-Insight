@@ -40,10 +40,16 @@ router.post('/login', async (req, res) => {
 			{expiresIn: '7d'}
 		);
 
-		await knex('refresh_token').insert({
-			token: refreshToken,
-			user_id: user.id,
-		});
+		const existingToken = await knex('refresh_token').where({user_id: user.id}).first();
+
+		if (existingToken) {
+			await knex('refresh_token').where({user_id: user.id}).update({token: refreshToken});
+		} else {
+			await knex('refresh_token').insert({
+				token: refreshToken,
+				user_id: user.id,
+			});
+		}
 
 		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
