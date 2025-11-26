@@ -40,6 +40,11 @@ router.post('/login', async (req, res) => {
 			{expiresIn: '7d'}
 		);
 
+		await knex('refresh_token').insert({
+			token: refreshToken,
+			user_id: user.id,
+		});
+
 		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production',
@@ -66,13 +71,20 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/refresh-token', async (req, res) => {
-	const refreshToken = req.cookies.refreshToken;
+	const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+
 	if (!refreshToken) {
 		return res.status(401).json({message: 'Refresh token tidak ditemukan'});
 	}
 
 	try {
 		const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+		const storedToken = await knex('refresh_token').where({token: refreshToken}).first();
+
+		if (!storedToken) {
+			return res.status(403).json({message: 'Refresh token tidak valid (telah dicabut)'});
+		}
+
 		const newAccessToken = jwt.sign(
 			{id: decoded.id, email: decoded.email},
 			process.env.JWT_SECRET,
@@ -87,12 +99,18 @@ router.post('/refresh-token', async (req, res) => {
 });
 
 router.post('/logout', authMiddleware, async (req, res) => {
+	const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+
 	try {
-		const token = req.token;
-		// blacklist
-		await knex('token_blacklist').insert({token});
-		// hapus cookis
-		res.clearCookie('refreshToken');
+		if (refreshToken) {
+			await knex('refresh_token').where({token: refreshToken}).del();
+		}
+
+		res.clearCookie('refreshToken', {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: 'strict',
+		});
 
 		res.status(200).json({message: 'Logout berhasil'});
 	} catch (error) {
