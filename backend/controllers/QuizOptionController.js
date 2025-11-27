@@ -3,7 +3,7 @@ const router = express.Router();
 const {authMiddleware, authorizeRole} = require('../middleware/auth');
 const QuizOptionService = require('../services/QuizOptionService');
 
-router.get('/question/:questionId', async (req, res) => {
+router.get('/question/:questionId', authMiddleware, async (req, res) => {
 	const {questionId} = req.params;
 
 	try {
