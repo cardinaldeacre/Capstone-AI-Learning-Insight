@@ -16,7 +16,7 @@ const QuizOptionService = {
 	},
 
 	update: async (id, data) => {
-		const [updatedOption] = await knex('quiz_options').where({id}).update(date).returning('*');
+		const [updatedOption] = await knex('quiz_options').where({id}).update(data).returning('*');
 		return updatedOption;
 	},
 
