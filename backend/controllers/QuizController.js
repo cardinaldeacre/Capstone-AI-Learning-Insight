@@ -3,7 +3,7 @@ const router = express.Router();
 const {authMiddleware, authorizeRole} = require('../middleware/auth');
 const QuizService = require('../services/QuizService');
 
-router.get('/module/:moduleID', authMiddleware, async (req, res) => {
+router.get('/module/:moduleId', authMiddleware, async (req, res) => {
 	const {moduleId} = req.params;
 
 	try {
@@ -34,7 +34,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
 router.post('/', authMiddleware, authorizeRole('teacher', 'admin'), async (req, res) => {
 	const {module_id, title, timer, min_score} = req.body;
 
-	if (!module_id || !title || !timer === undefined) {
+	if (!module_id || !title || !timer) {
 		return res.status(400).json({message: 'Module id, judul & timer wajib diisi'});
 	}
 
@@ -89,7 +89,7 @@ router.delete('/:id', authMiddleware, authorizeRole('admin', 'teacher'), async (
 			return res.status(400).json({message: 'ID quiz tidak valid'});
 		}
 
-		const deletedCount = await QuizService.delete(itemId);
+		const deletedCount = await QuizService.delete(quizId);
 
 		if (deletedCount === 0) {
 			return res.status(404).json({message: 'Quiz tidak ditemukan'});
