@@ -1,7 +1,11 @@
 const knex = require('../config/database');
 
 const ClassesService = {
-	getAll: async (role, userId) => {
+	getAll: async () => {
+		return knex('classes').select('*').orderBy('asc');
+	},
+
+	getClassesByStudent: async (role, userId) => {
 		let query = knex('classes')
 			.join('users', 'classes.teacher_id', 'users.id')
 			.select(

@@ -1,12 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const {authMiddleware, authorizeRole} = require('../middleware/auth');
-
 const ClassesService = require('../services/ClassesService');
+
 router.get('/', authMiddleware, async (req, res) => {
 	try {
+		const classes = await ClassesService.getAll();
+		return res.status(200).json(classes);
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({message: 'Error server'});
+	}
+});
+
+router.get('/student', authMiddleware, async (req, res) => {
+	try {
 		const {role, id: userId} = req.user;
-		const classes = await ClassesService.getAll(role, userId);
+		const classes = await ClassesService.getClassesByStudent(role, userId);
 
 		return res.status(200).json(classes);
 	} catch (error) {
