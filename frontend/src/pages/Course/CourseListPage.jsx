@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchCourseList } from '@/lib/api/services/courseService';
+import { fetchCourseStudentList } from '@/lib/api/services/courseService';
 import CourseCard from '@/components/Course/CourseCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -15,18 +15,28 @@ export default function CourseListPage() {
       setIsLoading(true);
       setError(null);
       try {
-        const data = await fetchCourseList();
-        setCourses(data);
+        const data = await fetchCourseStudentList();
+        if (data && data.data) {
+          setCourses(data.data);
+        } else if (Array.isArray(data)) {
+          setCourses(data);
+        } else {
+          setCourses([]);
+        }
       } catch (err) {
         setError(err.message);
         console.error(err);
       } finally {
-        setIsLoading(true);
+        setIsLoading(false);
       }
     };
 
     loadCourses();
   }, []);
+
+  console.log('Rendering Check: courses type:', typeof courses);
+  console.log('Rendering Check: courses length:', courses?.length);
+  console.log('Rendering Check: Actual courses data:', courses);
 
   if (isLoading) {
     return (
@@ -65,7 +75,7 @@ export default function CourseListPage() {
         ) : (
           <div className="col-span-full py-10 text-center">
             <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-300">
-              😥 Kursus Tidak Ditemukan
+              Kursus Tidak Ditemukan
             </h3>
             <p className="text-muted-foreground mt-2">
               Tidak ada kursus yang tersedia untuk Anda saat ini. Silakan cek
