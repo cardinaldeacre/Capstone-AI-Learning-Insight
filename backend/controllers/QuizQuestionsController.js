@@ -21,7 +21,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
 	try {
 		const question = await QuizQuestionsService.getById(id);
 		if (!question) {
-			return res.status(404).json({message: 'Pertanyaan tidak dquestionukan'});
+			return res.status(404).json({message: 'Pertanyaan tidak ditemukan'});
 		}
 		return res.status(200).json({data: question});
 	} catch (error) {
@@ -31,16 +31,16 @@ router.get('/:id', authMiddleware, async (req, res) => {
 });
 
 router.post('/', authMiddleware, authorizeRole('teacher', 'admin'), async (req, res) => {
-	const {quiz_id, questions_text} = req.body;
+	const {quiz_id, question_text} = req.body;
 
-	if (!quiz_id || !questions_text) {
+	if (!quiz_id || !question_text) {
 		return res.status(400).json({message: 'Quiz ID & text pertanyaan harus diisi'});
 	}
 
 	try {
 		const newQuestion = await QuizQuestionsService.create({
 			quiz_id,
-			questions_text,
+			question_text,
 		});
 
 		res.status(201).json({message: 'Pertanyaan berhasil ditambakan', data: newQuestion});
@@ -64,7 +64,7 @@ router.put('/:id', authMiddleware, authorizeRole('teacher', 'admin'), async (req
 			return res.status(400).json({message: 'ID Pertanyaan tidak valid'});
 		}
 
-		const updatedQuestion = await QuizQuestionService.update(questionId, question_text);
+		const updatedQuestion = await QuizQuestionsService.update(questionId, question_text);
 
 		if (!updatedQuestion) {
 			return res.status(404).json({message: 'Pertanyaan tidak ditemukan'});
@@ -90,7 +90,7 @@ router.delete('/:id', authMiddleware, authorizeRole('teacher', 'admin'), async (
 			return res.status(400).json({message: 'ID question tidak valid'});
 		}
 
-		const deletedCount = await Service.delete(questionId);
+		const deletedCount = await QuizQuestionsService.delete(questionId);
 
 		if (deletedCount === 0) {
 			return res.status(404).json({message: 'Pertanyaan tidak ditemukan'});
