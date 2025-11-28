@@ -23,7 +23,7 @@ router.get(
 		const {classId} = req.params;
 
 		try {
-			const students = await ClassEnrolmentService.getStudentByClass(classId);
+			const students = await ClassEnrolmentService.getStudentsByClass(classId);
 			return res.status(200).json({data: students});
 		} catch (error) {
 			console.error(error);
@@ -66,7 +66,7 @@ router.delete('/:classId', authMiddleware, async (req, res) => {
 	const studentId = req.user.id;
 
 	try {
-		const deletedCount = await ClassEnrolmentService.delete(studentId, classId);
+		const deletedCount = await ClassEnrolmentService.unenrollStudent(studentId, classId);
 
 		if (deletedCount === 0) {
 			return res.status(404).json({message: 'Anda tidak terdaftar di kelas ini'});
