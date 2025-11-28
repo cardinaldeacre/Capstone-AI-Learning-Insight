@@ -20,7 +20,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
 
 	try {
 		const module = await ModulesService.getById(id);
-		if (!module === null) {
+		if (!module) {
 			return res.status(404).json({message: 'Module tidak ditemukan'});
 		}
 

@@ -3,25 +3,20 @@ const router = express.Router();
 const {authMiddleware, authorizeRole} = require('../middleware/auth');
 const QuizOptionService = require('../services/QuizOptionService');
 
-router.get(
-	'/question/:questionId',
-	authMiddleware,
-	authorizeRole('admin', 'teacher'),
-	async (req, res) => {
-		const {questionId} = req.params;
+router.get('/question/:questionId', authMiddleware, async (req, res) => {
+	const {questionId} = req.params;
 
-		try {
-			const options = await QuizOptionService.getByQustionId(questionId);
-			const safeOptions =
-				req.user.role === 'student' ? options.map(({is_correct, ...rest}) => rest) : options;
+	try {
+		const options = await QuizOptionService.getByQustionId(questionId);
+		const safeOptions =
+			req.user.role === 'student' ? options.map(({is_correct, ...rest}) => rest) : options;
 
-			return res.status(200).json({data: safeOptions});
-		} catch (error) {
-			console.error(error);
-			return res.status(500).json({message: 'Error server'});
-		}
+		return res.status(200).json({data: safeOptions});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({message: 'Error server'});
 	}
-);
+});
 
 router.post('/', authMiddleware, authorizeRole('teacher', 'admin'), async (req, res) => {
 	const {question_id, option_text, is_correct} = req.body;

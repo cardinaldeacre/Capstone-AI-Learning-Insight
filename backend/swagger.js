@@ -9,5 +9,5 @@ export const swaggerSpec = swaggerJsdoc({
 			description: 'Built with Swagger',
 		},
 	},
-	apis: ['./routes/*.js'],
+	apis: ['./swagger/*.js'],
 });
