@@ -38,7 +38,7 @@ const ClassEnrolmentService = {
 			);
 	},
 
-	getStudentByClass: async classId => {
+	getStudentsByClass: async classId => {
 		return knex('class_enrolment as ce')
 			.join('users as u', 'ce.student_id', 'u.id')
 			.where('ce.class_id', classId)
