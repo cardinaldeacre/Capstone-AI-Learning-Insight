@@ -70,6 +70,28 @@
 
 /**
  * @swagger
+ * /api/classes/student:
+ *   get:
+ *     summary: Ambil semua kelas (telah di enroll student)
+ *     description: Ambil semua kelas milik student
+ *     tags: [Classes]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Data kelas berhasil diambil
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Class'
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
  * /api/classes/{id}:
  *   get:
  *     summary: Ambil detail satu kelas
