@@ -3,7 +3,8 @@ import axiosClient from '../axiosClient';
 const COURSE_ENDPOINTS = {
   list: '/classes',
   studentCourse: '/classes/student',
-  studentCourseDetail: id => `/classes/${id}`
+  studentCourseDetail: id => `/classes/${id}`,
+  moduleByClass: classId => `/modules/class/${classId}`
 };
 
 export const fetchCourseList = async () => {
@@ -12,7 +13,7 @@ export const fetchCourseList = async () => {
 
     return response.data;
   } catch (error) {
-    console.error('API Error in fetchCourseList: ', error);
+    console.error('[CourseService.fetchCourseList ]API Error : ', error);
     const errorMessage =
       error.response?.data?.message || 'Gagal membuat daftar kursus';
     throw new Error(errorMessage);
@@ -25,7 +26,7 @@ export const fetchCourseStudentList = async () => {
 
     return response.data;
   } catch (error) {
-    console.error('API Error in fetchCourseStudentList: ', error);
+    console.error('[CourseService.fetchCourseStudentList] API Error : ', error);
     const errorMessage =
       error.response?.data?.message || 'Gagal membuat daftar kursus';
     throw new Error(errorMessage);
@@ -56,5 +57,20 @@ export const fetchCourseStudentDetail = async courseId => {
     }
 
     throw new Error(errorMessage);
+  }
+};
+
+export const fetchCourseModules = async classId => {
+  try {
+    const url = COURSE_ENDPOINTS.moduleByClass(classId);
+    const response = await axiosClient.get(url);
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `[CourseService.fetchCourseModules] Error fetching modules for Class ID: ${classId}`,
+      error
+    );
+    throw error;
   }
 };
