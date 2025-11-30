@@ -42,7 +42,7 @@ export default function CourseModuleList({ modules }) {
             >
               <AccordionTrigger className="hover:no-underline py-4">
                 <div className="flex items-center gap-4 text-left w-full">
-                  {/* Nomor Urut / Icon */}
+                  {/* Nomor Urur/ Icon */}
                   <div className="shrink-0 w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-bold text-sm">
                     {index + 1}
                   </div>
@@ -54,7 +54,7 @@ export default function CourseModuleList({ modules }) {
                     </h3>
                   </div>
 
-                  {/* Badge Durasi atau Tipe (Opsional) */}
+                  {/* Badge samping */}
                   <Badge
                     variant="outline"
                     className="hidden sm:flex border-teal-200 text-teal-700 font-normal ml-2"
@@ -75,7 +75,6 @@ export default function CourseModuleList({ modules }) {
                   </div>
                   {module.content}
 
-                  {/* Tombol Aksi (Opsional) */}
                   <div className="mt-4">
                     <button className="text-sm text-teal-600 font-medium hover:underline">
                       Lihat Materi Lengkap &rarr;
