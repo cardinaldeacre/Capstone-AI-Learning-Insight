@@ -3,8 +3,11 @@ import { Calendar, User, BookOpen, Clock, PlayCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { useNavigate } from 'react-router';
 
 export default function CourseHeader({ course }) {
+  const navigate = useNavigate();
+
   const formatDate = dateString => {
     if (!dateString) return '-';
     return new Date(dateString).toLocaleDateString('id-ID', {
@@ -54,7 +57,11 @@ export default function CourseHeader({ course }) {
             <Button
               size="lg"
               className="w-full md:w-auto bg-teal-600 hover:bg-teal-700 text-white shadow-lg shadow-teal-600/20 rounded-full font-semibold transition-all hover:scale-105"
-              onClick={() => console.log('Mulai Course Clicked')}
+              onClick={() => {
+                if (course.id) {
+                  navigate(`/courses/${course.id}/modules`);
+                }
+              }}
             >
               <PlayCircle className="mr-2 h-5 w-5" />
               Mulai Belajar

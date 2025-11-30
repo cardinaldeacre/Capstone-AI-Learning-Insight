@@ -73,8 +73,7 @@ export default function CourseModuleList({ modules }) {
                       Deskripsi:
                     </span>
                   </div>
-                  {module.content}
-
+                  {module.content.slice(0, 150)}.....
                   <div className="mt-4">
                     <button className="text-sm text-teal-600 font-medium hover:underline">
                       Lihat Materi Lengkap &rarr;
