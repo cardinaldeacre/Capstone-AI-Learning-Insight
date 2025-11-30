@@ -1,56 +1,67 @@
-import { Star, Play } from 'lucide-react';
+import React from 'react';
+import { Calendar, User, BookOpen, Clock, PlayCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 
 export default function CourseHeader({ course }) {
-  console.log('Course Header received:', course);
-  console.log('Modules array:', course?.modules);
-  console.log('First Lesson:', course?.modules?.[0]?.lessons?.[0]);
-  const firstLesson = course.modules?.[0]?.lessons?.[0];
+  const formatDate = dateString => {
+    if (!dateString) return '-';
+    return new Date(dateString).toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
 
   return (
-    <header className="space-y-6">
-      <div className="max-w-4xl space-y-2">
-        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-          {course.title}
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          oleh {course.instructor}
-        </p>
-        {firstLesson && (
-          <Button
-            asChild
-            size="lg"
-            className="bg-teal-600 hover:bg-teal-700 text-white shadow-lg whitespace-nowrap"
-          >
-            <Link to={`/courses/${course.id}/lesson/${firstLesson.id}`}>
-              <Play className="mr-2 h-5 w-5" />
-              Mulai Belajar Sekarang
-            </Link>
-          </Button>
-        )}
+    <Card className="w-full mb-6 overflow-hidden border-none shadow-md bg-white">
+      <div className="h-32 bg-linear-to-r from-teal-600 to-teal-800 relative">
+        <div className="absolute -bottom-10 right-10 opacity-10">
+          <BookOpen size={150} color="white" />
+        </div>
       </div>
 
-      <div className="flex items-center space-x-3 text-lg">
-        <div className="flex text-yellow-500">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`h-5 w-5 ${
-                i < Math.floor(course.rating)
-                  ? 'fill-yellow-500'
-                  : 'text-gray-300'
-              }`}
-            />
-          ))}
+      <CardContent className="pt-6 relative">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+          <div className="space-y-3 flex-1">
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+              {course.title}
+            </h1>
+
+            <p className="text-gray-600 leading-relaxed text-base">
+              {course.description}
+            </p>
+
+            <Separator className="my-4" />
+
+            <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+              <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
+                <User className="w-4 h-4 text-teal-600" />
+                <span className="font-medium text-gray-700">
+                  {course.teacher_name}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-gray-400" />
+                <span>Diperbarui: {formatDate(course.updated_at)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="shrink-0 mt-2 md:mt-0 w-full md:w-auto">
+            <Button
+              size="lg"
+              className="w-full md:w-auto bg-teal-600 hover:bg-teal-700 text-white shadow-lg shadow-teal-600/20 rounded-full font-semibold transition-all hover:scale-105"
+              onClick={() => console.log('Mulai Course Clicked')}
+            >
+              <PlayCircle className="mr-2 h-5 w-5" />
+              Mulai Belajar
+            </Button>
+          </div>
         </div>
-        <span className="font-semibold">
-          {course.rating ? course.rating.toLocaleString() : 0}
-        </span>
-        <span className="text-muted-foreground">
-          ({course.reviewCount ? course.reviewCount.toLocaleString() : 0})
-        </span>
-      </div>
-    </header>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchCourseDetail } from '@/data/courseMocks';
+// import { fetchCourseDetail } from '@/data/courseMocks';
+import { fetchCourseStudentDetail } from '@/lib/api/services/courseService';
 import CourseHeader from '@/components/Course/CourseHeader';
 import CourseModuleList from '@/components/Course/CourseModuleList';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -10,27 +11,29 @@ import { Terminal } from 'lucide-react';
 export default function CourseDetailPage() {
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
-  const [isLoading, setIsloading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // setIsloading(true);
-    fetchCourseDetail(courseId)
-      .then(data => {
+    const loadDetailCourse = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchCourseStudentDetail(courseId);
         setCourse(data);
-        // console.log('module data: ', data.modules);
-        setIsloading(false);
-      })
-      .catch(err => {
-        console.log(err);
+      } catch (err) {
+        console.error(err);
         setError(err.message);
-      })
-      .finally(() => {
-        setIsloading(false);
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (courseId) {
+      loadDetailCourse();
+    }
   }, [courseId]);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="space-y-6">
         <Skeleton className="h-20 w-3/4" />
@@ -62,7 +65,7 @@ export default function CourseDetailPage() {
           Materi Pembelajaran
         </h2>
 
-        <CourseModuleList modules={course.modules} courseId={course.id} />
+        {/* <CourseModuleList modules={course.modules} courseId={course.id} /> */}
       </section>
     </div>
   );
