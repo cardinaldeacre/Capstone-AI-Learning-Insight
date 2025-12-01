@@ -1,15 +1,39 @@
-import React from 'react';
-import { ChevronLeft, ChevronRight, BookOpen } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  BookOpen,
+  CheckCircle,
+  Loader2
+} from 'lucide-react';
 
 const ModuleContent = ({
   module,
   currentIndex,
   totalModules,
   onNext,
-  onPrev
+  onPrev,
+  onComplete
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // handle tombol supaya aman
+  const handleFinishClick = async () => {
+    try {
+      setIsSubmitting(true);
+      await onComplete(); //props tunggu sampe selesai
+    } catch (error) {
+      console.error('Error completing module', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Cek apakah ini modul terakhir
+  const isLastModule = currentIndex === totalModules - 1;
+
   return (
-    <div className="w-full animate-in fade-in duration-500">
+    <div className="w-full animate-in fade-in duration-500 pb-10">
       {/* Breadcrumb */}
       <div className="mb-4 flex items-center gap-2 text-sm text-gray-500">
         <BookOpen size={16} />
@@ -20,74 +44,109 @@ const ModuleContent = ({
         </span>
       </div>
 
-      {/* main card */}
-      <div className="bg-white w-full rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
-        {/* Header Section */}
-        <div className="p-6 md:p-8 border-b border-gray-100">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-            {module.title}
-          </h1>
-          <div className="flex items-center gap-3">
-            <span className="bg-teal-100 text-teal-700 text-xs font-bold px-3 py-1 rounded-full">
-              Materi {module.order_number}
-            </span>
-            <span className="text-gray-400 text-sm">
-              Estimasi Baca: 10 menit
-            </span>
+      {/* main  */}
+      <div className="bg-white w-full rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col min-h-[500px]">
+        {/* header */}
+        <div className="p-6 md:p-8 border-b border-gray-100 relative">
+          <div className="flex justify-between items-start gap-4">
+            <div>
+              <div className="flex items-center gap-3 mb-3">
+                <span className="bg-teal-50 text-teal-700 border border-teal-100 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  Materi {module.order_number}
+                </span>
+                {module.isCompleted && (
+                  <span className="flex items-center gap-1.5 text-green-600 text-xs font-bold bg-green-50 px-3 py-1 rounded-full border border-green-100">
+                    <CheckCircle size={14} /> Selesai
+                  </span>
+                )}
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+                {module.title}
+              </h1>
+            </div>
           </div>
         </div>
 
-        {/* konten */}
-        <div className="p-6 md:p-8">
-          {/* gambar */}
-          {/* <div className="w-full h-64 md:h-80 bg-slate-900 rounded-xl mb-8 relative group overflow-hidden shadow-md">
-            <img
-              src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
-              alt="Ilustrasi Materi"
-              className="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-700"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30 cursor-pointer hover:bg-white/30 transition-all">
-                <PlayCircle className="text-white w-8 h-8 fill-current" />
-              </div>
-            </div>
-          </div> */}
+        {/* banner sukses jika sudah selesai*/}
+        {module.isCompleted && (
+          <div className="bg-green-50 px-8 py-3 border-b border-green-100 flex items-center gap-3 text-green-800 text-sm">
+            <CheckCircle size={18} className="text-green-600" />
+            <span>
+              Modul ini sudah Anda selesaikan pada{' '}
+              <b>
+                {new Date(module.completed_at).toLocaleDateString('id-ID', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric'
+                })}
+              </b>
+              .
+            </span>
+          </div>
+        )}
 
-          {/* content */}
-          <article className="prose prose-lg max-w-none prose-slate prose-headings:font-bold prose-a:text-teal-600 text-gray-600">
-            <p className="leading-relaxed">{module.content}</p>
+        {/* content body */}
+        <div className="p-6 md:p-8 flex-1">
+          <article className="prose prose-lg max-w-none prose-slate prose-headings:font-bold prose-a:text-teal-600 text-gray-600 leading-relaxed">
+            <div className="whitespace-pre-wrap">{module.content}</div>
           </article>
         </div>
 
-        {/* action prev dan next */}
-        <div className="bg-gray-50 p-6 border-t border-gray-100 flex justify-between items-center mt-auto">
+        {/* tombol action */}
+        <div className="bg-gray-50 p-6 border-t border-gray-100 flex justify-between items-center sticky bottom-0 z-10">
+          {/* prev */}
           <button
             onClick={onPrev}
-            disabled={currentIndex === 0}
+            disabled={currentIndex === 0 || isSubmitting}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all
               ${
                 currentIndex === 0
                   ? 'text-gray-300 cursor-not-allowed'
-                  : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm'
+                  : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300 shadow-sm'
               }`}
           >
             <ChevronLeft size={18} />
             Sebelumnya
           </button>
 
-          <button
-            onClick={onNext}
-            disabled={currentIndex === totalModules - 1}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm
-              ${
-                currentIndex === totalModules - 1
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-teal-600 text-white hover:bg-teal-700 hover:shadow-md'
-              }`}
-          >
-            {currentIndex === totalModules - 1 ? 'Selesai' : 'Selanjutnya'}
-            <ChevronRight size={18} />
-          </button>
+          {/* next) */}
+          <div className="flex gap-3">
+            {module.isCompleted ? (
+              <button
+                onClick={onNext}
+                disabled={isLastModule}
+                className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm
+                  ${
+                    isLastModule
+                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : 'bg-white border border-teal-200 text-teal-700 hover:bg-teal-50 hover:border-teal-300'
+                  }`}
+              >
+                {isLastModule ? 'Materi Habis' : 'Materi Selanjutnya'}
+                {!isLastModule && <ChevronRight size={18} />}
+              </button>
+            ) : (
+              <button
+                onClick={handleFinishClick}
+                disabled={isSubmitting}
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-md bg-teal-600 text-white hover:bg-teal-700 hover:shadow-lg disabled:opacity-70 disabled:cursor-wait"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    Menyimpan...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle size={18} />
+                    {isLastModule
+                      ? 'Selesai & Tutup'
+                      : 'Tandai Selesai & Lanjut'}
+                  </>
+                )}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

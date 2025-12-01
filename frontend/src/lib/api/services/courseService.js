@@ -4,7 +4,10 @@ const COURSE_ENDPOINTS = {
   list: '/classes',
   studentCourse: '/classes/student',
   studentCourseDetail: id => `/classes/${id}`,
-  moduleByClass: classId => `/modules/class/${classId}`
+  moduleByClass: classId => `/modules/class/${classId}`,
+  getModuleProgess: classId => `/modules-progress/class/${classId}`,
+  startModuleProgress: moduleId => `/modules-progress/${moduleId}/start`,
+  completeModuleProgress: moduleId => `/modules-progress/${moduleId}/complete`
 };
 
 export const fetchCourseList = async () => {
@@ -69,6 +72,48 @@ export const fetchCourseModules = async classId => {
   } catch (error) {
     console.error(
       `[CourseService.fetchCourseModules] Error fetching modules for Class ID: ${classId}`,
+      error
+    );
+    throw error;
+  }
+};
+
+export const fetchGetModuleProgress = async classId => {
+  try {
+    const url = COURSE_ENDPOINTS.getModuleProgess(classId);
+    const response = await axiosClient.get(url);
+    return response.data;
+  } catch (error) {
+    console.error(
+      `[CourseService.fetchGetModuleProgress] Error => Class ID: ${classId}`,
+      error
+    );
+    throw error;
+  }
+};
+
+export const fetchStartModuleProgress = async moduleId => {
+  try {
+    const url = COURSE_ENDPOINTS.startModuleProgress(moduleId);
+    const response = await axiosClient.post(url);
+    return response.data;
+  } catch (error) {
+    console.error(
+      `[CourseService.fetchStartModuleProgress] Error => Module ID: ${moduleId}`,
+      error
+    );
+    throw error;
+  }
+};
+
+export const fetchCompleteModuleProgress = async moduleId => {
+  try {
+    const url = COURSE_ENDPOINTS.completeModuleProgress(moduleId);
+    const response = await axiosClient.put(url);
+    return response.data;
+  } catch (error) {
+    console.error(
+      `[CourseService.fetchCompleteModuleProgress] Error => Module ID: ${moduleId}`,
       error
     );
     throw error;

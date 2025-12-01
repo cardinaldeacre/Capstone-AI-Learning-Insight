@@ -74,11 +74,11 @@ export default function CourseModuleList({ modules }) {
                     </span>
                   </div>
                   {module.content.slice(0, 150)}.....
-                  <div className="mt-4">
+                  {/* <div className="mt-4">
                     <button className="text-sm text-teal-600 font-medium hover:underline">
                       Lihat Materi Lengkap &rarr;
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </AccordionContent>
             </AccordionItem>
