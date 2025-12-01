@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // import { fetchCourseDetail } from '@/data/courseMocks';
-import { fetchCourseStudentDetail } from '@/lib/api/services/courseService';
+import {
+  fetchCourseStudentDetail,
+  fetchCourseModules
+} from '@/lib/api/services/courseService';
 import CourseHeader from '@/components/Course/CourseHeader';
 import CourseModuleList from '@/components/Course/CourseModuleList';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -11,6 +14,7 @@ import { Terminal } from 'lucide-react';
 export default function CourseDetailPage() {
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
+  const [modules, setModules] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -18,8 +22,12 @@ export default function CourseDetailPage() {
     const loadDetailCourse = async () => {
       try {
         setLoading(true);
-        const data = await fetchCourseStudentDetail(courseId);
-        setCourse(data);
+        const [courseData, modulesData] = await Promise.all([
+          fetchCourseStudentDetail(courseId),
+          fetchCourseModules(courseId)
+        ]);
+        setCourse(courseData);
+        setModules(modulesData);
       } catch (err) {
         console.error(err);
         setError(err.message);
@@ -61,11 +69,20 @@ export default function CourseDetailPage() {
       <CourseHeader course={course} />
 
       <section>
-        <h2 className="text-2xl font-bold tracking-tight mb-6">
-          Materi Pembelajaran
-        </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <CourseModuleList modules={modules} />
+          </div>
 
-        {/* <CourseModuleList modules={course.modules} courseId={course.id} /> */}
+          <div className="lg:col-span-1">
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+              <h3 className="font-bold text-gray-800 mb-2">Info Tambahan</h3>
+              <p className="text-sm text-gray-500">
+                Selesaikan semua modul untuk mendapatkan sertifikat.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

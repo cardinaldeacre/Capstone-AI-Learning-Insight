@@ -1,75 +1,90 @@
-import { Link } from 'react-router-dom';
-import { CheckCircle, Circle, ChevronDown } from 'lucide-react';
+import React from 'react';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
-import { Progress } from '@/components/ui/progress';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { BookOpen, FileText, Lock } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
-export default function CourseModuleList({ modules, courseId }) {
+export default function CourseModuleList({ modules }) {
+  if (!modules || modules.length === 0) {
+    return (
+      <Card className="border-dashed border-2 shadow-none bg-gray-50">
+        <CardContent className="flex flex-col items-center justify-center h-32 text-gray-400">
+          <p>Belum ada materi tersedia.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // supaya urut
+  const sortedModules = [...modules].sort(
+    (a, b) => a.order_number - b.order_number
+  );
+
   return (
-    <Accordion type="single" collapsible className="w-full space-y-4">
-      {/* {console.log('hai', modules)} */}
-      {modules.map(module => (
-        <AccordionItem
-          key={module.id}
-          value={`module-${module.id}`}
-          className="rounded-lg border bg-white shadow-sm dark:bg-gray-800"
-        >
-          <AccordionTrigger
-            className="flex justify-between items-center p-4 text-left 
-                       hover:no-underline font-semibold text-gray-900 dark:text-white"
-          >
-            <div className="flex flex-col items-start">
-              <span className="text-base">{module.title}</span>
-              <div className="flex items-center text-sm text-muted-foreground mt-1">
-                <span className="mr-2">Progress: {module.moduleProgress}%</span>
-                <Progress
-                  value={module.moduleProgress}
-                  className="h-2 w-32 bg-gray-300 dark:bg-gray-700 [&>div]:bg-teal-500"
-                />
-              </div>
-            </div>
-          </AccordionTrigger>
+    <Card className="border-none shadow-md">
+      <CardHeader>
+        <CardTitle className="text-xl font-bold text-gray-800">
+          Materi Pembelajaran
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <Accordion type="single" collapsible className="w-full">
+          {sortedModules.map((module, index) => (
+            <AccordionItem
+              key={module.id}
+              value={`item-${module.id}`}
+              className="px-4 hover:bg-gray-50/50 transition-colors border-b last:border-b-0"
+            >
+              <AccordionTrigger className="hover:no-underline py-4">
+                <div className="flex items-center gap-4 text-left w-full">
+                  {/* Nomor Urur/ Icon */}
+                  <div className="shrink-0 w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-bold text-sm">
+                    {index + 1}
+                  </div>
 
-          {/*  konten module */}
-          <AccordionContent className="p-0 border-t dark:border-gray-700">
-            {module.lessons.map(lesson => (
-              <div
-                key={lesson.id}
-                className="flex items-center justify-between p-4 pl-8 border-b last:border-b-0 
-                           hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-              >
-                <Link
-                  to={`/courses/${courseId}/lesson/${lesson.id}`}
-                  className="flex items-center grow text-gray-700 dark:text-gray-200"
-                >
-                  {lesson.isCompleted ? (
-                    <CheckCircle className="h-5 w-5 mr-3 text-teal-500 fill-teal-500/10" />
-                  ) : (
-                    <CheckCircle className="h-5 w-5 mr-3 text-muted-foreground" />
-                  )}
-                  <span
-                    className={
-                      lesson.isCompleted
-                        ? 'line-through text-muted-foreground'
-                        : ''
-                    }
+                  {/* Judul Modul */}
+                  <div className="flex-1">
+                    <h3 className="text-base font-semibold text-gray-800">
+                      {module.title}
+                    </h3>
+                  </div>
+
+                  {/* Badge samping */}
+                  <Badge
+                    variant="outline"
+                    className="hidden sm:flex border-teal-200 text-teal-700 font-normal ml-2"
                   >
-                    {lesson.title}
-                  </span>
-                </Link>
+                    <BookOpen className="w-3 h-3 mr-1" />
+                    Bacaan
+                  </Badge>
+                </div>
+              </AccordionTrigger>
 
-                <span className="text-sm text-muted-foreground">
-                  {lesson.duration}
-                </span>
-              </div>
-            ))}
-          </AccordionContent>
-        </AccordionItem>
-      ))}
-    </Accordion>
+              <AccordionContent className="pl-14 pr-4 pb-4 text-gray-600 leading-relaxed">
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <div className="flex items-start gap-2 mb-2">
+                    <FileText className="w-4 h-4 text-gray-400 mt-1" />
+                    <span className="font-semibold text-gray-700">
+                      Deskripsi:
+                    </span>
+                  </div>
+                  {module.content.slice(0, 150)}.....
+                  <div className="mt-4">
+                    <button className="text-sm text-teal-600 font-medium hover:underline">
+                      Lihat Materi Lengkap &rarr;
+                    </button>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </CardContent>
+    </Card>
   );
 }

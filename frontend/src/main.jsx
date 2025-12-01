@@ -7,7 +7,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import CourseListPage from './pages/Course/CourseListPage';
 import Profile from './components/Profile/Profile';
 import CourseDetailPage from './pages/Course/CourseDetailPage';
-import LessonListPage from './pages/Lesson/LessonListPage';
+import ModuleListPage from './pages/Module/ModuleListPage';
 import { LayoutProvider } from './contexts/LayoutContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './pages/Auth/LoginPage';
@@ -33,10 +33,8 @@ createRoot(document.getElementById('root')).render(
 
                   <Route path=":courseId">
                     <Route index element={<CourseDetailPage />} />
-                    <Route
-                      path="lesson/:lessonId"
-                      element={<LessonListPage />}
-                    />
+
+                    <Route path="modules" element={<ModuleListPage />} />
                   </Route>
                 </Route>
 
