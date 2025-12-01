@@ -82,6 +82,31 @@
 
 /**
  * @swagger
+ * /api/enrolments/finished-classes:
+ *   get:
+ *     summary: Ambil daftar kelas yang sudah selesai 100% (Finished Course)
+ *     tags: [Class Enrolments]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List kelas finished berhasil diambil
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/MyClass'
+ *       500:
+ *         description: Server error
+ */
+
+
+/**
+ * @swagger
  * /api/enrolments/class-students/{classId}:
  *   get:
  *     summary: Lihat daftar siswa dalam satu kelas (Teacher/Admin)
