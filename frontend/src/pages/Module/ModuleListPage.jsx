@@ -4,6 +4,8 @@ import { fetchCourseModules } from '@/lib/api/services/courseService';
 import ModuleSidebar from '@/components/Module/ModuleSIdebar';
 import ModuleContent from '@/components/Module/ModuleContent';
 import { useLayout } from '@/hooks/useLayout';
+import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 const LearningPage = () => {
   const { courseId } = useParams();
@@ -60,20 +62,34 @@ const LearningPage = () => {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
+      {/* Sidebar */}
       <ModuleSidebar
         modules={modules}
         currentIndex={currentIndex}
         onSelect={handleSelectModule}
       />
 
+      {/* Main Area */}
       <main className="flex-1 ml-80 h-screen overflow-y-auto relative bg-gray-50">
-        <div className="w-full p-4 md:p-6 pb-20">
+        {/* Navbar */}
+        <nav className="fixed top-0 left-80 right-0 h-14 bg-white border-b shadow-sm z-50 flex items-center px-4">
+          <Link
+            to={`/courses/${courseId}`}
+            className="flex items-center text-teal-600 hover:text-teal-700 font-medium"
+          >
+            ← Kembali ke Kelas
+          </Link>
+        </nav>
+
+        {/* Content wrapper (kasih padding-top supaya tidak ketimpa navbar) */}
+        <div className="w-full p-4 md:p-6 pb-20 pt-16 mt-5">
           <ModuleContent
             module={modules[currentIndex]}
             currentIndex={currentIndex}
             totalModules={modules.length}
             onNext={handleNext}
             onPrev={handlePrev}
+            courseId={courseId}
           />
         </div>
       </main>

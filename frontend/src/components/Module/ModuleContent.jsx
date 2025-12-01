@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft, ChevronRight, BookOpen, PlayCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen } from 'lucide-react';
 
 const ModuleContent = ({
   module,
