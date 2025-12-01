@@ -17,11 +17,10 @@ const ModuleContent = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // handle tombol supaya aman
   const handleFinishClick = async () => {
     try {
       setIsSubmitting(true);
-      await onComplete(); //props tunggu sampe selesai
+      await onComplete();
     } catch (error) {
       console.error('Error completing module', error);
     } finally {
@@ -29,7 +28,6 @@ const ModuleContent = ({
     }
   };
 
-  // Cek apakah ini modul terakhir
   const isLastModule = currentIndex === totalModules - 1;
 
   return (

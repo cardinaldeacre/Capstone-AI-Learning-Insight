@@ -134,13 +134,13 @@ const LearningPage = () => {
   //menandai module yg selesai
   const handleMarkAsComplete = async () => {
     const currentModule = modules[currentIndex];
-    if (!currentIndex) return;
+    if (!currentModule) return;
 
     try {
       await fetchCompleteModuleProgress(currentModule.id);
 
       setModules(prevModules => {
-        const updated = prevModules.map((mod, idx) =>
+        return prevModules.map((mod, idx) =>
           idx === currentIndex
             ? {
                 ...mod,
@@ -149,7 +149,6 @@ const LearningPage = () => {
               }
             : mod
         );
-        return updated;
       });
 
       setProgressStats(prev => {
@@ -163,8 +162,10 @@ const LearningPage = () => {
 
       handleNext();
     } catch (err) {
-      console.error('Gagal menyelesaikan modul', err);
-      alert('Terjadi kesalahan saat menyimpan progress.');
+      console.error('ERROR LENGKAP:', err);
+      console.error('Response Server:', err.response?.data);
+
+      alert('Gagal menyimpan progress. Silakan coba lagi.');
     }
   };
 
@@ -196,6 +197,7 @@ const LearningPage = () => {
         {/* module content */}
         <div className="w-full p-4 md:p-6 pb-20 pt-16 mt-5">
           <ModuleContent
+            key={modules[currentIndex]?.id}
             module={modules[currentIndex]}
             currentIndex={currentIndex}
             totalModules={modules.length}
