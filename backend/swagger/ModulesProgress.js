@@ -35,7 +35,7 @@
 
 /**
  * @swagger
- * /api/progress/class/{classId}:
+ * /api/modules-progress/class/{classId}:
  *   get:
  *     summary: Ambil progress belajar siswa di kelas tertentu
  *     tags: [Module Progress]
@@ -77,7 +77,7 @@
 
 /**
  * @swagger
- * /api/progress/{moduleId}/start:
+ * /api/modules-progress/{moduleId}/start:
  *   post:
  *     summary: Tandai modul dimulai (Start)
  *     description: Dipanggil saat siswa pertama kali membuka materi.
@@ -100,7 +100,7 @@
 
 /**
  * @swagger
- * /api/progress/{moduleId}/complete:
+ * /api/modules-progress/{moduleId}/complete:
  *   put:
  *     summary: Tandai modul selesai (Complete)
  *     description: Dipanggil saat siswa menyelesaikan materi/video.
