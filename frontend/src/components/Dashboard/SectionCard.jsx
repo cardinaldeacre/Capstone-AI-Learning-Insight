@@ -11,10 +11,12 @@ import {
 import { Progress } from "@/components/ui/progress"
 import { fetchFinishedCourses } from "@/lib/api/services/classEnrolmentService"
 import { fetchCourseStudentList } from "@/lib/api/services/courseService"
-import { useEffect, useState } from "react"
+import { fetchClassProgress } from "@/lib/api/services/moduleProgressService"
+import { useEffect, useId, useState } from "react"
+import CourseCard from "./CourseCard"
 
 export default function SectionCard() {
-    const [progress, setProgress] = useState(75)
+    const [progress, setProgress] = useState([])
     const [MyCourse, setMyCourse] = useState([]);
     const [finishedCourse, setFinishedCourse] = useState([]);
     const user = JSON.parse(localStorage.getItem('user'))
@@ -22,77 +24,46 @@ export default function SectionCard() {
     const role = user?.role;
 
     useEffect(() => {
-        const loadCourses = async () => {
+        const loadData = async () => {
             try {
-                const data = await fetchCourseStudentList(role, userId);
-                setMyCourse(data)
+                const courseData = await fetchCourseStudentList(role, userId);
+                setMyCourse(Array.isArray(courseData) ? courseData : courseData.data || []);
+
+                const finishedData = await fetchFinishedCourses();
+                setFinishedCourse(finishedData)
             } catch (error) {
                 console.error("Error loading courses:", error.message);
             }
         }
-
-        const loadFinishedCourses = async () => {
-            try {
-                const data = await fetchFinishedCourses();
-                setFinishedCourse(data)
-            } catch (error) {
-                console.error("Error loading courses:", error.message);
-            }
-        }
-
-        loadCourses();
-        loadFinishedCourses();
-
-        const timer = setTimeout(() => setProgress(66), 500)
-        return () => clearTimeout(timer)
-    }, [])
+        console.log('test')
+        loadData();
+    }, [role, userId])
 
     return (
-        <div className="grid grid-cols-1 shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-2">
-            <div>
+        <div className="grid grid-cols-1 gap-5 shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-2">
+            <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm">
                 <h1 className="text-2xl px-6 font-semibold">
                     Course Progress
                 </h1>
-                <Card className="@container/card">
-                    <CardHeader>
-                        <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
-                            Course Name
-                        </CardTitle>
-                        <CardAction>
-                            <Badge variant="outline">
-                                Progress75%
-                            </Badge>
-                        </CardAction>
-                    </CardHeader>
-                    <CardFooter className="flex-col items-start gap-1 text-sm">
-                        <div className="line-clamp-1 flex gap-2 font-medium">
-                            Course description, lorem ipsum
-                        </div>
-                        <Progress value={progress} className='w-100%' />
-                    </CardFooter>
-                </Card>
-                {MyCourse.map((course) => (
-                    <Card key={course.id} className="@container/card">
-                        <CardHeader>
-                            <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
-                                {course.title}
-                            </CardTitle>
-                            <CardAction>
-                                <Badge variant="outline">
-                                    Progress75%
-                                </Badge>
-                            </CardAction>
-                        </CardHeader>
-                        <CardFooter className="flex-col items-start gap-1 text-sm">
-                            <div className="line-clamp-1 flex gap-2 font-medium">
-                                {course.description}
-                            </div>
-                            <Progress value={progress} className='w-100%' />
-                        </CardFooter>
-                    </Card>
-                ))}
+
+                {MyCourse.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-4 px-6 w-full">
+                        {MyCourse.slice(0, 5).map((course) => (
+                            <CourseCard key={course.id || course.class_id} course={course} />
+                        ))}
+                    </div>
+                ) : (
+                    <p className="px-6 text-gray-500">You have no any classes yet.</p>
+                )}
+                {MyCourse.length > 5 && (
+                    <div className="px-6 mt-6 text-center">
+                        <Link className="w-full">
+                            Check all Classes
+                        </Link>
+                    </div>
+                )}
             </div>
-            <div>
+            <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm">
                 <h1 className="text-2xl px-6 font-semibold mb-4">
                     Class Finished
                 </h1>
