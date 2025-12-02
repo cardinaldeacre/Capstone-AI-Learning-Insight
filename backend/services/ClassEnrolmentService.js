@@ -91,7 +91,7 @@ const ClassEnrolmentService = {
 				.join('class_assignment as ca', 'cs.assignment_id', 'ca.id')
 				.where('ca.class_id', kelas.class_id)
 				.where('cs.student_id', studentId)
-				.whereIn('cs.status', 'graded')
+				.whereIn('cs.status', ['submitted', 'graded'])
 				.count('cs.id as count').first();
 			const submittedAssignments = parseInt(submittedAssignmentsRes.count) || 0;
 
