@@ -7,7 +7,7 @@ import { Link } from "react-router";
 
 const CardAction = ({ children }) => <div className="ml-auto">{children}</div>;
 
-export default function CourseCard({ course }) {
+export default function ShortCourseCard({ course }) {
     const [progressStats, setProgressStats] = useState({
         percentage: 0,
         completed: 0,
@@ -57,12 +57,6 @@ export default function CourseCard({ course }) {
                     </CardAction>
                 </CardHeader>
 
-                {/* <div className="grow px-6 py-2">
-                    <p className="text-sm text-muted-foreground line-clamp-3">
-                        {course.description || "no description"}
-                    </p>
-                </div> */}
-
                 <CardFooter className="flex-col items-start gap-3 mt-auto">
                     <div className="w-full space-y-1">
                         <div className="flex justify-between text-xs text-muted-foreground">
@@ -70,7 +64,10 @@ export default function CourseCard({ course }) {
                             <span>{progressStats.percentage}%</span>
                         </div>
 
-                        <Progress value={progressStats.percentage} className="w-full h-2" />
+                        <div
+                            className="h-2 rounded-full transition-all duration-1000 bg-teal-600"
+                            style={{ width: `${progressStats?.percentage || 0}%` }}
+                        ></div>
                     </div>
 
                     <div className="flex justify-between w-full text-xs text-gray-400">

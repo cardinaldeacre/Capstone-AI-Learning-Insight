@@ -19,7 +19,8 @@ import SidebarUserProfile from './SidebarUserProfile';
 export default function AppSidebar() {
   const menuItems = [
     { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' },
-    { title: 'Courses', icon: BookOpen, url: '/courses' },
+    { title: 'My Course', icon: BookOpen, url: '/courses' },
+    { title: 'Get Course', icon: BookOpen, url: '/classes' },
     { title: 'Schedule', icon: Calendar, url: '/profile' },
     { title: 'Settings', icon: Settings, url: '#' }
   ];

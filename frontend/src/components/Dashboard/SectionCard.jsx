@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge"
 import {
     Card,
     CardAction,
-    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
@@ -11,12 +10,10 @@ import {
 import { Progress } from "@/components/ui/progress"
 import { fetchFinishedCourses } from "@/lib/api/services/classEnrolmentService"
 import { fetchCourseStudentList } from "@/lib/api/services/courseService"
-import { fetchClassProgress } from "@/lib/api/services/moduleProgressService"
 import { useEffect, useId, useState } from "react"
-import CourseCard from "./CourseCard"
+import CourseCard from "../Course/ShortCourseCard"
 
 export default function SectionCard() {
-    const [progress, setProgress] = useState([])
     const [MyCourse, setMyCourse] = useState([]);
     const [finishedCourse, setFinishedCourse] = useState([]);
     const user = JSON.parse(localStorage.getItem('user'))

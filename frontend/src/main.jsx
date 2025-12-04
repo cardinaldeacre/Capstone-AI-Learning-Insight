@@ -12,6 +12,7 @@ import { LayoutProvider } from './contexts/LayoutContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './pages/Auth/LoginPage';
 import { AuthProvider } from './contexts/AuthContext';
+import ClassListPage from './pages/Classes/ClassListPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -36,6 +37,10 @@ createRoot(document.getElementById('root')).render(
 
                     <Route path="modules" element={<ModuleListPage />} />
                   </Route>
+                </Route>
+
+                <Route path="classes">
+                  <Route index element={<ClassListPage />} />
                 </Route>
 
                 <Route path="/profile" element={<Profile />} />
