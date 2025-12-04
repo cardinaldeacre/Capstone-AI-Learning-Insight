@@ -10,12 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Badge } from "../ui/badge";
 import { enrollClass } from "@/lib/api/services/classEnrolmentService";
 import { useNavigate } from "react-router";
 import { Loader2, BookOpen, CheckCircle } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
+import { fetchModulesByClass } from "@/lib/api/services/moduleService";
+import { ScrollArea } from "../ui/scroll-area";
 
 const CardAction = ({ children }) => <div className="ml-auto">{children}</div>;
 
@@ -54,8 +55,27 @@ export default function GetCourseCard({ course }) {
 
     loadProgress();
 
+
     return () => { isMounted = false; };
   }, [classId]);
+
+  useEffect(() => {
+    if (isOpen && classId && modules.length === 0) {
+      const loadModules = async () => {
+        setLoadingModules(true);
+        try {
+          const data = await fetchModulesByClass(classId);
+          setModules(Array.isArray(data) ? data : data.data || [])
+        } catch (error) {
+          console.error("Gagal mengambil modul:", error);
+        } finally {
+          setLoadingModules(false);
+        }
+      }
+
+      loadModules();
+    }
+  }, [isOpen, classId, modules.length]);
 
   const handleJoinClass = async () => {
     setIsEnrolling(true);
@@ -70,8 +90,6 @@ export default function GetCourseCard({ course }) {
   }
 
   const isCompleted = progressStats.percentage === 100;
-  const badgeText = isCompleted ? "Selesai" : `${progressStats.percentage}% Progress`;
-  const badgeVariant = isCompleted ? "default" : "outline";
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
