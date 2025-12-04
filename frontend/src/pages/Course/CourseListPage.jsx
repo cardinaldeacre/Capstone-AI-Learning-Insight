@@ -4,46 +4,51 @@ import CourseCard from '@/components/Course/CourseCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
+import useAuth from '@/hooks/useAuth'; 
+import TeacherClassesPage from './TeacherClassesPage';
 
 export default function CourseListPage() {
+  const { auth } = useAuth(); 
+  const userRole = auth.user?.role;
+  const isStudent = userRole === 'student' || !userRole;
+
   const [courses, setCourses] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     const loadCourses = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const data = await fetchCourseStudentList();
-        if (data && data.data) {
-          setCourses(data.data);
-        } else if (Array.isArray(data)) {
-          setCourses(data);
-        } else {
-          setCourses([]);
+      if (isStudent) {
+        setIsLoading(true);
+        setError(null);
+        try {
+          const data = await fetchCourseStudentList(); 
+          setCourses(Array.isArray(data) ? data : data.data || []);
+        } catch (err) {
+          setError(err.message);
+          console.error(err);
+        } finally {
+          setIsLoading(false);
         }
-      } catch (err) {
-        setError(err.message);
-        console.error(err);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     loadCourses();
-  }, []);
+  }, [isStudent]);
 
-  console.log('Rendering Check: courses type:', typeof courses);
-  console.log('Rendering Check: courses length:', courses?.length);
-  console.log('Rendering Check: Actual courses data:', courses);
+  if (!isStudent) {
+    return <TeacherClassesPage />;
+  }
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[...Array(6)].map((_, i) => (
-          <Skeleton key={i} className="h-48 w-full rounded-xl" />
-        ))}
+      <div className="space-y-2">
+        <Skeleton className="h-12 w-full" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-48" />
+          ))}
+        </div>
       </div>
     );
   }
@@ -71,15 +76,14 @@ export default function CourseListPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses && courses.length > 0 ? (
-          courses.map(course => <CourseCard key={course.id} course={course} />)
+          courses.map(course => <CourseCard key={course.id || course.class_id} course={course} />)
         ) : (
           <div className="col-span-full py-10 text-center">
             <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-300">
               Kursus Tidak Ditemukan
             </h3>
             <p className="text-muted-foreground mt-2">
-              Tidak ada kursus yang tersedia untuk Anda saat ini. Silakan cek
-              kembali nanti.
+              Anda belum terdaftar di kelas manapun.
             </p>
           </div>
         )}
