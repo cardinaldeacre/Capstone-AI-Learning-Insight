@@ -2,7 +2,7 @@ import axiosClient from "../axiosClient";
 
 const ENROLL_ENPOINTS = {
     finishedCourse: '/enrolment/finished-classes',
-    joinClass: classId => `/enrolments/${classId}`
+    joinClass: classId => `/enrolment/${classId}`
 }
 
 export const fetchFinishedCourses = async () => {
