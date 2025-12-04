@@ -21,8 +21,6 @@ export default function AppSidebar() {
     { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' },
     { title: 'My Course', icon: BookOpen, url: '/courses' },
     { title: 'Get Course', icon: BookOpen, url: '/classes' },
-    { title: 'Schedule', icon: Calendar, url: '/profile' },
-    { title: 'Settings', icon: Settings, url: '#' }
   ];
 
   return (
