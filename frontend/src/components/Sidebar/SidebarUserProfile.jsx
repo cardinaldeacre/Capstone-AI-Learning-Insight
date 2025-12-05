@@ -14,10 +14,12 @@ import {
   SidebarMenuButton
 } from '@/components/ui/sidebar';
 import useAuth from '@/hooks/useAuth';
+import SimpleAvatar from '../Profile/SimpleAvatar';
 
 export default function SidebarUserProfile() {
-  const userName = 'Rizky Cahyono Putra';
   const { logout } = useAuth();
+  const { auth } = useAuth();
+  const username = auth.user?.name;
 
   const handleLogout = () => {
     logout();
@@ -31,10 +33,9 @@ export default function SidebarUserProfile() {
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton className="w-full flex items-center justify-between h-12 hover:bg-gray-100 dark:hover:bg-gray-800">
                 <div className="flex items-center gap-8">
-                  <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold">
-                    {userName[0]}
-                  </div>
-                  <span>{userName[0]}</span>
+                  <SimpleAvatar username={username} size={35} />
+
+                  <span>{username}</span>
                 </div>
                 <ChevronUp className="ml-auto h-4 w-4 text-muted-foreground" />
               </SidebarMenuButton>
