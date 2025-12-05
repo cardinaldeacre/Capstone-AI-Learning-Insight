@@ -1,5 +1,5 @@
-import SectionCard from "./SectionCard";
-import HeaderCard from "./HeaderCard";
+import SectionCard from "../../components/Dashboard/SectionCard";
+import HeaderCard from "../../components/Dashboard/HeaderCard";
 
 export default function Dashboard() {
   return (

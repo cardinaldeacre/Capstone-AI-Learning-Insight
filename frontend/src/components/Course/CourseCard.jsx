@@ -1,61 +1,86 @@
-import { Link } from 'react-router';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+import { fetchClassProgress } from "@/lib/api/services/moduleProgressService";
+import { useEffect, useState } from "react";
+import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Link } from "react-router";
+
+const CardAction = ({ children }) => <div className="ml-auto">{children}</div>;
 
 export default function CourseCard({ course }) {
-  const { id, title, description, teacher_name, progress } = course;
+  const [progressStats, setProgressStats] = useState({
+    percentage: 0,
+    completed: 0,
+    total: 0
+  });
+  const [loading, setLoading] = useState(true);
+  const classId = course.id || course.class_id;
 
-  const numericProgress = parseInt(progress, 10) || 0;
-  const isCompleted = numericProgress === 100;
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadData = async () => {
+      try {
+        const response = await fetchClassProgress(classId);
+        if (isMounted && response.stats) {
+          setProgressStats(response.stats);
+        }
+      } catch (error) {
+        console.error("Error loading courses:", error.message);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    loadData();
+  }, [classId]);
+
+  const isCompleted = progressStats.percentage === 100;
+  const badgeText = isCompleted ? "Selesai" : `${progressStats.percentage}% Progress`;
+  const badgeVariant = isCompleted ? "default" : "outline";
 
   return (
-    <Link to={`/courses/${id}`} className="group block h-full">
+    <Link to={`/courses/${classId}`} className="group block h-full w-full">
       <Card
-        className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300 ease-in-out 
+        className="@container/card flex flex-col h-full w-full hover:shadow-md transition-shadow cursor-pointer 
                    bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700"
       >
-        {/* Header */}
-        <CardHeader className="grow pb-2">
-          <CardDescription className="text-teal-500 font-semibold uppercase text-xs mb-1 dark:text-teal-400">
-            Module 1
-          </CardDescription>
+        <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+          <CardTitle className="text-xl font-semibold tabular-nums line-clamp-2 leading-tight">
+            {course.title}
+          </CardTitle>
 
-          <CardTitle className="text-lg font-bold leading-snug group-hover:text-teal-600 transition-colors">
-            {title}
-          </CardTitle>
-          <CardTitle className="text-md text-gray-600 dark:text-gray-400 line-clamp-2 ">
-            {teacher_name}
-          </CardTitle>
+          <CardAction>
+            <Badge variant={badgeVariant} className={isCompleted ? "bg-green-600 hover:bg-green-700" : ""}>
+              {loading ? "..." : badgeText}
+            </Badge>
+          </CardAction>
         </CardHeader>
 
-        {/* Content */}
-        <CardContent className="pt-0 pb-4">
-          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-2">
-            {description}
+        <div className="grow px-6">
+          <p className="text-sm text-muted-foreground line-clamp-3">
+            {course.description || "no description"}
           </p>
-        </CardContent>
+        </div>
 
-        {/* Progress */}
-        <CardFooter className="pt-5">
-          <div className="w-full">
-            <p className="text-xs text-gray-500 mb-1">
-              Progress{isCompleted ? ' (Completed)' : ''}: {numericProgress}%
-            </p>
+        <CardFooter className="flex-col items-start gap-3 mt-auto">
+          <div className="w-full space-y-1">
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>Learning Progress</span>
+              <span>{progressStats.percentage}%</span>
+            </div>
 
-            <Progress
-              value={numericProgress}
-              className="h-2 bg-gray-200 dark:bg-gray-700 [&>div]:bg-teal-500"
-            />
+            <div
+              className="h-2.5 rounded-full transition-all duration-1000 bg-teal-600"
+              style={{ width: `${progressStats?.percentage || 0}%` }}
+            ></div>
+          </div>
+
+          <div className="flex justify-between w-full text-xs text-gray-400">
+            <span>{progressStats.completed}/{progressStats.total} Modul</span>
+            {course.teacher_name && <span>Mentor: {course.teacher_name}</span>}
           </div>
         </CardFooter>
       </Card>
     </Link>
   );
-}
+}   

@@ -10,12 +10,12 @@ const ClassEnrolmentService = {
 			throw new Error('already_enrolled');
 		}
 
-		const [enrolment] = await knex('class_enrolment');
-		insert({
-			student_id: studentId,
-			class_id: classId,
-			enrolled_at: knex.fn.now(),
-		}).returning('*');
+		const [enrolment] = await knex('class_enrolment').
+			insert({
+				student_id: studentId,
+				class_id: classId,
+				enrolled_at: knex.fn.now(),
+			}).returning('*');
 
 		return enrolment;
 	},
