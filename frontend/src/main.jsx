@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import MainLayout from './layouts/MainLayout';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Dashboard from './components/Dashboard/Dashboard';
+import Dashboard from './pages/Dashboard/Dashboard';
 import CourseListPage from './pages/Course/CourseListPage';
 import Profile from './components/Profile/Profile';
 import CourseDetailPage from './pages/Course/CourseDetailPage';
