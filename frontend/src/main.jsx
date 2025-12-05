@@ -21,6 +21,7 @@ createRoot(document.getElementById('root')).render(
         <LayoutProvider>
           <Routes>
             {/* publik */}
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
 
             {/* private */}
