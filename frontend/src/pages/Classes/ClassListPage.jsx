@@ -3,7 +3,7 @@ import { fetchCourseList } from '@/lib/api/services/courseService';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
-import GetCourseCard from '@/components/Course/getCourseCard';
+import GetCourseCard from '@/components/Course/GetCourseCard';
 
 export default function ClassListPage() {
   const [courses, setCourses] = useState();
@@ -71,7 +71,9 @@ export default function ClassListPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses && courses.length > 0 ? (
-          courses.map(course => <GetCourseCard key={course.id} course={course} />)
+          courses.map(course => (
+            <GetCourseCard key={course.id} course={course} />
+          ))
         ) : (
           <div className="col-span-full py-10 text-center">
             <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-300">
