@@ -15,6 +15,7 @@ import useAuth from '@/hooks/useAuth';
 const LearningPage = () => {
   const { auth } = useAuth();
   const userRole = auth.user?.role;
+  const isTeacher = userRole === 'teacher';
   const { courseId } = useParams();
   const { toggleSidebar } = useLayout();
 
@@ -185,12 +186,21 @@ const LearningPage = () => {
 
       <main className="flex-1 ml-80 h-screen overflow-y-auto relative bg-gray-50">
         <nav className="fixed top-0 left-80 right-0 h-14 bg-white border-b shadow-sm z-50 flex items-center px-4">
-          <Link
-            to={`/courses/${courseId}`}
-            className="flex items-center text-teal-600 hover:text-teal-700 font-medium"
-          >
-            ← Kembali ke Kelas
-          </Link>
+          {isTeacher ? (
+            <Link
+              to={`/courses`}
+              className="flex items-center text-teal-600 hover:text-teal-700 font-medium"
+            >
+              ← Back to courses
+            </Link>
+          ) : (
+            <Link
+              to={`/courses/${courseId}`}
+              className="flex items-center text-teal-600 hover:text-teal-700 font-medium"
+            >
+              ← Back to courses
+            </Link>
+          )}
         </nav>
         <div className="w-full p-4 md:p-6 pb-20 pt-16 mt-5">
           {modules.length > 0 && (
