@@ -97,7 +97,7 @@ export default function TeacherClassesPage() {
     <div className="space-y-6">
       <header className="flex justify-between items-center pb-4 border-b">
         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-          Manajemen Kelas Anda
+          Course
         </h1>
 
         <Button onClick={handleOpenCreate}>
@@ -105,7 +105,7 @@ export default function TeacherClassesPage() {
           Buat Kelas Baru
         </Button>
       </header>
-      
+
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent side="right">
           <SheetHeader>
@@ -115,8 +115,8 @@ export default function TeacherClassesPage() {
           </SheetHeader>
           <div className="pt-6">
             <ClassForm
-            
-              initialData={editingClass} 
+
+              initialData={editingClass}
               isEdit={!!editingClass}
               onSuccess={loadClasses}
               onClose={() => setIsSheetOpen(false)}
