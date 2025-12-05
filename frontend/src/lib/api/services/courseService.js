@@ -7,7 +7,10 @@ const COURSE_ENDPOINTS = {
   moduleByClass: classId => `/modules/class/${classId}`,
   getModuleProgess: classId => `/modules-progress/class/${classId}`,
   startModuleProgress: moduleId => `/modules-progress/${moduleId}/start`,
-  completeModuleProgress: moduleId => `/modules-progress/${moduleId}/complete`
+  completeModuleProgress: moduleId => `/modules-progress/${moduleId}/complete`,
+  createClass: '/classes',
+  updateClass: id => `/classes/${id}`,
+  deleteClass: id => `/classes/${id}`,
 };
 
 export const fetchCourseList = async () => {
@@ -117,5 +120,43 @@ export const fetchCompleteModuleProgress = async moduleId => {
       error
     );
     throw error;
+  }
+};
+
+export const createClass = async data => {
+  try {
+    const response = await axiosClient.post(COURSE_ENDPOINTS.createClass, data);
+    return response.data;
+  } catch (error) {
+    console.error('[CourseService.createClass] API Error : ', error);
+    const errorMessage =
+      error.response?.data?.message || 'Gagal membuat kelas baru';
+    throw new Error(errorMessage);
+  }
+};
+
+export const updateClass = async (classId, data) => {
+  try {
+    const url = COURSE_ENDPOINTS.updateClass(classId);
+    const response = await axiosClient.put(url, data);
+    return response.data;
+  } catch (error) {
+    console.error('[CourseService.updateClass] API Error : ', error);
+    const errorMessage =
+      error.response?.data?.message || 'Gagal memperbarui kelas';
+    throw new Error(errorMessage);
+  }
+};
+
+export const deleteClass = async classId => {
+  try {
+    const url = COURSE_ENDPOINTS.deleteClass(classId);
+    const response = await axiosClient.delete(url);
+    return response.data;
+  } catch (error) {
+    console.error('[CourseService.deleteClass] API Error : ', error);
+    const errorMessage =
+      error.response?.data?.message || 'Gagal menghapus kelas';
+    throw new Error(errorMessage);
   }
 };

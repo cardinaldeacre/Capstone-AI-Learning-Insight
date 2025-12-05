@@ -10,8 +10,8 @@ import {
 import { Progress } from "@/components/ui/progress"
 import { fetchFinishedCourses } from "@/lib/api/services/classEnrolmentService"
 import { fetchCourseStudentList } from "@/lib/api/services/courseService"
-import { useEffect, useId, useState } from "react"
-import CourseCard from "../Course/ShortCourseCard"
+import { useEffect, useState } from "react"
+import CourseCard from "./CourseCard"
 
 export default function SectionCard() {
     const [MyCourse, setMyCourse] = useState([]);
