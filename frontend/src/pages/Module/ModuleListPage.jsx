@@ -10,9 +10,11 @@ import ModuleSidebar from '@/components/Module/ModuleSIdebar';
 import ModuleContent from '@/components/Module/ModuleContent';
 import { useLayout } from '@/hooks/useLayout';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import useAuth from '@/hooks/useAuth';
 
 const LearningPage = () => {
+  const { auth } = useAuth();
+  const userRole = auth.user?.role;
   const { courseId } = useParams();
   const { toggleSidebar } = useLayout();
 
@@ -97,10 +99,10 @@ const LearningPage = () => {
             prevModules.map((mod, idx) =>
               idx === currentIndex
                 ? {
-                    ...mod,
-                    isStarted: true,
-                    started_at: new Date().toISOString()
-                  }
+                  ...mod,
+                  isStarted: true,
+                  started_at: new Date().toISOString()
+                }
                 : mod
             )
           );
@@ -143,10 +145,10 @@ const LearningPage = () => {
         return prevModules.map((mod, idx) =>
           idx === currentIndex
             ? {
-                ...mod,
-                isCompleted: true,
-                completed_at: new Date().toISOString()
-              }
+              ...mod,
+              isCompleted: true,
+              completed_at: new Date().toISOString()
+            }
             : mod
         );
       });
@@ -170,12 +172,9 @@ const LearningPage = () => {
   };
 
   if (loading) return <div className="p-10 text-center">Memuat materi...</div>;
-  if (modules.length === 0)
-    return <div className="p-10 text-center">Belum ada modul tersedia.</div>;
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
-      {/* Sidebar */}
       <ModuleSidebar
         modules={modules}
         currentIndex={currentIndex}
@@ -183,8 +182,8 @@ const LearningPage = () => {
         progressStats={progressStats}
       />
 
+
       <main className="flex-1 ml-80 h-screen overflow-y-auto relative bg-gray-50">
-        {/* Navbar  atas modulecontent*/}
         <nav className="fixed top-0 left-80 right-0 h-14 bg-white border-b shadow-sm z-50 flex items-center px-4">
           <Link
             to={`/courses/${courseId}`}
@@ -193,19 +192,22 @@ const LearningPage = () => {
             ← Kembali ke Kelas
           </Link>
         </nav>
-
-        {/* module content */}
         <div className="w-full p-4 md:p-6 pb-20 pt-16 mt-5">
-          <ModuleContent
-            key={modules[currentIndex]?.id}
-            module={modules[currentIndex]}
-            currentIndex={currentIndex}
-            totalModules={modules.length}
-            onNext={handleNext}
-            onPrev={handlePrev}
-            onComplete={handleMarkAsComplete}
-            courseId={courseId}
-          />
+          {modules.length > 0 && (
+            <ModuleContent
+              key={modules[currentIndex]?.id}
+              module={modules[currentIndex]}
+              currentIndex={currentIndex}
+              totalModules={modules.length}
+              onNext={handleNext}
+              onPrev={handlePrev}
+              onComplete={handleMarkAsComplete}
+              courseId={courseId}
+            />
+          )}
+          {modules.length === 0 && (
+            <div className="p-10 text-center text-gray-600 hover:text-red-gray font-medium">No any module yet!</div>
+          )}
         </div>
       </main>
     </div>
