@@ -16,7 +16,7 @@ export const fetchUser = async (roleFilter = null) => {
     } catch (error) {
         console.error('[UserService.fetchUsers] Error:', error);
         throw new Error(
-            error.response?.data?.message || 'Gagal memuat data pengguna'
+            error.response?.data?.message || 'Failed to fetch users'
         );
     }
 };
@@ -28,7 +28,7 @@ export const createUser = async userData => {
     } catch (error) {
         console.error('[UserService.createUser] Error:', error);
         throw new Error(
-            error.response?.data?.message || 'Gagal membuat pengguna'
+            error.response?.data?.message || 'Failed to create user'
         );
     }
 }
@@ -40,7 +40,7 @@ export const fetchUserDetail = async userId => {
     } catch (error) {
         console.error(`[UserService.fetchUserDetail] Error for ID ${userId}`, error);
         throw new Error(
-            error.response?.data?.message || 'Gagal memuat detail pengguna'
+            error.response?.data?.message || 'Failed to fetch user details'
         );
     }
 }
@@ -52,7 +52,7 @@ export const updateUser = async (userId, updateData) => {
     } catch (error) {
         console.error(`[UserService.updateUser] Error for ID ${userId}`, error);
         throw new Error(
-            error.response?.data?.message || 'Gagal memperbarui pengguna'
+            error.response?.data?.message || 'Failed to update user'
         );
     }
 }
@@ -64,7 +64,31 @@ export const deleteUser = async userId => {
     } catch (error) {
         console.error(`[UserService.deleteUser] Error for ID ${userId}`, error);
         throw new Error(
-            error.response?.data?.message || 'Gagal menghapus pengguna'
+            error.response?.data?.message || 'Failed to delete user'
         );
     }
 };
+
+export const registerStudent = async userData => {
+    try {
+        const response = await axiosClient.post('/users/student', userData); 
+        return response.data;
+    } catch (error) {
+        console.error('[UserService.registerStudent] Error:', error);
+        throw new Error(
+            error.response?.data?.message || 'failed to register as a student'
+        );
+    }
+};
+
+export const registerTeacher = async userData => {
+    try {
+       const response = await axiosClient.post('/users/teacher', userData);
+        return response.data;
+    } catch (error) {
+        console.error('[UserService.registerTeacher] Error:', error);
+        throw new Error(
+            error.response?.data?.message || 'failed to register as a mentor'
+        );
+    }
+}

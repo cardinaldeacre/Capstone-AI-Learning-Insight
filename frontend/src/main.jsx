@@ -11,6 +11,7 @@ import ModuleListPage from './pages/Module/ModuleListPage';
 import { LayoutProvider } from './contexts/LayoutContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './pages/Auth/LoginPage';
+import Register from './pages/Auth/RegisterPage';
 import { AuthProvider } from './contexts/AuthContext';
 import ClassListPage from './pages/Classes/ClassListPage';
 
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')).render(
             {/* publik */}
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register/>}/>
 
             {/* private */}
             <Route element={<ProtectedRoute />}>
