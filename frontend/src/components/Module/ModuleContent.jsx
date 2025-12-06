@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
@@ -6,6 +6,10 @@ import {
   CheckCircle,
   Loader2
 } from 'lucide-react';
+import useAuth from '@/hooks/useAuth';
+import { fetchQuizByModule } from '@/lib/api/services/quizService';
+import TeacherActionPanel from './TeacherActionPanel';
+import StudentQuizPanel from './StudentQuizPanel';
 
 const ModuleContent = ({
   module,
@@ -13,9 +17,25 @@ const ModuleContent = ({
   totalModules,
   onNext,
   onPrev,
-  onComplete
+  onComplete,
+  courseId
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [quizzes, setQuizzes] = useState([]);
+
+  const { auth } = useAuth();
+  const userRole = auth.user?.role;
+  const isTeacher = userRole === 'teacher';
+
+  useEffect(() => {
+    const loadQuizzes = async () => {
+      if (module?.id) {
+        const data = await fetchQuizByModule(module.id);
+        setQuizzes(data || []);
+      }
+    }
+    loadQuizzes()
+  }, [module]);
 
   const handleFinishClick = async () => {
     try {
@@ -27,6 +47,10 @@ const ModuleContent = ({
       setIsSubmitting(false);
     }
   };
+
+  const handleEditModule = () => {
+
+  }
 
   const isLastModule = currentIndex === totalModules - 1;
 
@@ -42,9 +66,7 @@ const ModuleContent = ({
         </span>
       </div>
 
-      {/* main  */}
       <div className="bg-white w-full rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col min-h-[500px]">
-        {/* header */}
         <div className="p-6 md:p-8 border-b border-gray-100 relative">
           <div className="flex justify-between items-start gap-4">
             <div>
@@ -65,7 +87,6 @@ const ModuleContent = ({
           </div>
         </div>
 
-        {/* banner sukses jika sudah selesai*/}
         {module.isCompleted && (
           <div className="bg-green-50 px-8 py-3 border-b border-green-100 flex items-center gap-3 text-green-800 text-sm">
             <CheckCircle size={18} className="text-green-600" />
@@ -83,30 +104,42 @@ const ModuleContent = ({
           </div>
         )}
 
-        {/* content body */}
+        {/* konten */}
         <div className="p-6 md:p-8 flex-1">
           <article className="prose prose-lg max-w-none prose-slate prose-headings:font-bold prose-a:text-teal-600 text-gray-600 leading-relaxed">
             <div className="whitespace-pre-wrap">{module.content}</div>
           </article>
         </div>
 
-        {/* tombol action */}
-        <div className="bg-gray-50 p-6 border-t border-gray-100 flex justify-between items-center sticky bottom-0 z-10">
-          {/* prev */}
-          <button
-            onClick={onPrev}
-            disabled={currentIndex === 0 || isSubmitting}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all
-              ${currentIndex === 0
-                ? 'text-gray-300 cursor-not-allowed'
-                : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300 shadow-sm'
-              }`}
-          >
-            <ChevronLeft size={18} />
-            Previous
-          </button>
+        {isTeacher ? (
+          <TeacherActionPanel
+            quizzes={quizzes}
+            courseId={courseId}
+            onEditModule={handleEditModule}
+          />
+        ) : (
+          <StudentQuizPanel
+            quizzes={quizzes}
+            courseId={courseId}
+          />
+        )}
 
-          {/* next) */}
+        <div className="bg-gray-50 p-6 border-t border-gray-100 flex justify-between items-center sticky bottom-0 z-10">
+          {(currentIndex > 0) && (
+            <button
+              onClick={onPrev}
+              disabled={currentIndex === 0 || isSubmitting}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all
+              ${currentIndex === 0
+                  ? 'text-gray-300 cursor-not-allowed'
+                  : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300 shadow-sm'
+                }`}
+            >
+              <ChevronLeft size={18} />
+              Previous
+            </button>
+          )}
+
           <div className="flex gap-3">
             {module.isCompleted ? (
               <button
@@ -136,7 +169,7 @@ const ModuleContent = ({
                   <>
                     <CheckCircle size={18} />
                     {isLastModule
-                      ? 'Finish && Close'
+                      ? 'Finish & Close'
                       : 'Mark as done & continue'}
                   </>
                 )}
