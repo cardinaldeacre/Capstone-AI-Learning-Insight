@@ -44,7 +44,7 @@ const RegisterPage = () => {
       navigate('/login');
     } catch (error) {
       console.error(error);
-      // FIX: Pesan error yang lebih user-friendly
+    
       setErrorMessage(error.message || 'Pendaftaran gagal. Periksa koneksi atau status server Anda.');
     } finally {
       setIsLoading(false);
@@ -67,7 +67,7 @@ const RegisterPage = () => {
       <Card className="w-full max-w-lg shadow-xl border-none z-10 rounded-3xl">
         <CardHeader className="space-y-1 pb-2">
           <CardTitle className="text-3xl font-extrabold text-center text-gray-800">
-            Daftar Akun Baru
+            Sign up
           </CardTitle>
         </CardHeader>
 
@@ -83,7 +83,7 @@ const RegisterPage = () => {
             {/* Input Name */}
             <div className="space-y-2">
               <Label className="text-gray-600 font-medium ml-1" htmlFor="name">
-                Nama Lengkap
+               Your Name
               </Label>
               <Input
                 id="name"
