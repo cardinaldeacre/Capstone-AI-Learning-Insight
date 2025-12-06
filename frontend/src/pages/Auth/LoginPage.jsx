@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import useAuth from '@/hooks/useAuth'; 
+import useAuth from '@/hooks/useAuth';
 import { useNavigate, Link } from 'react-router-dom';
 
 const LoginPage = () => {
@@ -59,7 +59,7 @@ const LoginPage = () => {
       <Card className="w-full max-w-md shadow-xl border-none z-10 rounded-3xl">
         <CardHeader className="space-y-1 pb-2">
           <CardTitle className="text-3xl font-extrabold text-center text-gray-800">
-            Student Login
+            Login
           </CardTitle>
         </CardHeader>
 
@@ -137,7 +137,7 @@ const LoginPage = () => {
           <div className="text-center text-sm text-gray-600 mt-4">
             didn't have an account?{' '}
             <Link to="/register" className="text-teal-600 hover:underline font-medium">
-              sign up 
+              sign up
             </Link>
           </div>
         </CardContent>
