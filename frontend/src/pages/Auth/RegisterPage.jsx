@@ -83,13 +83,13 @@ const RegisterPage = () => {
             {/* Input Name */}
             <div className="space-y-2">
               <Label className="text-gray-600 font-medium ml-1" htmlFor="name">
-               Your Name
+               Name
               </Label>
               <Input
                 id="name"
                 name="name"
                 type="text"
-                placeholder="Nama Anda"
+                placeholder="your name"
                 className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-teal-600"
                 value={formData.name}
                 onChange={handleChange}
@@ -170,7 +170,7 @@ const RegisterPage = () => {
               className="w-full h-12 text-lg font-semibold rounded-full bg-teal-700 hover:bg-teal-800 transition-colors shadow-lg shadow-teal-700/20"
               disabled={isLoading}
             >
-              {isLoading ? 'Mendaftar...' : 'Daftar'}
+              {isLoading ? 'Sign up...' : 'sign up'}
             </Button>
           </form>
 
