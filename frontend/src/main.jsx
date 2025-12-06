@@ -13,6 +13,9 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './pages/Auth/LoginPage';
 import { AuthProvider } from './contexts/AuthContext';
 import ClassListPage from './pages/Classes/ClassListPage';
+import TeacherModuleCreatePage from './pages/Module/TeacherModuleCreatePage';
+import TeacherModuleEditPage from './pages/Module/TeacherModuleEditPage';
+import TeacherModuleListPage from './pages/Module/TeacherModuleListPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -36,7 +39,20 @@ createRoot(document.getElementById('root')).render(
                   <Route path=":courseId">
                     <Route index element={<CourseDetailPage />} />
 
-                    <Route path="modules" element={<ModuleListPage />} />
+                    <Route path="modules">
+                      <Route index element={<ModuleListPage />} />
+                      <Route path="teacher">
+                        <Route index element={<TeacherModuleListPage />} />
+                        <Route
+                          path="create"
+                          element={<TeacherModuleCreatePage />}
+                        />
+                        <Route
+                          path="edit/:moduleId"
+                          element={<TeacherModuleEditPage />}
+                        ></Route>
+                      </Route>
+                    </Route>
                   </Route>
                 </Route>
 
