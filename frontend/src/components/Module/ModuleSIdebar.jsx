@@ -7,14 +7,14 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
       {/* header */}
       <div className="p-6 border-b border-gray-100 bg-white shrink-0">
         <h2 className="text-lg font-bold text-gray-800 tracking-tight">
-          Daftar Modul
+          Module List
         </h2>
 
         {/* Statistik Progress */}
         <div className="flex justify-between items-end mt-1">
           <p className="text-xs text-gray-500 font-medium">
-            {progressStats?.completed || 0} dari{' '}
-            {progressStats?.total || modules.length} Materi Selesai
+            {progressStats?.completed || 0} of{' '}
+            {progressStats?.total || modules.length} Module finished
           </p>
           <span className="text-xs font-bold text-teal-600">
             {progressStats?.percentage || 0}%
@@ -51,10 +51,9 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                 disabled={isLocked}
                 className={`
                   w-full text-left px-4 py-3 rounded-lg flex items-start gap-3 transition-all duration-200 group border
-                  ${
-                    isActive
-                      ? 'bg-teal-50 text-teal-700 border-teal-100 ring-1 ring-teal-200'
-                      : isLocked
+                  ${isActive
+                    ? 'bg-teal-50 text-teal-700 border-teal-100 ring-1 ring-teal-200'
+                    : isLocked
                       ? 'bg-gray-50 text-gray-400 border-transparent cursor-not-allowed opacity-70'
                       : 'bg-white text-gray-600 border-transparent hover:bg-gray-50 hover:text-gray-900'
                   }
@@ -62,13 +61,12 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
               >
                 {/* icon */}
                 <div
-                  className={`mt-0.5 shrink-0 transition-colors ${
-                    isActive
-                      ? 'text-teal-600'
-                      : isCompleted
+                  className={`mt-0.5 shrink-0 transition-colors ${isActive
+                    ? 'text-teal-600'
+                    : isCompleted
                       ? 'text-teal-500'
                       : 'text-gray-400 group-hover:text-gray-600'
-                  }`}
+                    }`}
                 >
                   {isCompleted ? (
                     <CheckCircle
@@ -92,16 +90,14 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
 
                 <div className="overflow-hidden">
                   <p
-                    className={`text-[10px] font-bold mb-0.5 uppercase tracking-wider ${
-                      isActive ? 'text-teal-600' : 'text-gray-400'
-                    }`}
+                    className={`text-[10px] font-bold mb-0.5 uppercase tracking-wider ${isActive ? 'text-teal-600' : 'text-gray-400'
+                      }`}
                   >
-                    Materi {modul.order_number}
+                    Chapter {modul.order_number}
                   </p>
                   <h3
-                    className={`text-sm font-medium leading-snug truncate ${
-                      isActive ? 'text-gray-900' : 'text-gray-600'
-                    }`}
+                    className={`text-sm font-medium leading-snug truncate ${isActive ? 'text-gray-900' : 'text-gray-600'
+                      }`}
                   >
                     {modul.title}
                   </h3>

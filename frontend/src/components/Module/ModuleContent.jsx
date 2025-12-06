@@ -35,10 +35,10 @@ const ModuleContent = ({
       {/* Breadcrumb */}
       <div className="mb-4 flex items-center gap-2 text-sm text-gray-500">
         <BookOpen size={16} />
-        <span>Modul Pembelajaran</span>
+        <span>Learning Modules</span>
         <span>/</span>
         <span className="text-teal-600 font-medium">
-          Materi {module.order_number}
+          Chapter {module.order_number}
         </span>
       </div>
 
@@ -50,11 +50,11 @@ const ModuleContent = ({
             <div>
               <div className="flex items-center gap-3 mb-3">
                 <span className="bg-teal-50 text-teal-700 border border-teal-100 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                  Materi {module.order_number}
+                  Chapter {module.order_number}
                 </span>
                 {module.isCompleted && (
                   <span className="flex items-center gap-1.5 text-green-600 text-xs font-bold bg-green-50 px-3 py-1 rounded-full border border-green-100">
-                    <CheckCircle size={14} /> Selesai
+                    <CheckCircle size={14} /> Done
                   </span>
                 )}
               </div>
@@ -70,9 +70,9 @@ const ModuleContent = ({
           <div className="bg-green-50 px-8 py-3 border-b border-green-100 flex items-center gap-3 text-green-800 text-sm">
             <CheckCircle size={18} className="text-green-600" />
             <span>
-              Modul ini sudah Anda selesaikan pada{' '}
+              This module had been finished at{' '}
               <b>
-                {new Date(module.completed_at).toLocaleDateString('id-ID', {
+                {new Date(module.completed_at).toLocaleDateString('en-EN', {
                   day: 'numeric',
                   month: 'long',
                   year: 'numeric'
@@ -97,14 +97,13 @@ const ModuleContent = ({
             onClick={onPrev}
             disabled={currentIndex === 0 || isSubmitting}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all
-              ${
-                currentIndex === 0
-                  ? 'text-gray-300 cursor-not-allowed'
-                  : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300 shadow-sm'
+              ${currentIndex === 0
+                ? 'text-gray-300 cursor-not-allowed'
+                : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300 shadow-sm'
               }`}
           >
             <ChevronLeft size={18} />
-            Sebelumnya
+            Previous
           </button>
 
           {/* next) */}
@@ -114,13 +113,12 @@ const ModuleContent = ({
                 onClick={onNext}
                 disabled={isLastModule}
                 className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm
-                  ${
-                    isLastModule
-                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                      : 'bg-white border border-teal-200 text-teal-700 hover:bg-teal-50 hover:border-teal-300'
+                  ${isLastModule
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-white border border-teal-200 text-teal-700 hover:bg-teal-50 hover:border-teal-300'
                   }`}
               >
-                {isLastModule ? 'Materi Habis' : 'Materi Selanjutnya'}
+                {isLastModule ? 'End of modules' : 'Next Chapter'}
                 {!isLastModule && <ChevronRight size={18} />}
               </button>
             ) : (
@@ -132,14 +130,14 @@ const ModuleContent = ({
                 {isSubmitting ? (
                   <>
                     <Loader2 size={18} className="animate-spin" />
-                    Menyimpan...
+                    Saving...
                   </>
                 ) : (
                   <>
                     <CheckCircle size={18} />
                     {isLastModule
-                      ? 'Selesai & Tutup'
-                      : 'Tandai Selesai & Lanjut'}
+                      ? 'Finish && Close'
+                      : 'Mark as done & continue'}
                   </>
                 )}
               </button>
