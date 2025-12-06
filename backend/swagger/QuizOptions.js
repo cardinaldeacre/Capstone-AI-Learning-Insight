@@ -1,7 +1,7 @@
 /**
  * @swagger
  * tags:
- *   name: Quiz Options
+ *   name: Quiz option
  *   description: Manajemen Opsi Jawaban (A, B, C, D)
  */
 
@@ -50,11 +50,11 @@
 
 /**
  * @swagger
- * /api/quiz-options/question/{questionId}:
+ * /api/quiz-option/question/{questionId}:
  *   get:
  *     summary: Ambil semua opsi jawaban untuk satu pertanyaan
  *     description: Jika user adalah student, field is_correct akan disembunyikan.
- *     tags: [Quiz Options]
+ *     tags: [Quiz option]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -82,10 +82,10 @@
 
 /**
  * @swagger
- * /api/quiz-options:
+ * /api/quiz-option:
  *   post:
  *     summary: Tambah opsi jawaban baru (Teacher/Admin)
- *     tags: [Quiz Options]
+ *     tags: [Quiz option]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -105,10 +105,10 @@
 
 /**
  * @swagger
- * /api/quiz-options/{id}:
+ * /api/quiz-option/{id}:
  *   put:
  *     summary: Update opsi jawaban (Teacher/Admin)
- *     tags: [Quiz Options]
+ *     tags: [Quiz option]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -136,10 +136,10 @@
 
 /**
  * @swagger
- * /api/quiz-options/{id}:
+ * /api/quiz-option/{id}:
  *   delete:
  *     summary: Hapus opsi jawaban (Teacher/Admin)
- *     tags: [Quiz Options]
+ *     tags: [Quiz option]
  *     security:
  *       - bearerAuth: []
  *     parameters:
