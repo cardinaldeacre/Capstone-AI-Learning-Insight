@@ -15,6 +15,7 @@ import Register from './pages/Auth/RegisterPage';
 import { AuthProvider } from './contexts/AuthContext';
 import ClassListPage from './pages/Classes/ClassListPage';
 import AppendQuizPage from './pages/Quiz/AppendQuizPage';
+import ManageQuizPage from './pages/Quiz/ManageQuizPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -25,7 +26,7 @@ createRoot(document.getElementById('root')).render(
             {/* publik */}
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register/>}/>
+            <Route path="/register" element={<Register />} />
 
             {/* private */}
             <Route element={<ProtectedRoute />}>
@@ -41,6 +42,7 @@ createRoot(document.getElementById('root')).render(
 
                     <Route path="modules" element={<ModuleListPage />} />
                     <Route path="quiz/create" element={<AppendQuizPage />} />
+                    <Route path="quiz/:quizId" element={<ManageQuizPage />}></Route>
                   </Route>
                 </Route>
 
