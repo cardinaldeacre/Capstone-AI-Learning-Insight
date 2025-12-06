@@ -49,7 +49,7 @@ const LearningPage = () => {
           fetchGetModuleProgress(courseId)
         ]);
 
-        const progressList = progressResponse.data || []; //response dari fetchGetModuleProgress
+        const progressList = progressResponse.data || [];
 
         // matching data module dan data progress
         const mergedModules = modulesData.map(mod => {
@@ -171,10 +171,7 @@ const LearningPage = () => {
 
       handleNext();
     } catch (err) {
-      console.error('ERROR LENGKAP:', err);
       console.error('Response Server:', err.response?.data);
-
-      alert('Gagal menyimpan progress. Silakan coba lagi.');
     }
   };
 
@@ -183,8 +180,8 @@ const LearningPage = () => {
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
 
-      {/* Sidebar */}
-      <div className="w-80 flex-shrink-0 h-full border-r border-gray-200 bg-white z-20">
+      {/* siddebar */}
+      <div className="w-80 shrink-0 h-full border-r border-gray-200 bg-white z-20">
         <ModuleSidebar
           modules={modules}
           currentIndex={currentIndex}
@@ -200,7 +197,7 @@ const LearningPage = () => {
             className="flex items-center gap-2 text-gray-500 hover:text-teal-600 font-medium transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
-            <span className="hidden sm:inline">Kembali ke Kelas</span>
+            <span className="hidden sm:inline">Back to Course</span>
           </Link>
 
           {isTeacher && (
@@ -209,7 +206,7 @@ const LearningPage = () => {
               className="bg-teal-600 hover:bg-teal-700 text-white gap-2"
             >
               <PlusCircle className="w-4 h-4" />
-              Buat Quiz
+              Create Quiz
             </Button>
           )}
         </header>

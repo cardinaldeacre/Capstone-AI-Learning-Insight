@@ -5,8 +5,8 @@ const QUIZ_ENDPOINT = {
 }
 export const createQuiz = async (quizData) => {
     try {
-        const url = QUIZ_ENDPOINT.baseQuiz(quizData)
-        const response = await axiosClient.post(url);
+        const url = QUIZ_ENDPOINT.baseQuiz;
+        const response = await axiosClient.post(url, quizData);
         return response.data;
     } catch (error) {
         console.error("Error creating quiz:", error);
