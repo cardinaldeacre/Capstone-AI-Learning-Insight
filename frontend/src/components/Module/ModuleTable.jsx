@@ -1,6 +1,13 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { MoreHorizontal, Pencil, PlusCircle, Trash2, Eye, FileQuestion } from 'lucide-react';
+import {
+  MoreHorizontal,
+  Pencil,
+  PlusCircle,
+  Trash2,
+  Eye,
+  FileQuestion
+} from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -34,7 +41,7 @@ export default function ModuleTable({ modules = [], onDelete }) {
   const { courseId } = useParams();
 
   const handleEdit = moduleId => {
-    navigate(`/courses/${courseId}/teacher/modules/edit/${moduleId}`);
+    navigate(`/courses/${courseId}/modules/teacher/edit/${moduleId}`);
   };
 
   const formatDate = dateString => {
@@ -42,13 +49,13 @@ export default function ModuleTable({ modules = [], onDelete }) {
     return new Date(dateString).toLocaleDateString('id-ID');
   };
 
-  const handleCreateQuiz = (moduleId) => {
+  const handleCreateQuiz = moduleId => {
     navigate(`/courses/${courseId}/quiz/create`, { state: { moduleId } });
-  }
+  };
 
-  const handleViewQuiz = (quizId) => {
+  const handleViewQuiz = quizId => {
     navigate(`/courses/${courseId}/quiz/${quizId}`);
-  }
+  };
 
   return (
     <Table>
@@ -64,7 +71,10 @@ export default function ModuleTable({ modules = [], onDelete }) {
       <TableBody>
         {modules.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+            <TableCell
+              colSpan={5}
+              className="h-24 text-center text-muted-foreground"
+            >
               No modules found. Please create one.
             </TableCell>
           </TableRow>
@@ -75,9 +85,7 @@ export default function ModuleTable({ modules = [], onDelete }) {
                 {index + 1}
               </TableCell>
 
-              <TableCell className="font-medium">
-                {module.title}
-              </TableCell>
+              <TableCell className="font-medium">{module.title}</TableCell>
 
               <TableCell className="text-center">
                 {module.quiz ? (
@@ -133,9 +141,12 @@ export default function ModuleTable({ modules = [], onDelete }) {
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Delete module "{module.title}"?</DialogTitle>
+                          <DialogTitle>
+                            Delete module "{module.title}"?
+                          </DialogTitle>
                           <DialogDescription>
-                            This action cannot be undone. This will permanently delete the module and all associated materials.
+                            This action cannot be undone. This will permanently
+                            delete the module and all associated materials.
                           </DialogDescription>
                         </DialogHeader>
                         <DialogFooter>

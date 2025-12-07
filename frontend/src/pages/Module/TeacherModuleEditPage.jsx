@@ -42,15 +42,14 @@ export default function TeacherModuleEditPage() {
       const dataToSend = {
         title: formData.title,
         content: formData.content,
-        order_number: formData.order_number
+        order_number: Number(initialData.order_number)
       };
 
-      const updatedModule = await fetchTeacherUpdateModule(
-        moduleId,
-        dataToSend
-      );
-      console.log(`Module "${updatedModule.title}" berhasil diupdate`);
-      navigate('/courses');
+      console.log('data to send', dataToSend);
+
+      await fetchTeacherUpdateModule(moduleId, dataToSend);
+      // console.log(`Module "${updatedModule.title}" berhasil diupdate`);
+      navigate(`/courses/${courseId}/modules/teacher`);
     } catch (error) {
       console.error('gagal memperbarui module: ', error);
       alert('terjadi kesalahan saat memperbarui modul');
