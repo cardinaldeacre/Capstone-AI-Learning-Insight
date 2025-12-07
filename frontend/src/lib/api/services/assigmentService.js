@@ -5,7 +5,7 @@ const MODULE_ENDPOINT = {
   getAssigmentById: id => `/assignments/${id}`,
   putAssigmentById: id => `/assignments/${id}`,
   deleteAssigmentById: id => `/assignments/${id}`,
-  postAssigment: '/assigments'
+  postAssigment: '/assignments'
 };
 
 export const fetchGetAllAssigments = async classId => {
@@ -54,8 +54,10 @@ export const fetchDeleteAssigmentById = async id => {
 
 export const fetchPostAssigmentById = async assigmentData => {
   try {
-    const url = MODULE_ENDPOINT.postAssigment(assigmentData);
-    const response = await axiosClient.post(url);
+    const response = await axiosClient.post(
+      MODULE_ENDPOINT.postAssigment,
+      assigmentData
+    );
     return response.data;
   } catch (error) {
     console.error('assigmentService.fetchPostAssigmentById: ', error);
