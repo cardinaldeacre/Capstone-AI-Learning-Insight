@@ -1,4 +1,3 @@
-// src/components/Module/ModuleForm.jsx
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -49,17 +48,14 @@ export default function ModuleForm({
   }, [initialData]);
 
   const handleFormSubmit = formData => {
-    // if RHF content is empty but editor has content => sync first
     const currentContent = getValues('content');
     const editorHtml = editorInstance?.getHTML() || '';
 
     if (!currentContent && editorHtml) {
-      // sinkronkan RHF value (ini tidak memicu validation pada handleSubmit karena sudah lulus)
       setValue('content', editorHtml, { shouldValidate: false });
       formData = { ...formData, content: editorHtml };
     }
 
-    // Jika content tetap kosong, zod akan menangani dan menolak submit
     onSubmit({
       ...formData,
       content: formData.content || editorHtml
@@ -79,7 +75,6 @@ export default function ModuleForm({
 
       <CardContent>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-          {/* Judul */}
           <div className="space-y-2">
             <Label>Judul Modul</Label>
             <Input
@@ -104,7 +99,6 @@ export default function ModuleForm({
                   initialContent={field.value || ''}
                   onEditorReady={editor => setEditorInstance(editor)}
                   onContentBlur={html => {
-                    // update RHF hanya saat editor blur (selesai editing)
                     field.onChange(html);
                   }}
                 />

@@ -1,5 +1,3 @@
-// src/pages/Module/ModuleCreatePage.jsx
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ModuleForm from '@/components/Module/ModuleForm';
