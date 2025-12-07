@@ -38,11 +38,7 @@ export default function AppendQuizPage() {
                 const data = await fetchCourseModules(courseId);
                 setModules(data || []);
             } catch (error) {
-                toast({
-                    variant: 'destruction',
-                    title: 'Fail to load module',
-                    description: 'Ensure you have create a module for this course'
-                })
+                toast.error("Fail to load module")
             } finally {
                 setLoading(false)
             }
@@ -65,11 +61,7 @@ export default function AppendQuizPage() {
         setIsSubmitting(true);
 
         if (!formData.module_id || !formData.timer || !formData.title) {
-            toast({
-                variant: 'destructive',
-                title: 'Data not complete',
-                description: 'Please fill the module, title, and timer'
-            });
+            toast.error("Data not complete")
             setIsSubmitting(false);
             return;
         }
@@ -83,18 +75,10 @@ export default function AppendQuizPage() {
             }
 
             await createQuiz(payload);
-            toast({
-                title: 'Quiz Created',
-                description: 'Now you can create question!',
-                className: "bg-green-500 text-white",
-            })
+            toast.success("Quiz Created")
             nav(`/courses/${courseId}/modules/teacher`);
         } catch (error) {
-            toast({
-                variant: "destructive",
-                title: "Failed to create quiz",
-                description: error.message,
-            });
+            toast.error("Failed to create quiz")
         } finally {
             setIsSubmitting(false)
         }
