@@ -59,7 +59,7 @@ const LoginPage = () => {
       <Card className="w-full max-w-md shadow-xl border-none z-10 rounded-3xl">
         <CardHeader className="space-y-1 pb-2">
           <CardTitle className="text-3xl font-extrabold text-center text-gray-800">
-            Student Login
+          Login
           </CardTitle>
         </CardHeader>
 

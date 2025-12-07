@@ -25,13 +25,14 @@ import {
   Users,
   Loader2
 } from 'lucide-react';
+// IMPORT DIALOG COMPONENTS
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
 import ClassForm from '@/components/Course/ClassForm';
 import { Link } from 'react-router-dom';
 
@@ -39,7 +40,7 @@ export default function TeacherClassesPage() {
   const [classes, setClasses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false); // State ini kini mengontrol Dialog
   const [editingClass, setEditingClass] = useState(null);
 
   const loadClasses = async () => {
@@ -97,34 +98,36 @@ export default function TeacherClassesPage() {
     <div className="space-y-6">
       <header className="flex justify-between items-center pb-4 border-b">
         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-          Course
+          Manajemen Kelas Anda
         </h1>
 
-        <Button onClick={handleOpenCreate}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Buat Kelas Baru
-        </Button>
+        {/* MENGGANTI SHEET DENGAN DIALOG */}
+        <Dialog open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+          <DialogTrigger asChild> 
+            <Button onClick={handleOpenCreate}>
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Buat Kelas Baru
+            </Button>
+          </DialogTrigger>
+          
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                {editingClass ? 'Edit Kelas' : 'Buat Kelas Baru'}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="pt-2"> 
+              <ClassForm
+                initialData={editingClass}
+                isEdit={!!editingClass}
+                onSuccess={loadClasses}
+                onClose={() => setIsSheetOpen(false)}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+
       </header>
-
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent side="right">
-          <SheetHeader>
-            <SheetTitle>
-              {editingClass ? 'Edit Kelas' : 'Buat Kelas Baru'}
-            </SheetTitle>
-          </SheetHeader>
-          <div className="pt-6">
-            <ClassForm
-
-              initialData={editingClass}
-              isEdit={!!editingClass}
-              onSuccess={loadClasses}
-              onClose={() => setIsSheetOpen(false)}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
-
 
       {isLoading ? (
         <div className="space-y-4">
