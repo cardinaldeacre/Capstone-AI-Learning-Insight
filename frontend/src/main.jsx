@@ -48,9 +48,20 @@ createRoot(document.getElementById('root')).render(
                       <Route index element={<ModuleListPage />} />
                       <Route path="teacher">
                         <Route index element={<TeacherModuleListPage />} />
-                        <Route path="create" element={<TeacherModuleCreatePage />} />
-                        <Route path="edit/:moduleId" element={<TeacherModuleEditPage />} />
+                        <Route
+                          path="create"
+                          element={<TeacherModuleCreatePage />}
+                        />
+                        <Route
+                          path="edit/:moduleId"
+                          element={<TeacherModuleEditPage />}
+                        />
                       </Route>
+                    </Route>
+
+                    {/* assigments */}
+                    <Route path="assigments">
+                      <Route index></Route>
                     </Route>
 
                     {/* quiz */}
@@ -63,14 +74,13 @@ createRoot(document.getElementById('root')).render(
                   <Route path="classes">
                     <Route index element={<ClassListPage />} />
                   </Route>
-
-                </Route >
+                </Route>
                 <Route path="/profile" element={<Profile />} />
-              </Route >
-            </Route >
-          </Routes >
-        </LayoutProvider >
-      </BrowserRouter >
-    </AuthProvider >
-  </StrictMode >
+              </Route>
+            </Route>
+          </Routes>
+        </LayoutProvider>
+      </BrowserRouter>
+    </AuthProvider>
+  </StrictMode>
 );
