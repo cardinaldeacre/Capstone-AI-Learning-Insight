@@ -7,13 +7,15 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import CourseListPage from './pages/Course/CourseListPage';
 import Profile from './components/Profile/Profile';
 import CourseDetailPage from './pages/Course/CourseDetailPage';
-import ModuleListPage from './pages/Module/ModuleListPage';
+import ModuleListPage from './pages/Module/LearningPage';
 import { LayoutProvider } from './contexts/LayoutContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './pages/Auth/LoginPage';
 import Register from './pages/Auth/RegisterPage';
 import { AuthProvider } from './contexts/AuthContext';
 import ClassListPage from './pages/Classes/ClassListPage';
+import AppendQuizPage from './pages/Quiz/AppendQuizPage';
+import ManageQuizPage from './pages/Quiz/ManageQuizPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -24,7 +26,7 @@ createRoot(document.getElementById('root')).render(
             {/* publik */}
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register/>}/>
+            <Route path="/register" element={<Register />} />
 
             {/* private */}
             <Route element={<ProtectedRoute />}>
@@ -39,6 +41,8 @@ createRoot(document.getElementById('root')).render(
                     <Route index element={<CourseDetailPage />} />
 
                     <Route path="modules" element={<ModuleListPage />} />
+                    <Route path="quiz/create" element={<AppendQuizPage />} />
+                    <Route path="quiz/:quizId" element={<ManageQuizPage />}></Route>
                   </Route>
                 </Route>
 

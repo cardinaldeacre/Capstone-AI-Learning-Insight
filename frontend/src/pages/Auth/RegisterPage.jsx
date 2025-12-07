@@ -44,7 +44,7 @@ const RegisterPage = () => {
       navigate('/login');
     } catch (error) {
       console.error(error);
-    
+
       setErrorMessage(error.message || 'Pendaftaran gagal. Periksa koneksi atau status server Anda.');
     } finally {
       setIsLoading(false);
@@ -79,11 +79,11 @@ const RegisterPage = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            
+
             {/* Input Name */}
             <div className="space-y-2">
               <Label className="text-gray-600 font-medium ml-1" htmlFor="name">
-               Name
+                Name
               </Label>
               <Input
                 id="name"
@@ -161,7 +161,7 @@ const RegisterPage = () => {
                 className="flex h-12 w-full rounded-xl border border-gray-200 bg-gray-50/50 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value="student">Student</option>
-                <option value="teacher">Mentor</option>
+                <option value="teacher">Teacher</option>
               </select>
             </div>
 
