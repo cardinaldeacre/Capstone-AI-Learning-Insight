@@ -20,8 +20,8 @@ import ManageQuizPage from './pages/Quiz/ManageQuizPage';
 import TeacherModuleCreatePage from './pages/Module/TeacherModuleCreatePage';
 import TeacherModuleEditPage from './pages/Module/TeacherModuleEditPage';
 import TeacherModuleListPage from './pages/Module/TeacherModuleListPage';
-import TeacherListAssigmentPage from './pages/Assigment/TeacherListAssigmentPage';
 import LandingPage from './pages/LandingPage';
+import TeacherListAssigmentPage from './pages/Assigment/TeacherListAssigmentPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

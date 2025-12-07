@@ -44,3 +44,32 @@ export const createFullQuestion = async (quizId, questionText, options) => {
         throw new Error(msg);
     }
 }
+
+export const updateFullQuestion = async (questionId, questionText, options) => {
+    try {
+        await axiosClient.put(`/quiz-question/${questionId}`, {
+            question_text: questionText
+        });
+        const optionPromises = options.map(opt => {
+            return axiosClient.put(`/quiz-option/${opt.id}`, {
+                option_text: opt.text,
+                is_correct: opt.isCorrect
+            });
+        });
+
+        await Promise.all(optionPromises);
+        return true;
+    } catch (error) {
+        console.error("Gagal update soal:", error);
+        throw error;
+    }
+};
+
+export const deleteQuestion = async (questionId) => {
+    try {
+        await axiosClient.delete(`/quiz-question/${questionId}`);
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
