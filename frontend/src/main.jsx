@@ -43,31 +43,29 @@ createRoot(document.getElementById('root')).render(
                   <Route path=":courseId">
                     <Route index element={<CourseDetailPage />} />
 
-                    <Route path="modules" element={<ModuleListPage />} />
+                    {/* modules */}
                     <Route path="modules">
-                      <Route path="quiz/create" element={<AppendQuizPage />} />
-                      <Route path="quiz/:quizId" element={<ManageQuizPage />}></Route>
                       <Route index element={<ModuleListPage />} />
                       <Route path="teacher">
                         <Route index element={<TeacherModuleListPage />} />
-                        <Route
-                          path="create"
-                          element={<TeacherModuleCreatePage />}
-                        />
-                        <Route
-                          path="edit/:moduleId"
-                          element={<TeacherModuleEditPage />}
-                        ></Route>
+                        <Route path="create" element={<TeacherModuleCreatePage />} />
+                        <Route path="edit/:moduleId" element={<TeacherModuleEditPage />} />
                       </Route>
-                    </Route >
-                  </Route >
+                    </Route>
+
+                    {/* quiz */}
+                    <Route path="quiz">
+                      <Route path="create" element={<AppendQuizPage />} />
+                      <Route path=":quizId" element={<ManageQuizPage />} />
+                    </Route>
+                  </Route>
 
                   <Route path="classes">
                     <Route index element={<ClassListPage />} />
                   </Route>
 
-                  <Route path="/profile" element={<Profile />} />
                 </Route >
+                <Route path="/profile" element={<Profile />} />
               </Route >
             </Route >
           </Routes >
