@@ -132,12 +132,20 @@ export default function AppendQuizPage() {
                                         <SelectValue placeholder={loading ? "Loading module..." : "Choose relational module"} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {modules.map((mod) => (
-                                            <SelectItem key={mod.id} disabled
-                                                value={String(mod.id)}>
-                                                {mod.title}
-                                            </SelectItem>
-                                        ))}
+                                        {modules.map((mod) => {
+                                            const hasQuiz = !!mod.quiz;
+
+                                            return (
+                                                <SelectItem
+                                                    key={mod.id}
+                                                    value={String(mod.id)}
+                                                    disabled={hasQuiz}
+                                                    className={hasQuiz ? "opacity-50 cursor-not-allowed" : ""}
+                                                >
+                                                    {mod.title} {hasQuiz ? "(Quiz created)" : ""}
+                                                </SelectItem>
+                                            );
+                                        })}
                                     </SelectContent>
                                 </Select>
                                 {modules.length === 0 && !loading && (

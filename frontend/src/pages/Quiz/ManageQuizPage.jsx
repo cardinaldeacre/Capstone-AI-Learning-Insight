@@ -98,17 +98,51 @@ export default function ManageQuizPage() {
     }
 
     const handleSaveQuestion = async () => {
-        if (!qText) return toast({ variant: "destructive", title: "Question empty!" });
-        if (optionsData.some(o => !o.text)) return toast({ variant: "destructive", title: "Option cannot be blank" });
-        if (!optionsData.some(o => o.isCorrect)) return toast({ variant: "destructive", title: "Choose one correct answer" });
+        if (!qText) {
+            return toast.error("Question empty!", {
+                description: "Please write the question text."
+            });
+        }
+
+        if (optionsData.some(o => !o.text)) {
+            return toast.error("Option cannot be blank", {
+                description: "Please fill all answer options."
+            });
+        }
+
+        if (!optionsData.some(o => o.isCorrect)) {
+            return toast.error("No correct answer", {
+                description: "Please select one correct answer."
+            });
+        }
+
+        const optionTexts = optionsData
+            .map(opt => opt.text.trim())
+            .filter(text => text !== '');
+
+        if (optionsData.length !== optionTexts.length) {
+            return toast.error("Option cannot be empty", {
+                description: "Please fill the blank option."
+            });
+        }
+
+        const uniqueOptions = new Set(optionTexts.map(text => text.toLowerCase()));
+
+        if (uniqueOptions.size !== optionTexts.length) {
+            return toast.error("Option duplicated!", {
+                description: "Each answer must be unique."
+            });
+        }
 
         setIsSubmitting(true);
         try {
             await createFullQuestion(quizId, qText, optionsData);
 
-            toast({ title: "Success", description: "Question created successfully" });
-            setIsModalOpen(false);
+            toast.success("Success", {
+                description: "Question created successfully"
+            });
 
+            setIsModalOpen(false);
             setQText("");
             setOptionsData([
                 { text: "", isCorrect: false },
@@ -119,7 +153,10 @@ export default function ManageQuizPage() {
 
             loadData();
         } catch (error) {
-            toast({ variant: "destructive", title: "Gagal menyimpan soal" });
+            console.error(error);
+            toast.error("Gagal menyimpan soal", {
+                description: "Terjadi kesalahan pada server."
+            });
         } finally {
             setIsSubmitting(false);
         }
