@@ -20,6 +20,7 @@ import ManageQuizPage from './pages/Quiz/ManageQuizPage';
 import TeacherModuleCreatePage from './pages/Module/TeacherModuleCreatePage';
 import TeacherModuleEditPage from './pages/Module/TeacherModuleEditPage';
 import TeacherModuleListPage from './pages/Module/TeacherModuleListPage';
+import TeacherListAssigmentPage from './pages/Assigment/TeacherListAssigmentPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -63,7 +64,7 @@ createRoot(document.getElementById('root')).render(
 
                     {/* assigments */}
                     <Route path="assigments">
-                      <Route index></Route>
+                      <Route index element={<TeacherListAssigmentPage />} />
                     </Route>
 
                     {/* quiz */}

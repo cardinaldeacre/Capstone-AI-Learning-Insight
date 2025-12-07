@@ -180,7 +180,7 @@ export default function TeacherClassesPage() {
                       title="Lihat Assigment"
                       variant="outline"
                     >
-                      <Link to={`/courses/${kelas.id}/classes`}>
+                      <Link to={`/courses/${kelas.id}/assigments`}>
                         <ListTodo className="h-4 w-4" />
                       </Link>
                     </Button>
