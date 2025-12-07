@@ -1,8 +1,6 @@
-// src/components/Module/ModuleTable.jsx
-
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { MoreHorizontal, Pencil, PlusCircle, Trash2, Eye, FileQuestion } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -10,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui/table'; // Shadcn Table
+} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -19,7 +17,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'; // Shadcn DropdownMenu
+} from '@/components/ui/dropdown-menu';
 import {
   Dialog,
   DialogTrigger,
@@ -29,98 +27,126 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose
-} from '@/components/ui/dialog'; // Shadcn Dialog
+} from '@/components/ui/dialog';
 
-/**
- * Komponen untuk menampilkan daftar modul dalam bentuk tabel.
- * @param {array} modules - Array data modul
- * @param {function} onDelete - Handler untuk menghapus modul
- */
 export default function ModuleTable({ modules = [], onDelete }) {
   const navigate = useNavigate();
+  const { courseId } = useParams();
 
-  // Handler untuk mengarahkan ke halaman edit
   const handleEdit = moduleId => {
-    navigate(`/admin/modules/edit/${moduleId}`); // Rute akan dikonfigurasi di Tahap 5
+    navigate(`/courses/${courseId}/teacher/modules/edit/${moduleId}`);
   };
 
-  // Format tanggal (contoh sederhana)
   const formatDate = dateString => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('id-ID');
   };
 
+  const handleCreateQuiz = (moduleId) => {
+    navigate(`/courses/${courseId}/quiz/create`, { state: { moduleId } });
+  }
+
+  const handleViewQuiz = (quizId) => {
+    navigate(`/courses/${courseId}/quiz/${quizId}`);
+  }
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">ID</TableHead>
-          <TableHead>Judul Modul</TableHead>
-          <TableHead>Dibuat Pada</TableHead>
-          <TableHead className="text-right">Aksi</TableHead>
+          <TableHead className="w-20 text-center">NO</TableHead>
+          <TableHead className="text-left">TITLE</TableHead>
+          <TableHead className="text-center">QUIZ STATUS</TableHead>
+          <TableHead className="text-center">CREATED AT</TableHead>
+          <TableHead className="text-right pr-6">ACTION</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {modules.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={4} className="h-24 text-center">
-              Belum ada Modul.
+            <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+              No modules found. Please create one.
             </TableCell>
           </TableRow>
         ) : (
-          modules.map(module => (
+          modules.map((module, index) => (
             <TableRow key={module.id}>
-              <TableCell className="font-medium truncate max-w-[100px]">
-                {module.id}
+              <TableCell className="font-medium text-center">
+                {index + 1}
               </TableCell>
-              <TableCell>{module.title}</TableCell>
-              <TableCell>{formatDate(module.createdAt)}</TableCell>
+
+              <TableCell className="font-medium">
+                {module.title}
+              </TableCell>
+
+              <TableCell className="text-center">
+                {module.quiz ? (
+                  <Button
+                    onClick={() => handleViewQuiz(module.quiz.id)}
+                    variant="outline"
+                    className="border-teal-600 text-teal-600 hover:bg-teal-50 gap-2 h-8"
+                  >
+                    <FileQuestion className="w-4 h-4" />
+                    Manage Quiz
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => handleCreateQuiz(module.id)}
+                    className="bg-teal-600 hover:bg-teal-700 text-white gap-2 h-8"
+                  >
+                    <PlusCircle className="w-4 h-4" />
+                    Add Quiz
+                  </Button>
+                )}
+              </TableCell>
+
+              <TableCell className="text-center text-gray-500 text-sm">
+                {formatDate(module.created_at || module.createdAt)}
+              </TableCell>
+
               <TableCell className="text-right">
-                {/* Dropdown Menu untuk Aksi */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
-                      <span className="sr-only">Buka menu</span>
+                      <span className="sr-only">Menu</span>
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Aksi</DropdownMenuLabel>
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem
                       onClick={() => handleEdit(module.id)}
                       className="cursor-pointer"
                     >
-                      <Pencil className="mr-2 h-4 w-4" /> Edit
+                      <Pencil className="mr-2 h-4 w-4" /> Edit Module
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
 
-                    {/* Dialog Konfirmasi Hapus */}
                     <Dialog>
                       <DialogTrigger asChild>
                         <DropdownMenuItem
-                          className="cursor-pointer text-red-600"
+                          className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
                           onSelect={e => e.preventDefault()}
                         >
-                          <Trash2 className="mr-2 h-4 w-4" /> Hapus
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete Module
                         </DropdownMenuItem>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Konfirmasi Penghapusan</DialogTitle>
+                          <DialogTitle>Delete module "{module.title}"?</DialogTitle>
                           <DialogDescription>
-                            Apakah Anda yakin ingin menghapus modul "
-                            {module.title}"? Aksi ini tidak dapat dibatalkan.
+                            This action cannot be undone. This will permanently delete the module and all associated materials.
                           </DialogDescription>
                         </DialogHeader>
                         <DialogFooter>
                           <DialogClose asChild>
-                            <Button variant="outline">Batal</Button>
+                            <Button variant="outline">Cancel</Button>
                           </DialogClose>
                           <Button
                             variant="destructive"
                             onClick={() => onDelete(module.id)}
                           >
-                            Hapus
+                            Delete
                           </Button>
                         </DialogFooter>
                       </DialogContent>

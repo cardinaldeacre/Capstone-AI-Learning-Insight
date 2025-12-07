@@ -50,19 +50,21 @@ export default function TeacherModuleListPage() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Manajemen Modul</h1>
-        <Button onClick={handleCreateClick}>
-          <Plus className="mr-2 h-4 w-4" /> Tambah Modul Baru
+        <h1 className="text-3xl font-bold">Course Content</h1>
+        <Button
+          className="bg-teal-600 hover:bg-teal-700 text-white gap-2"
+          onClick={handleCreateClick}>
+          <Plus className="mr-2 h-4 w-4" /> Add new module
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Daftar Modul Pembelajaran</CardTitle>
+          <CardTitle>List Content</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <p>Memuat data modul...</p>
+            <p>List module data...</p>
           ) : (
             <ModuleTable modules={modules} onDelete={handleDelete} />
           )}

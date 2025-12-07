@@ -7,12 +7,15 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import CourseListPage from './pages/Course/CourseListPage';
 import Profile from './components/Profile/Profile';
 import CourseDetailPage from './pages/Course/CourseDetailPage';
-import ModuleListPage from './pages/Module/ModuleListPage';
+import ModuleListPage from './pages/Module/LearningPage';
 import { LayoutProvider } from './contexts/LayoutContext';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './pages/Auth/LoginPage';
+import Register from './pages/Auth/RegisterPage';
 import { AuthProvider } from './contexts/AuthContext';
 import ClassListPage from './pages/Classes/ClassListPage';
+import AppendQuizPage from './pages/Quiz/AppendQuizPage';
+import ManageQuizPage from './pages/Quiz/ManageQuizPage';
 import TeacherModuleCreatePage from './pages/Module/TeacherModuleCreatePage';
 import TeacherModuleEditPage from './pages/Module/TeacherModuleEditPage';
 import TeacherModuleListPage from './pages/Module/TeacherModuleListPage';
@@ -26,6 +29,7 @@ createRoot(document.getElementById('root')).render(
             {/* publik */}
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
             {/* private */}
             <Route element={<ProtectedRoute />}>
@@ -39,33 +43,34 @@ createRoot(document.getElementById('root')).render(
                   <Route path=":courseId">
                     <Route index element={<CourseDetailPage />} />
 
+                    {/* modules */}
                     <Route path="modules">
                       <Route index element={<ModuleListPage />} />
                       <Route path="teacher">
                         <Route index element={<TeacherModuleListPage />} />
-                        <Route
-                          path="create"
-                          element={<TeacherModuleCreatePage />}
-                        />
-                        <Route
-                          path="edit/:moduleId"
-                          element={<TeacherModuleEditPage />}
-                        ></Route>
+                        <Route path="create" element={<TeacherModuleCreatePage />} />
+                        <Route path="edit/:moduleId" element={<TeacherModuleEditPage />} />
                       </Route>
                     </Route>
+
+                    {/* quiz */}
+                    <Route path="quiz">
+                      <Route path="create" element={<AppendQuizPage />} />
+                      <Route path=":quizId" element={<ManageQuizPage />} />
+                    </Route>
                   </Route>
-                </Route>
 
-                <Route path="classes">
-                  <Route index element={<ClassListPage />} />
-                </Route>
+                  <Route path="classes">
+                    <Route index element={<ClassListPage />} />
+                  </Route>
 
+                </Route >
                 <Route path="/profile" element={<Profile />} />
-              </Route>
-            </Route>
-          </Routes>
-        </LayoutProvider>
-      </BrowserRouter>
-    </AuthProvider>
-  </StrictMode>
+              </Route >
+            </Route >
+          </Routes >
+        </LayoutProvider >
+      </BrowserRouter >
+    </AuthProvider >
+  </StrictMode >
 );
