@@ -3,7 +3,7 @@ import React from 'react';
 const SimpleAvatar = ({ username, size = 64 }) => {
   const seed = encodeURIComponent(username.toLowerCase());
 
-  const avatarUrl = `https://api.dicebear.com/8.x/fun-emoji/svg?seed=${seed}&size=${size}`;
+  const avatarUrl = `https://api.dicebear.com/8.x/fun-emoji/svg?seed=${seed}&size=${size}&backgroundColor=00d5be`;
 
   return (
     <img
@@ -12,8 +12,7 @@ const SimpleAvatar = ({ username, size = 64 }) => {
       style={{
         width: size,
         height: size,
-        borderRadius: '50%',
-        backgroundColor: '#f0f0f0'
+        borderRadius: '50%'
       }}
     />
   );

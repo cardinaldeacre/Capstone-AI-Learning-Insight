@@ -66,7 +66,12 @@ export default function TeacherClassesPage() {
   };
 
   const handleDelete = async classId => {
-    if (!window.confirm('Apakah Anda yakin ingin menghapus kelas ini? Tindakan ini tidak dapat dibatalkan.')) return;
+    if (
+      !window.confirm(
+        'Apakah Anda yakin ingin menghapus kelas ini? Tindakan ini tidak dapat dibatalkan.'
+      )
+    )
+      return;
 
     try {
       await deleteClass(classId);
@@ -86,9 +91,7 @@ export default function TeacherClassesPage() {
       <Alert variant="destructive">
         <Terminal className="h-4 w-4" />
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          Gagal memuat daftar kelas: {error}
-        </AlertDescription>
+        <AlertDescription>Gagal memuat daftar kelas: {error}</AlertDescription>
       </Alert>
     );
   }
@@ -115,7 +118,6 @@ export default function TeacherClassesPage() {
           </SheetHeader>
           <div className="pt-6">
             <ClassForm
-
               initialData={editingClass}
               isEdit={!!editingClass}
               onSuccess={loadClasses}
@@ -124,7 +126,6 @@ export default function TeacherClassesPage() {
           </div>
         </SheetContent>
       </Sheet>
-
 
       {isLoading ? (
         <div className="space-y-4">
@@ -173,7 +174,7 @@ export default function TeacherClassesPage() {
                       asChild
                       title="Atur Modul"
                     >
-                      <Link to={`/courses/${kelas.id || kelas.class_id}/modules`}>
+                      <Link to={`/courses/${kelas.id}/modules/teacher`}>
                         <BookOpen className="h-4 w-4" />
                       </Link>
                     </Button>
