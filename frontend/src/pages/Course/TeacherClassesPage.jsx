@@ -24,7 +24,8 @@ import {
   BookOpen,
   Users,
   Loader2,
-  Sheet
+  Sheet,
+  ListTodo
 } from 'lucide-react';
 // IMPORT DIALOG COMPONENTS
 import {
@@ -174,7 +175,17 @@ export default function TeacherClassesPage() {
                   </TableCell>
                   <TableCell className="space-x-2 flex justify-center">
                     <Button
-                      variant="secondary"
+                      size="sm"
+                      asChild
+                      title="Lihat Assigment"
+                      variant="outline"
+                    >
+                      <Link to={`/courses/${kelas.id}/assigments`}>
+                        <ListTodo className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="outline"
                       size="sm"
                       asChild
                       title="Atur Modul"

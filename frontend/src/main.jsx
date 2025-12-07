@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import MainLayout from './layouts/MainLayout';
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from '@/components/ui/sonner';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard/Dashboard';
 import CourseListPage from './pages/Course/CourseListPage';
@@ -21,6 +21,7 @@ import TeacherModuleCreatePage from './pages/Module/TeacherModuleCreatePage';
 import TeacherModuleEditPage from './pages/Module/TeacherModuleEditPage';
 import TeacherModuleListPage from './pages/Module/TeacherModuleListPage';
 import LandingPage from './pages/LandingPage';
+import TeacherListAssigmentPage from './pages/Assigment/TeacherListAssigmentPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -51,9 +52,20 @@ createRoot(document.getElementById('root')).render(
                       <Route index element={<ModuleListPage />} />
                       <Route path="teacher">
                         <Route index element={<TeacherModuleListPage />} />
-                        <Route path="create" element={<TeacherModuleCreatePage />} />
-                        <Route path="edit/:moduleId" element={<TeacherModuleEditPage />} />
+                        <Route
+                          path="create"
+                          element={<TeacherModuleCreatePage />}
+                        />
+                        <Route
+                          path="edit/:moduleId"
+                          element={<TeacherModuleEditPage />}
+                        />
                       </Route>
+                    </Route>
+
+                    {/* assigments */}
+                    <Route path="assigments">
+                      <Route index element={<TeacherListAssigmentPage />} />
                     </Route>
 
                     {/* quiz */}
@@ -62,18 +74,16 @@ createRoot(document.getElementById('root')).render(
                       <Route path=":quizId" element={<ManageQuizPage />} />
                     </Route>
                   </Route>
-
-
-                </Route >
+                </Route>
                 <Route path="classes">
                   <Route index element={<ClassListPage />} />
                 </Route>
                 <Route path="/profile" element={<Profile />} />
-              </Route >
-            </Route >
-          </Routes >
-        </LayoutProvider >
-      </BrowserRouter >
-    </AuthProvider >
-  </StrictMode >
+              </Route>
+            </Route>
+          </Routes>
+        </LayoutProvider>
+      </BrowserRouter>
+    </AuthProvider>
+  </StrictMode>
 );

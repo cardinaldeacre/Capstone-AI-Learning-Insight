@@ -47,10 +47,10 @@ export const fetchgetModuleById = async moduleId => {
   }
 };
 
-export const fetchTeacherUpdateModule = async id => {
+export const fetchTeacherUpdateModule = async (id, data) => {
   try {
     const url = MODULE_ENDPOINT.putTeacherUpdateModule(id);
-    const response = await axiosClient.put(url);
+    const response = await axiosClient.put(url, data);
     return response.data;
   } catch (error) {
     console.error('moduleService.fetchTeacherUpdateModule: ', error);
