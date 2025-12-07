@@ -34,16 +34,6 @@ export default function TeacherListAssigmentPage() {
           <CardTitle className="text-teal-600">Daftar Assignment</CardTitle>
 
           <div className="flex items-center gap-2">
-            {/* <Button
-              variant="outline"
-              onClick={loadAssigments}
-              disabled={loading}
-              className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white"
-            >
-              <RefreshCw className="h-4 w-4 mr-1" />
-              Refresh
-            </Button> */}
-
             <Button
               variant="outline"
               asChild
@@ -58,10 +48,8 @@ export default function TeacherListAssigmentPage() {
         </CardHeader>
 
         <CardContent>
-          {/* Loading State */}
           {loading && <p className="text-gray-500">Memuat data assignment…</p>}
 
-          {/* Empty State */}
           {!loading && assignments.length === 0 && (
             <p className="text-gray-600 italic">
               Belum ada assignment untuk kelas ini.
