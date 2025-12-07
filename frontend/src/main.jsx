@@ -60,11 +60,11 @@ createRoot(document.getElementById('root')).render(
                     </Route>
                   </Route>
 
-                  <Route path="classes">
-                    <Route index element={<ClassListPage />} />
-                  </Route>
 
                 </Route >
+                <Route path="classes">
+                  <Route index element={<ClassListPage />} />
+                </Route>
                 <Route path="/profile" element={<Profile />} />
               </Route >
             </Route >
