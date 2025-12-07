@@ -1,5 +1,3 @@
-// src/pages/Module/ModuleEditPage.jsx
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ModuleForm from '@/components/Module/ModuleForm';
@@ -62,7 +60,7 @@ export default function TeacherModuleEditPage() {
   };
 
   if (isLoading) {
-    return <div className="p-6">Memuat data modul...</div>; // Ganti dengan Skeleton
+    return <div className="p-6">Memuat data modul...</div>;
   }
 
   if (!initialData) {
