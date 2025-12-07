@@ -20,6 +20,7 @@ import ManageQuizPage from './pages/Quiz/ManageQuizPage';
 import TeacherModuleCreatePage from './pages/Module/TeacherModuleCreatePage';
 import TeacherModuleEditPage from './pages/Module/TeacherModuleEditPage';
 import TeacherModuleListPage from './pages/Module/TeacherModuleListPage';
+import LandingPage from './pages/LandingPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -29,7 +30,7 @@ createRoot(document.getElementById('root')).render(
           <Toaster />
           <Routes>
             {/* publik */}
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
