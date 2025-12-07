@@ -133,7 +133,7 @@ export default function ManageQuizPage() {
 
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Link to={`/courses/${courseId}`} className="p-2 rounded-full hover:bg-gray-200">
+                        <Link to={`/courses/${courseId}/modules/teacher`} className="p-2 rounded-full hover:bg-gray-200">
                             <ArrowLeft className="w-5 h-5 text-gray-600" />
                         </Link>
                         <div>

@@ -13,19 +13,20 @@ import {
 import { fetchCourseModules } from "@/lib/api/services/courseService";
 import { createQuiz } from "@/lib/api/services/quizService";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { toast } from 'sonner'
 
 export default function AppendQuizPage() {
     const { courseId } = useParams();
     const nav = useNavigate();
+    const location = useLocation();
 
     const [modules, setModules] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [formData, setFormData] = useState({
-        module_id: '',
+        module_id: location.state?.moduleId || '',
         title: '',
         timer: '',
         min_score: ''
@@ -87,7 +88,7 @@ export default function AppendQuizPage() {
                 description: 'Now you can create question!',
                 className: "bg-green-500 text-white",
             })
-            nav(`/courses/${courseId}/modules`);
+            nav(`/courses/${courseId}/modules/teacher`);
         } catch (error) {
             toast({
                 variant: "destructive",
@@ -105,7 +106,7 @@ export default function AppendQuizPage() {
 
                 <div className="flex items-center gap-4 mb-6">
                     <Link
-                        to={`/courses/${courseId}/modules`}
+                        to={`/courses/${courseId}/modules/teacher`}
                         className="p-2 rounded-full hover:bg-gray-200 transition-colors"
                     >
                         <ArrowLeft className="w-5 h-5 text-gray-600" />
@@ -132,7 +133,8 @@ export default function AppendQuizPage() {
                                     </SelectTrigger>
                                     <SelectContent>
                                         {modules.map((mod) => (
-                                            <SelectItem key={mod.id} value={String(mod.id)}>
+                                            <SelectItem key={mod.id} disabled
+                                                value={String(mod.id)}>
                                                 {mod.title}
                                             </SelectItem>
                                         ))}
