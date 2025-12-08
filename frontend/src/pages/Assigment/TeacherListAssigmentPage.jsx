@@ -7,11 +7,13 @@ import {
   fetchDeleteAssigmentById,
   fetchGetAllAssigments
 } from '@/lib/api/services/assigmentService';
+import { fetchCourseStudentDetail } from '@/lib/api/services/courseService';
 
 export default function TeacherListAssigmentPage() {
   const { courseId } = useParams();
   const [loading, setLoading] = useState(false);
   const [assignments, setAssignments] = useState([]);
+  const [course, setCourse] = useState(null);
 
   useEffect(() => {
     const loadAssigments = async () => {
@@ -27,6 +29,10 @@ export default function TeacherListAssigmentPage() {
     };
 
     loadAssigments();
+  }, [courseId]);
+
+  useEffect(() => {
+    fetchCourseStudentDetail(courseId).then(res => setCourse(res));
   }, [courseId]);
 
   const handleDelete = async (id, title) => {
@@ -48,7 +54,9 @@ export default function TeacherListAssigmentPage() {
       {/* Wrapper Card */}
       <Card className="bg-white border-teal-600/20 shadow-md">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-teal-600">Daftar Assignment</CardTitle>
+          <CardTitle className="text-teal-600">
+            Daftar Assignment - {course?.title}
+          </CardTitle>
 
           <div className="flex items-center gap-2">
             <Button
