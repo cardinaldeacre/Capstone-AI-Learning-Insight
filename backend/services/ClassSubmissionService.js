@@ -31,7 +31,7 @@ const ClassSubmissionService = {
 			.first();
 	},
 
-	create: async (assignmentId, studentId) => {
+	create: async (assignmentId, studentId, fileUrl) => {
 		const existing = await ClassSubmissionService.getByAssignmentAndStudent(
 			assignmentId,
 			studentId
@@ -48,6 +48,7 @@ const ClassSubmissionService = {
 			status: 'submitted',
 			submitted_at: knex.fn.now(),
 			score: 0.0,
+			file_url: fileUrl
 		};
 
 		const [newSubmission] = await knex('class_submission').insert(data).returning('*');

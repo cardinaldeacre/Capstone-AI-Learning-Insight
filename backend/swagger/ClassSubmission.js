@@ -97,6 +97,38 @@
 
 /**
  * @swagger
+ * /api/submissions/{assignmentId}/download-all:
+ *   get:
+ *     summary: Download semua submisi tugas sebagai ZIP (Teacher/Admin)
+ *     description: Mengambil semua file tugas siswa dalam satu assignment dan membungkusnya menjadi file .zip.
+ *     tags: [Class Submissions]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: assignmentId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID Assignment yang ingin didownload
+ *     responses:
+ *       200:
+ *         description: Berhasil mendownload file ZIP
+ *         content:
+ *           application/zip:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       403:
+ *         description: Akses ditolak (Bukan guru pemilik kelas)
+ *       404:
+ *         description: Belum ada siswa yang mengumpulkan tugas
+ *       500:
+ *         description: Gagal membuat file zip
+ */
+
+/**
+ * @swagger
  * /api/submissions/student/{assignmentId}:
  *   get:
  *     summary: Ambil submisi saya sendiri (Student)
@@ -124,23 +156,26 @@
  * @swagger
  * /api/submissions:
  *   post:
- *     summary: Submit Tugas (Student)
+ *     summary: Submit Tugas (Upload ZIP)
  *     tags: [Class Submissions]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/SubmissionInput'
+ *             type: object
+ *             properties:
+ *               assignment_id:
+ *                 type: integer
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: File tugas (.zip / .rar)
  *     responses:
  *       201:
- *         description: Tugas berhasil disubmit
- *       409:
- *         description: Anda sudah mensubmit tugas ini
- *       400:
- *         description: Data tidak lengkap
+ *         description: Berhasil upload
  */
 
 /**
