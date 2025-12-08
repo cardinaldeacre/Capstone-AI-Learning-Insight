@@ -33,8 +33,8 @@ const ModuleContent = ({
         const data = await fetchQuizByModule(module.id);
         setQuizzes(data || []);
       }
-    }
-    loadQuizzes()
+    };
+    loadQuizzes();
   }, [module]);
 
   const handleFinishClick = async () => {
@@ -48,9 +48,7 @@ const ModuleContent = ({
     }
   };
 
-  const handleEditModule = () => {
-
-  }
+  const handleEditModule = () => {};
 
   const isLastModule = currentIndex === totalModules - 1;
 
@@ -62,7 +60,9 @@ const ModuleContent = ({
         <span>Learning Modules</span>
         <span>/</span>
         <span className="text-teal-600 font-medium">
-          Chapter {module.order_number}
+          {module.type === 'assignment'
+            ? 'Assignment'
+            : `Chapter ${module.order_number}`}
         </span>
       </div>
 
@@ -72,7 +72,9 @@ const ModuleContent = ({
             <div>
               <div className="flex items-center gap-3 mb-3">
                 <span className="bg-teal-50 text-teal-700 border border-teal-100 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                  Chapter {module.order_number}
+                  {module.type === 'assignment'
+                    ? 'Assignment'
+                    : `Chapter ${module.order_number}`}
                 </span>
                 {module.isCompleted && (
                   <span className="flex items-center gap-1.5 text-green-600 text-xs font-bold bg-green-50 px-3 py-1 rounded-full border border-green-100">
@@ -118,22 +120,20 @@ const ModuleContent = ({
             onEditModule={handleEditModule}
           />
         ) : (
-          <StudentQuizPanel
-            quizzes={quizzes}
-            courseId={courseId}
-          />
+          <StudentQuizPanel quizzes={quizzes} courseId={courseId} />
         )}
 
         <div className="bg-gray-50 p-6 border-t border-gray-100 flex justify-between items-center sticky bottom-0 z-10">
-          {(currentIndex > 0) && (
+          {currentIndex > 0 && (
             <button
               onClick={onPrev}
               disabled={currentIndex === 0 || isSubmitting}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all
-              ${currentIndex === 0
+              ${
+                currentIndex === 0
                   ? 'text-gray-300 cursor-not-allowed'
                   : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300 shadow-sm'
-                }`}
+              }`}
             >
               <ChevronLeft size={18} />
               Previous
@@ -146,9 +146,10 @@ const ModuleContent = ({
                 onClick={onNext}
                 disabled={isLastModule}
                 className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm
-                  ${isLastModule
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-white border border-teal-200 text-teal-700 hover:bg-teal-50 hover:border-teal-300'
+                  ${
+                    isLastModule
+                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : 'bg-white border border-teal-200 text-teal-700 hover:bg-teal-50 hover:border-teal-300'
                   }`}
               >
                 {isLastModule ? 'End of modules' : 'Next Chapter'}

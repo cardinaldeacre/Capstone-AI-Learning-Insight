@@ -1,16 +1,25 @@
 import React from 'react';
-import { PlayCircle, CheckCircle, Lock, FileText } from 'lucide-react';
+import {
+  PlayCircle,
+  CheckCircle,
+  Lock,
+  FileText,
+  ClipboardList
+} from 'lucide-react';
 
 const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
+  const isAssignmentLockedByModules = !modules
+    .filter(m => m.type !== 'assignment')
+    .every(m => m.isCompleted);
+
   return (
     <aside className="fixed top-0 left-0 w-80 bg-white border-r border-gray-200 h-screen flex-col shadow-sm z-10 hidden md:flex">
-      {/* header */}
+      {/* Header */}
       <div className="p-6 border-b border-gray-100 bg-white shrink-0">
         <h2 className="text-lg font-bold text-gray-800 tracking-tight">
           Module List
         </h2>
 
-        {/* Statistik Progress */}
         <div className="flex justify-between items-end mt-1">
           <p className="text-xs text-gray-500 font-medium">
             {progressStats?.completed || 0} of{' '}
@@ -21,7 +30,6 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
           </span>
         </div>
 
-        {/* Progress Bar */}
         <div className="w-full bg-gray-100 rounded-full h-2 mt-3 overflow-hidden">
           <div
             className="bg-teal-500 h-full rounded-full transition-all duration-500 ease-out"
@@ -30,20 +38,24 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
         </div>
       </div>
 
-      {/* List Materi */}
+      {/* List */}
       <div className="flex-1 overflow-y-auto custom-scrollbar p-2">
         <div className="space-y-1">
           {modules.map((modul, index) => {
             const isActive = index === currentIndex;
             const isCompleted = modul.isCompleted;
             const isStarted = modul.isStarted;
+            const isAssignment = modul.type === 'assignment';
 
-            const isLocked =
+            const previousModuleIncomplete =
               index > 0 &&
               !modules[index - 1].isCompleted &&
               !isCompleted &&
               !isActive;
 
+            const isLocked = isAssignment
+              ? isAssignmentLockedByModules
+              : previousModuleIncomplete;
             return (
               <button
                 key={modul.id}
@@ -51,24 +63,35 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                 disabled={isLocked}
                 className={`
                   w-full text-left px-4 py-3 rounded-lg flex items-start gap-3 transition-all duration-200 group border
-                  ${isActive
-                    ? 'bg-teal-50 text-teal-700 border-teal-100 ring-1 ring-teal-200'
-                    : isLocked
+                  ${
+                    isActive
+                      ? 'bg-teal-50 text-teal-700 border-teal-100 ring-1 ring-teal-200'
+                      : isLocked
                       ? 'bg-gray-50 text-gray-400 border-transparent cursor-not-allowed opacity-70'
                       : 'bg-white text-gray-600 border-transparent hover:bg-gray-50 hover:text-gray-900'
                   }
                 `}
               >
-                {/* icon */}
+                {/* ICON */}
                 <div
-                  className={`mt-0.5 shrink-0 transition-colors ${isActive
-                    ? 'text-teal-600'
-                    : isCompleted
-                      ? 'text-teal-500'
-                      : 'text-gray-400 group-hover:text-gray-600'
-                    }`}
+                  className={`
+                    mt-0.5 shrink-0 transition-colors 
+                    ${
+                      isActive
+                        ? 'text-teal-600'
+                        : isCompleted
+                        ? 'text-teal-500'
+                        : 'text-gray-400 group-hover:text-gray-600'
+                    }
+                  `}
                 >
-                  {isCompleted ? (
+                  {isAssignment ? (
+                    isLocked ? (
+                      <Lock size={18} className="text-gray-300" />
+                    ) : (
+                      <ClipboardList size={18} className="text-teal-600" />
+                    )
+                  ) : isCompleted ? (
                     <CheckCircle
                       size={18}
                       className="fill-teal-100 stroke-teal-600"
@@ -79,7 +102,7 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                       fill="currentColor"
                       className="text-teal-100 stroke-teal-600"
                     />
-                  ) : isLocked ? (
+                  ) : previousModuleIncomplete ? (
                     <Lock size={18} className="text-gray-300" />
                   ) : isStarted ? (
                     <PlayCircle size={18} className="text-amber-500" />
@@ -90,14 +113,21 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
 
                 <div className="overflow-hidden">
                   <p
-                    className={`text-[10px] font-bold mb-0.5 uppercase tracking-wider ${isActive ? 'text-teal-600' : 'text-gray-400'
-                      }`}
+                    className={`
+                      text-[10px] font-bold mb-0.5 uppercase tracking-wider
+                      ${isActive ? 'text-teal-600' : 'text-gray-400'}
+                    `}
                   >
-                    Chapter {modul.order_number}
+                    {isAssignment
+                      ? 'Assignment'
+                      : `Chapter ${modul.order_number}`}
                   </p>
+
                   <h3
-                    className={`text-sm font-medium leading-snug truncate ${isActive ? 'text-gray-900' : 'text-gray-600'
-                      }`}
+                    className={`
+                      text-sm font-medium leading-snug truncate
+                      ${isActive ? 'text-gray-900' : 'text-gray-600'}
+                    `}
                   >
                     {modul.title}
                   </h3>

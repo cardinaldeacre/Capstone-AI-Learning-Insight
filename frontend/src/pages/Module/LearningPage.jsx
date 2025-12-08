@@ -7,6 +7,7 @@ import {
   fetchStartModuleProgress,
   fetchCompleteModuleProgress
 } from '@/lib/api/services/courseService';
+import { fetchGetAllAssigments } from '@/lib/api/services/assigmentService';
 import ModuleSidebar from '@/components/Module/ModuleSIdebar';
 import ModuleContent from '@/components/Module/ModuleContent';
 import { useLayout } from '@/hooks/useLayout';
@@ -27,6 +28,7 @@ const LearningPage = () => {
     completed: 0,
     percentage: 0
   });
+  const [_, setAssignments] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -44,10 +46,13 @@ const LearningPage = () => {
       try {
         setLoading(true);
 
-        const [modulesData, progressResponse] = await Promise.all([
-          fetchCourseModules(courseId),
-          fetchGetModuleProgress(courseId)
-        ]);
+        const [modulesData, progressResponse, assignmentResponse] =
+          await Promise.all([
+            fetchCourseModules(courseId),
+            fetchGetModuleProgress(courseId),
+            fetchGetAllAssigments(courseId)
+          ]);
+        // console.log('ASSIGNMENT RESPONSE:', assignmentResponse);
 
         const progressList = progressResponse.data || [];
 
@@ -69,10 +74,28 @@ const LearningPage = () => {
         const sortedModules = mergedModules.sort(
           (a, b) => a.order_number - b.order_number
         );
-        setModules(sortedModules);
+
+        // assigment response
+        const assignmentList = Array.isArray(assignmentResponse)
+          ? assignmentResponse
+          : [];
+
+        const assignmentModules = assignmentList.map(a => ({
+          id: `assign-${a.id}`,
+          order_number: 9999,
+          type: 'assignment',
+          title: a.title,
+          min_score: a.min_score,
+          content: a.content
+        }));
+
+        const combineModules = [...sortedModules, ...assignmentModules];
+
+        setModules(combineModules);
         setProgressStats(
           progressResponse.stats || { total: 0, completed: 0, percentage: 0 }
         );
+        setAssignments(assignmentList);
 
         // mulai module yg isCompleted == false
         const firstUnfinishedIndex = sortedModules.findIndex(
@@ -102,10 +125,10 @@ const LearningPage = () => {
             prevModules.map((mod, idx) =>
               idx === currentIndex
                 ? {
-                  ...mod,
-                  isStarted: true,
-                  started_at: new Date().toISOString()
-                }
+                    ...mod,
+                    isStarted: true,
+                    started_at: new Date().toISOString()
+                  }
                 : mod
             )
           );
@@ -138,7 +161,7 @@ const LearningPage = () => {
 
   const handleCreateQuiz = () => {
     nav(`/courses/${courseId}/quiz/create`);
-  }
+  };
 
   //menandai module yg selesai
   const handleMarkAsComplete = async () => {
@@ -152,10 +175,10 @@ const LearningPage = () => {
         return prevModules.map((mod, idx) =>
           idx === currentIndex
             ? {
-              ...mod,
-              isCompleted: true,
-              completed_at: new Date().toISOString()
-            }
+                ...mod,
+                isCompleted: true,
+                completed_at: new Date().toISOString()
+              }
             : mod
         );
       });
@@ -175,11 +198,15 @@ const LearningPage = () => {
     }
   };
 
-  if (loading) return <div className="p-10 text-center text-gray-600 hover:text-red-gray font-medium">Getting modules for you...</div>;
+  if (loading)
+    return (
+      <div className="p-10 text-center text-gray-600 hover:text-red-gray font-medium">
+        Getting modules for you...
+      </div>
+    );
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
-
       {/* siddebar */}
       <div className="w-80 shrink-0 h-full border-r border-gray-200 bg-white z-20">
         <ModuleSidebar
@@ -211,6 +238,7 @@ const LearningPage = () => {
           )}
         </header>
 
+        {/* module content */}
         <div className="w-full p-4 md:p-6 pb-20 pt-16 mt-5">
           {modules.length > 0 && (
             <ModuleContent
