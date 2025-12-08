@@ -81,7 +81,8 @@ const LearningPage = () => {
           : [];
 
         const assignmentModules = assignmentList.map(a => ({
-          id: `assign-${a.id}`,
+          navigationId: `assign-${a.id}`,
+          assignmentId: a.id,
           order_number: 9999,
           type: 'assignment',
           title: a.title,
@@ -117,7 +118,11 @@ const LearningPage = () => {
     const markAsStarted = async () => {
       const currentModule = modules[currentIndex];
 
-      if (currentModule && !currentModule.isStarted) {
+      if (
+        currentModule &&
+        !currentModule.isStarted &&
+        currentModule.type !== 'assignment'
+      ) {
         try {
           await fetchStartModuleProgress(currentModule.id);
 
@@ -166,7 +171,7 @@ const LearningPage = () => {
   //menandai module yg selesai
   const handleMarkAsComplete = async () => {
     const currentModule = modules[currentIndex];
-    if (!currentModule) return;
+    if (!currentModule || currentModule.type === 'assignment') return;
 
     try {
       await fetchCompleteModuleProgress(currentModule.id);

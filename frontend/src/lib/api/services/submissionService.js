@@ -37,7 +37,13 @@ export const fetchPostSubmission = async submissionData => {
   try {
     const response = await axiosClient.post(
       MODULE_ENDPOINT.postSubmission,
-      submissionData
+      submissionData,
+      // override header
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
     );
     return response.data;
   } catch (error) {

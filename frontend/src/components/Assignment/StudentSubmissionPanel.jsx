@@ -11,13 +11,6 @@ import {
 import { toast } from 'sonner';
 
 const StudentSubmissionPanel = ({ assignmentModule }) => {
-  // if (!assignmentModule) {
-  //   return (
-  //     <p className="p-4 text-red-500">Error: Assignment data is missing</p>
-  //   );
-  // }
-  console.log('assignmentModule', assignmentModule);
-
   const assignmentId = assignmentModule.assignmentId;
   const [submission, setSubmission] = useState(null);
   const [file, setFile] = useState(null);
@@ -60,6 +53,7 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('assignment_id', assignmentId);
+    console.log('formData: ', formData);
 
     try {
       const response = await fetchPostSubmission(formData);
@@ -143,7 +137,7 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
     <Card className="shadow-lg border-2 border-teal-500/50">
       <CardHeader className="flex flex-row items-center justify-between">
         <h3 className="text-xl font-semibold text-teal-800">
-          {assignmentModule.title} (Assignment)
+          {assignmentModule.title}
         </h3>
         {renderStatusBadge()}
       </CardHeader>
@@ -173,7 +167,6 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
           </div>
         )}
 
-        {/* Siswa diizinkan upload ulang bahkan jika sudah dinilai, atau jika belum dinilai */}
         <p className="text-sm text-gray-500 mb-2">
           Unggah file ZIP tugas Anda di sini. (Mengunggah baru akan menimpa
           submission sebelumnya).

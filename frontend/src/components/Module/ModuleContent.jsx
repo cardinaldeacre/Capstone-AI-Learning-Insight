@@ -83,9 +83,6 @@ const ModuleContent = ({
                   </span>
                 )}
               </div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
-                {module.title}
-              </h1>
             </div>
           </div>
         </div>
@@ -108,14 +105,10 @@ const ModuleContent = ({
         )}
 
         {/* konten */}
-        <div className="p-6 md:p-8 flex-1">
-          <article className="prose prose-lg max-w-none prose-slate prose-headings:font-bold prose-a:text-teal-600 text-gray-600 leading-relaxed">
-            <div className="whitespace-pre-wrap">{module.content}</div>
-          </article>
-
+        <div className="py md:p-8 flex-1">
           {/* panel submission */}
           {!isTeacher && module.type === 'assignment' && (
-            <div className="mt-8">
+            <div>
               <StudentSubmissionPanel assignmentModule={module} />
             </div>
           )}
