@@ -23,6 +23,7 @@ import TeacherModuleListPage from './pages/Module/TeacherModuleListPage';
 import LandingPage from './pages/LandingPage';
 import TeacherListAssigmentPage from './pages/Assigment/TeacherListAssigmentPage';
 import TeacherCreateAssignmentPage from './pages/Assigment/TeacherCreateAssigmentPage';
+import TeacherDetailAssigmentPage from './pages/Assigment/TeacherDetailAssigmentPage';
 import TakeQuizPage from './pages/Quiz/TakeQuizPage';
 import QuizResultPage from './pages/Quiz/QuizResultPage';
 
@@ -72,6 +73,10 @@ createRoot(document.getElementById('root')).render(
                       <Route
                         path="create"
                         element={<TeacherCreateAssignmentPage />}
+                      />
+                      <Route
+                        path=":assigmentId"
+                        element={<TeacherDetailAssigmentPage />}
                       />
                     </Route>
 

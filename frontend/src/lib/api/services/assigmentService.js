@@ -30,10 +30,10 @@ export const fetchGetAssigmentById = async id => {
   }
 };
 
-export const fetchPutAssigmentById = async id => {
+export const fetchPutAssigmentById = async (id, payload) => {
   try {
     const url = MODULE_ENDPOINT.putAssigmentById(id);
-    const response = await axiosClient.put(url);
+    const response = await axiosClient.put(url, payload);
     return response.data;
   } catch (error) {
     console.error('assigmentService.fetchPutAssigmentById: ', error);
