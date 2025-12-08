@@ -87,6 +87,7 @@ const LoginPage = () => {
                 className="pl-10 h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-teal-600"
                 value={formData.email}
                 onChange={handleChange}
+                autoComplete="username"
                 required
               />
             </div>
@@ -109,6 +110,7 @@ const LoginPage = () => {
                   className="pl-10 pr-10 h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-teal-600"
                   value={formData.password}
                   onChange={handleChange}
+                  autoComplete="current-password"
                   required
                 />
 

@@ -3,13 +3,13 @@ const knex = require('../config/database');
 const QuizAttemptService = {
 	submitAttempt: async (studentId, quizId, userAnswer) => {
 		const correctOptions = await knex('quiz_options as qo')
-			.join('quiz_question as qq', 'qo.question_id', 'qq.id')
+			.join('quiz_questions as qq', 'qo.question_id', 'qq.id')
 			.where('qq.quiz_id', quizId)
 			.where('qo.is_correct', true)
 			.select('qq.id as question_id', 'qo.id as option_id');
 
 		const totalQuestion = await knex('quiz_questions')
-			.where({quiz_id: quizId})
+			.where({ quiz_id: quizId })
 			.count('id as count')
 			.first();
 
@@ -24,7 +24,8 @@ const QuizAttemptService = {
 		userAnswer.forEach(answer => {
 			const isCorrect = correctOptions.find(
 				correct =>
-					correct.question_id == answer.question_id && correct.option_id == answer.option_id
+					String(correct.question_id) === String(answer.question_id) &&
+					String(correct.option_id) === String(answer.option_id)
 			);
 
 			if (isCorrect) {
@@ -47,15 +48,15 @@ const QuizAttemptService = {
 
 	getHistoryByStudent: async (studentId, quizId) => {
 		return knex('quiz_attempts')
-			.where({student_id: studentId, quiz_id: quizId})
+			.where({ student_id: studentId, quiz_id: quizId })
 			.orderBy('id', 'desc');
 	},
 
 	checkPassStatus: async attemptId => {
-		const attempt = await knex('quiz_attempts').where({id: attemptId}).first();
-		const quiz = await knex('quizzes').where({id: attempt.quiz_id}).first();
+		const attempt = await knex('quiz_attempts').where({ id: attemptId }).first();
+		const quiz = await knex('quizzes').where({ id: attempt.quiz_id }).first();
 
-		if (!quiz.min_score) return {passed: true};
+		if (!quiz.min_score) return { passed: true };
 
 		return {
 			passed: attempt.score >= quiz.min_score,
