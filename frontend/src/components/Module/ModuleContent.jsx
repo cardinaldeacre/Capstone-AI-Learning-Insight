@@ -9,7 +9,7 @@ import {
 import useAuth from '@/hooks/useAuth';
 import { fetchQuizByModule } from '@/lib/api/services/quizService';
 import TeacherActionPanel from './TeacherActionPanel';
-import StudentQuizPanel from './StudentQuizPanel';
+import StudentQuizPanel from '../Quiz/StudentQuizPanel';
 
 const ModuleContent = ({
   module,
