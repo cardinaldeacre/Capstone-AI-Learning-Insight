@@ -56,9 +56,11 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
             const isLocked = isAssignment
               ? isAssignmentLockedByModules
               : previousModuleIncomplete;
+
+            const uniqueKey = modul.navigationId || modul.id;
             return (
               <button
-                key={modul.id}
+                key={uniqueKey}
                 onClick={() => !isLocked && onSelect(index)}
                 disabled={isLocked}
                 className={`
