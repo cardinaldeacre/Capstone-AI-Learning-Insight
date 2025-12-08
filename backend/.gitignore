@@ -34,3 +34,6 @@ coverage/
 
 dist/
 build/
+
+# file upload local
+public/uploads/*

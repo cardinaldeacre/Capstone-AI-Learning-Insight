@@ -18,11 +18,14 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
 
   useEffect(() => {
     const loadMySubmission = async () => {
+      console.log('assignmentId', assignmentId);
       try {
-        const response = await fetchGetAllMySubmissions(assignmentId);
-        setSubmission(
-          Array.isArray(response.data) ? response.data[0] : response.data
-        );
+        const response = await fetchGetAllMySubmissions(Number(assignmentId));
+        const submissionData = Array.isArray(response.data)
+          ? response.data[0]
+          : response.data.submission || response.data;
+        setSubmission(submissionData);
+        console.log('fetchGetAllMySubmissions', response);
       } catch (error) {
         console.error('gagal fetch getAllSubmission: ', error);
         setSubmission(null);
@@ -57,7 +60,7 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
 
     try {
       const response = await fetchPostSubmission(formData);
-      setSubmission(response.data);
+      setSubmission(response.submission);
       toast.success('Submission berhasil diunggah');
     } catch (error) {
       console.error('Upload submission gagal: ', error);
@@ -128,7 +131,9 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
         </Button>
       </div>
       {file && (
-        <p className="text-sm text-gray-500">File terpilih: **{file.name}**</p>
+        <p className="text-sm text-gray-500">
+          File terpilih: <span className="font-bold">{file.name}</span>
+        </p>
       )}
     </form>
   );
@@ -160,16 +165,14 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
             </p>
             {isGraded && (
               <p className="text-sm mt-2 text-gray-700">
-                **Feedback Guru:**{' '}
-                {submission.feedback || 'Tidak ada feedback.'}
+                {/* {submission.file_url} */}
               </p>
             )}
           </div>
         )}
 
         <p className="text-sm text-gray-500 mb-2">
-          Unggah file ZIP tugas Anda di sini. (Mengunggah baru akan menimpa
-          submission sebelumnya).
+          Unggah file ZIP tugas Anda di sini.
         </p>
         {renderSubmissionForm()}
       </CardContent>
