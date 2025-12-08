@@ -3,8 +3,9 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const app = express();
 const port = 3000;
+const path = require('path')
 const swaggerUi = require('swagger-ui-express');
-const {swaggerSpec} = require('./swagger');
+const { swaggerSpec } = require('./swagger');
 const UserController = require('./controllers/UserController');
 const ModulesController = require('./controllers/ModulesController');
 const ModulesProgressController = require('./controllers/ModulesProgressController');
@@ -44,6 +45,7 @@ app.use('/api/submissions', ClassSubmissionController);
 app.use('/api/enrolment', ClassEnrolmentController);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Run server
 app.listen(port, () => {

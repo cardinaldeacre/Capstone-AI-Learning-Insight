@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const {authMiddleware, authorizeRole} = require('../middleware/auth');
+const { authMiddleware, authorizeRole } = require('../middleware/auth');
 const ClassSubmissionService = require('../services/ClassSubmissionService');
 const ClassAssignmentService = require('../services/ClassAssignmentService');
 const ClassesService = require('../services/ClassesService');
+const upload = require('../middleware/upload');
+const archiver = require('archiver');
 
 const authorizeGrader = async (req, res, next) => {
 	if (req.user.role === 'admin') {
@@ -14,13 +16,13 @@ const authorizeGrader = async (req, res, next) => {
 	const submission = await ClassSubmissionService.getById(submissionId);
 
 	if (!submission) {
-		return res.status(404).json({message: 'Submisi tidak ditemukan'});
+		return res.status(404).json({ message: 'Submisi tidak ditemukan' });
 	}
 
 	const classDetail = await ClassesService.getById(submission.class_id);
 
 	if (!classDetail || classDetail.teacher_id !== req.user.id) {
-		return res.status(403).json({message: 'Anda tidak diizinkan untuk menilai tugas ini.'});
+		return res.status(403).json({ message: 'Anda tidak diizinkan untuk menilai tugas ini.' });
 	}
 
 	next();
@@ -31,14 +33,14 @@ router.get(
 	authMiddleware,
 	authorizeRole('admin', 'teacher'),
 	async (req, res) => {
-		const {assignmentId} = req.params;
+		const { assignmentId } = req.params;
 		try {
 			const assignmentIdInt = parseInt(assignmentId);
 
 			if (req.user.role === 'teacher') {
 				const assignment = await ClassAssignmentService.getById(assignmentIdInt);
 				if (!assignment) {
-					return res.status(404).json({message: 'Tugas tidak ditemukan'});
+					return res.status(404).json({ message: 'Tugas tidak ditemukan' });
 				}
 
 				const classDetail = await ClassesService.getById(assignment.class_id);
@@ -54,13 +56,13 @@ router.get(
 			return res.status(200).json(submissions);
 		} catch (error) {
 			console.error(error);
-			return res.status(500).json({message: 'Error server'});
+			return res.status(500).json({ message: 'Error server' });
 		}
 	}
 );
 
 router.get('/student/:assignmentId', authMiddleware, authorizeRole('student'), async (req, res) => {
-	const {assignmentId} = req.params;
+	const { assignmentId } = req.params;
 	const studentId = req.user.id;
 	try {
 		const assignmentIdInt = parseInt(assignmentId);
@@ -71,28 +73,32 @@ router.get('/student/:assignmentId', authMiddleware, authorizeRole('student'), a
 		);
 
 		if (!submission) {
-			return res.status(404).json({message: 'Submisi Anda tidak ditemukan.'});
+			return res.status(404).json({ message: 'Submisi Anda tidak ditemukan.' });
 		}
 
 		return res.status(200).json(submission);
 	} catch (error) {
 		console.error(error);
-		return res.status(500).json({message: 'Error server'});
+		return res.status(500).json({ message: 'Error server' });
 	}
 });
 
-router.post('/', authMiddleware, authorizeRole('student'), async (req, res) => {
+router.post('/', authMiddleware, authorizeRole('student'), upload.single('file'), async (req, res) => {
 	try {
-		const {assignment_id} = req.body;
+		const { assignment_id } = req.body;
 		const studentId = req.user.id;
 
+		if (!req.file) {
+			return res.status(400).json({ message: 'File tugas (ZIP/RAR) wajib di upload' });
+		}
+
 		if (!assignment_id) {
-			return res.status(400).json({message: 'assignment_id harus diisi.'});
+			return res.status(400).json({ message: 'assignment id haru diisi' })
 		}
 
 		const assignmentIdInt = parseInt(assignment_id);
-
-		const newSubmission = await ClassSubmissionService.create(assignmentIdInt, studentId);
+		const fileUrl = `/uploads/submissions/${req.file.filename}`;
+		const newSubmission = await ClassSubmissionService.create(assignmentIdInt, studentId, fileUrl);
 
 		res.status(201).json({
 			message: 'Tugas berhasil disubmit',
@@ -100,13 +106,13 @@ router.post('/', authMiddleware, authorizeRole('student'), async (req, res) => {
 		});
 	} catch (error) {
 		if (error.code === '409') {
-			return res.status(409).json({message: 'Anda sudah mensubmit tugas ini.'});
+			return res.status(409).json({ message: 'Anda sudah mensubmit tugas ini.' });
 		}
 		if (error.code === '23503')
-			return res.status(400).json({message: 'Assignment ID tidak valid.'});
+			return res.status(400).json({ message: 'Assignment ID tidak valid.' });
 
 		console.error(error);
-		res.status(500).json({message: 'Error server'});
+		res.status(500).json({ message: 'Error server' });
 	}
 });
 
@@ -116,11 +122,11 @@ router.put(
 	authorizeRole('admin', 'teacher'),
 	authorizeGrader,
 	async (req, res) => {
-		const {id} = req.params;
-		const {score, feedback} = req.body;
+		const { id } = req.params;
+		const { score, feedback } = req.body;
 
 		if (score === undefined || score === null) {
-			return res.status(400).json({message: 'Score harus diisi.'});
+			return res.status(400).json({ message: 'Score harus diisi.' });
 		}
 
 		try {
@@ -140,9 +146,54 @@ router.put(
 			});
 		} catch (error) {
 			console.error(error);
-			res.status(500).json({message: 'Server error'});
+			res.status(500).json({ message: 'Server error' });
 		}
 	}
 );
+
+router.get('/:assignmentId/download-all', authMiddleware, authorizeRole('admin', 'teacher'), async (req, res) => {
+	const { assignmentId } = req.params;
+
+	try {
+		const submission = await ClassSubmissionService.getAllByAssignment(assignmentId);
+
+		if (submission.length === 0) {
+			return res.status(404).json({ message: 'Belum ada tugas yg dikumpulkan' })
+		}
+
+		const fileName = `submission-assignment-${assignmentId}.zip`;
+		res.attachment(fileName);
+
+		const archive = archiver('zip', {
+			zlib: { level: 9 }
+		});
+
+		archive.on('error', function (error) {
+			console.error("Archiver Error", error);
+			res.status(500).send({ message: error.message })
+		})
+
+		archive.pipe(res);
+
+		submission.forEach(sub => {
+			if (sub.file_url) {
+				const relativePath = sub.file_url.startsWith('/') ? sub.file_url.slice(1) : sub.file_url;
+				const absolutePath = path.join(__dirname, '../', relativePath);
+
+				if (fs.existsSync(absolutePath)) {
+					const niceName = `${sub.student_name.replace(/ /g, '_')}_${sub.id}.zip`;
+					archive.file(absolutePath, { name: niceName });
+				}
+			}
+		})
+
+		await archive.finalize()
+	} catch (error) {
+		console.error(error);
+		if (!res.headersSent) {
+			res.status(500).json({ message: 'Gagal membuat zip.' });
+		}
+	}
+})
 
 module.exports = router;

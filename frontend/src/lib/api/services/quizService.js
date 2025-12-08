@@ -96,3 +96,24 @@ export const submitStudentAnswers = async (quizId, answers) => {
     }
 };
 
+export const fetchLatestQuizResult = async (quizId) => {
+    try {
+        const response = await axiosClient.get(`/quiz-attempt/latest/${quizId}`)
+
+        return response.data.data;
+    } catch (error) {
+        console.error("Error submitting quiz:", error);
+        const msg = error.response?.data?.message || "Gagal mengirim jawaban";
+        throw new Error(msg);
+    }
+};
+
+export const fetchQuizHistory = async (quizId) => {
+    try {
+        const response = await axiosClient.get(`/quiz-attempt/history/${quizId}`);
+        return response.data.data;
+    } catch (error) {
+        console.error("Gagal mengambil history kuis:", error);
+        return [];
+    }
+}

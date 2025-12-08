@@ -9,8 +9,8 @@ import {
 import useAuth from '@/hooks/useAuth';
 import { fetchQuizByModule } from '@/lib/api/services/quizService';
 import TeacherActionPanel from './TeacherActionPanel';
-import StudentQuizPanel from './StudentQuizPanel';
-import StudentSubmissionPanel from '@/components/Assignment/StudentSubmissionPanel';
+import StudentQuizPanel from '../Quiz/StudentQuizPanel';
+import StudentSubmissionPanel from '../Assignment/StudentSubmissionPanel';
 
 const ModuleContent = ({
   module,
