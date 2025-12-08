@@ -102,7 +102,9 @@ export default function TeacherListAssigmentPage() {
                     className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white"
                     title="Lihat Submission"
                   >
-                    <Link>
+                    <Link
+                      to={`/courses/${courseId}/assigments/${item.id}/submission/list`}
+                    >
                       <Upload className="h-4 w-4" />
                     </Link>
                   </Button>
