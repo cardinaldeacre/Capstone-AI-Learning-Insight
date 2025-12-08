@@ -31,7 +31,7 @@ const StudentQuizItem = ({ quiz, courseId }) => {
     const isPassed = bestScore >= quiz.min_score;
 
     return (
-        <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
+        <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-md">
             <div className="flex items-center gap-2 mb-4">
                 <PlayCircle className="w-6 h-6 text-teal-600" />
                 <h3 className="text-xl font-bold text-gray-800">{quiz.title}</h3>
@@ -52,21 +52,31 @@ const StudentQuizItem = ({ quiz, courseId }) => {
                         ) : history.length > 0 ? (
                             <ScrollArea className="h-[120px] pr-4">
                                 <ul className="space-y-3">
-                                    {history.map((attempt, idx) => (
-                                        <li key={attempt.id} className="flex justify-between items-center text-sm border-b pb-2 last:border-0">
-                                            <div className="flex flex-col">
-                                                <span className="text-xs text-gray-400">
-                                                    {new Date(attempt.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                    {history.map((attempt) => {
+                                        const attemptPassed = attempt.score >= quiz.min_score;
+                                        return (
+                                            <li key={attempt.id} className="flex justify-between items-center text-sm border-b pb-2 last:border-0">
+                                                <div className="flex items-center gap-2">
+                                                    {attemptPassed ? (
+                                                        <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
+                                                    ) : (
+                                                        <XCircle className="w-4 h-4 text-red-500 shrink-0" />
+                                                    )}
+                                                    <div className="flex flex-col">
+                                                        <span className="text-xs text-gray-400">
+                                                            {new Date(attempt.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                                        </span>
+                                                        <span className={`font-medium text-xs ${attemptPassed ? 'text-green-600' : 'text-red-500'}`}>
+                                                            {attemptPassed ? 'Passed' : 'Not Passed'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <span className="font-extrabold text-lg text-slate-800 bg-slate-100 px-2 py-1 rounded">
+                                                    {Math.round(attempt.score)}
                                                 </span>
-                                                <span className={`font-medium text-xs ${attempt.score >= quiz.min_score ? 'text-green-600' : 'text-red-500'}`}>
-                                                    {attempt.score >= quiz.min_score ? 'Passed' : 'Not Passed'}
-                                                </span>
-                                            </div>
-                                            <span className="font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded">
-                                                {Math.round(attempt.score)}
-                                            </span>
-                                        </li>
-                                    ))}
+                                            </li>
+                                        )
+                                    })}
                                 </ul>
                             </ScrollArea>
                         ) : (
@@ -78,9 +88,12 @@ const StudentQuizItem = ({ quiz, courseId }) => {
                     </CardContent>
 
                     {history.length > 0 && (
-                        <div className="p-3 bg-slate-50 border-t flex justify-between items-center text-sm">
-                            <span className="text-slate-500">Best Score:</span>
-                            <Badge variant={isPassed ? "default" : "secondary"} className={isPassed ? "bg-green-600" : ""}>
+                        <div className="p-3 bg-slate-100 border-t flex justify-between items-center text-sm rounded-b-lg">
+                            <span className="text-slate-700 font-semibold">Best Score:</span>
+                            <Badge
+                                variant={isPassed ? "default" : "secondary"}
+                                className={`text-lg font-bold px-3 py-1 ${isPassed ? 'bg-teal-600 hover:bg-teal-700 text-white' : 'bg-red-500 hover:bg-red-600 text-white'}`}
+                            >
                                 {Math.round(bestScore)}
                             </Badge>
                         </div>
@@ -118,7 +131,7 @@ const StudentQuizItem = ({ quiz, courseId }) => {
 
                     <CardFooter>
                         <Button
-                            className="w-full bg-teal-600 hover:bg-teal-700 text-white gap-2 shadow-lg shadow-teal-200"
+                            className="w-full bg-teal-600 hover:bg-teal-700 text-white gap-2 shadow-lg shadow-teal-200 rounded-xl" // Tombol aksi diubah ke rounded-xl
                             onClick={() => navigate(`/courses/${courseId}/quiz/${quiz.id}/take`)}
                         >
                             {history.length > 0 ? "Try Again" : "Start Quiz"}
