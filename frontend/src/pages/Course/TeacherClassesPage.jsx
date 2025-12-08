@@ -1,5 +1,3 @@
-// frontend/src/pages/Course/TeacherClassesPage.jsx
-
 import React, { useState, useEffect } from 'react';
 import {
   fetchCourseStudentList,
@@ -22,12 +20,8 @@ import {
   Edit,
   Trash2,
   BookOpen,
-  Users,
-  Loader2,
-  Sheet,
   ListTodo
 } from 'lucide-react';
-// IMPORT DIALOG COMPONENTS
 import {
   Dialog,
   DialogContent,
@@ -42,7 +36,7 @@ export default function TeacherClassesPage() {
   const [classes, setClasses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isSheetOpen, setIsSheetOpen] = useState(false); // State ini kini mengontrol Dialog
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [editingClass, setEditingClass] = useState(null);
 
   const loadClasses = async () => {

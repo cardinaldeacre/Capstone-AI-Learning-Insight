@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Trash2, ChevronRight } from 'lucide-react';
+import { PlusCircle, Trash2, Edit, Upload } from 'lucide-react';
 import {
   fetchDeleteAssigmentById,
   fetchGetAllAssigments
@@ -100,9 +100,20 @@ export default function TeacherListAssigmentPage() {
                     variant="outline"
                     asChild
                     className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white"
+                    title="Lihat Submission"
+                  >
+                    <Link>
+                      <Upload className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    asChild
+                    className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white"
+                    title="Edit Assignment"
                   >
                     <Link to={`/courses/${courseId}/assigments/${item.id}`}>
-                      <ChevronRight className="h-4 w-4" />
+                      <Edit className="h-4 w-4" />
                     </Link>
                   </Button>
 

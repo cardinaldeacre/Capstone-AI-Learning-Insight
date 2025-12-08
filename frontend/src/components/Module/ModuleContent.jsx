@@ -10,6 +10,7 @@ import useAuth from '@/hooks/useAuth';
 import { fetchQuizByModule } from '@/lib/api/services/quizService';
 import TeacherActionPanel from './TeacherActionPanel';
 import StudentQuizPanel from './StudentQuizPanel';
+import StudentSubmissionPanel from '@/components/Assignment/StudentSubmissionPanel';
 
 const ModuleContent = ({
   module,
@@ -111,6 +112,13 @@ const ModuleContent = ({
           <article className="prose prose-lg max-w-none prose-slate prose-headings:font-bold prose-a:text-teal-600 text-gray-600 leading-relaxed">
             <div className="whitespace-pre-wrap">{module.content}</div>
           </article>
+
+          {/* panel submission */}
+          {!isTeacher && module.type === 'assignment' && (
+            <div className="mt-8">
+              <StudentSubmissionPanel assignmentModule={module} />
+            </div>
+          )}
         </div>
 
         {isTeacher ? (
