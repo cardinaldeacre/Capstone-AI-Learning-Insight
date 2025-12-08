@@ -1,3 +1,4 @@
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card"; // Asumsi pakai Card dari Shadcn
 import { fetchQuizDataForStudent, submitStudentAnswers } from "@/lib/api/services/quizService";
@@ -15,8 +16,8 @@ export default function TakeQuizPage() {
     const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
     const [answers, setAnswers] = useState({});
     const [timeLeft, setTimeLeft] = useState(null);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(null)
 
-    // --- Load Data ---
     useEffect(() => {
         const loadQuizData = async () => {
             try {
@@ -35,14 +36,12 @@ export default function TakeQuizPage() {
         loadQuizData();
     }, [quizId, nav]);
 
-    // --- Timer Logic ---
     useEffect(() => {
         if (timeLeft === null || timeLeft <= 0) return;
         const intervalId = setInterval(() => {
             setTimeLeft((prevTime) => {
                 if (prevTime <= 1) {
                     clearInterval(intervalId);
-                    // Opsi: handleSubmitQuiz(); (Auto submit jika waktu habis)
                     return 0;
                 }
                 return prevTime - 1;
@@ -58,7 +57,6 @@ export default function TakeQuizPage() {
         return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
-    // --- Handlers ---
     const handleSelectAnswer = (questionId, optionId) => {
         setAnswers(prev => ({
             ...prev,
@@ -78,35 +76,33 @@ export default function TakeQuizPage() {
         if (!isFirstQ) setCurrentQuestionIdx(prev => prev - 1);
     }
 
-    // Fungsi untuk lompat ke soal tertentu dari Map
     const jumpToQuestion = (index) => {
         setCurrentQuestionIdx(index);
     }
 
     const handleSubmitQuiz = async () => {
         if (Object.keys(answers).length < totalQ) {
-            toast.warning("Masih ada soal kosong!", {
-                description: `Anda baru menjawab ${Object.keys(answers).length} dari ${totalQ} soal.`
+            toast.warning("There's a blank answer!", {
+                description: `Answered${Object.keys(answers).length} from ${totalQ} Question.`
             });
             return;
         }
 
-        if (!confirm("Yakin ingin mengumpulkan jawaban?")) return;
+        setIsConfirmOpen(true)
+    };
 
+    const handleConfirmSubmit = async () => {
+        setIsConfirmOpen(false)
         setLoading(true);
         try {
-            const submissionResult = await submitStudentAnswers(quizId, answers);
-            toast.success("Kuis Berhasil Disubmit!", {
-                description: `Nilai Anda: ${Math.round(submissionResult.score)}`
-            });
+            await submitStudentAnswers(quizId, answers);
             nav(`/quiz-result/${quizId}`);
         } catch (error) {
             toast.error("Gagal mengirim jawaban.");
         } finally {
             setLoading(false);
         }
-    };
-
+    }
     if (loading) return <div className="p-10 text-center">Memuat Kuis...</div>;
     if (totalQ === 0) return <div className="p-10 text-center text-red-500">Soal tidak ditemukan.</div>;
 
@@ -138,9 +134,9 @@ export default function TakeQuizPage() {
                                 const isAnswered = answers[q.id] !== undefined;
                                 const isCurrent = currentQuestionIdx === idx;
 
-                                let btnClass = "border border-gray-200 text-gray-600 hover:bg-gray-100"; // Default (Belum dijawab)
-                                if (isAnswered) btnClass = "bg-teal-100 text-teal-700 border-teal-200"; // Sudah dijawab
-                                if (isCurrent) btnClass = "bg-teal-600 text-white border-teal-600 ring-2 ring-teal-100"; // Sedang dibuka
+                                let btnClass = "border border-gray-200 text-gray-600 hover:bg-gray-100";
+                                if (isAnswered) btnClass = "bg-teal-100 text-teal-700 border-teal-200";
+                                if (isCurrent) btnClass = "bg-teal-600 text-white border-teal-600 ring-2 ring-teal-100";
 
                                 return (
                                     <button
@@ -239,6 +235,30 @@ export default function TakeQuizPage() {
 
                 </div>
             </div>
+            <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="text-xl text-red-600">⚠️ Perhatian: Selesaikan Kuis?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Anda akan mengumpulkan **{totalQ}** jawaban. Setelah dikumpulkan, jawaban tidak dapat diubah lagi.
+                            <br />
+                            <br />
+                            Apakah Anda yakin ingin menyelesaikan kuis ini sekarang?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setIsConfirmOpen(false)}>
+                            Batal, Periksa Lagi
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={handleConfirmSubmit}
+                            className="bg-red-600 hover:bg-red-700"
+                        >
+                            Ya, Kumpulkan Sekarang
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
