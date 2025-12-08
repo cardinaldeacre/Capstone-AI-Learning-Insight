@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authMiddleware } = require('../middleware/auth');
+const { authMiddleware, authorizeRole } = require('../middleware/auth');
 const QuizAttemptService = require('../services/QuizAttemptService');
 
 router.get('/history/:quizId', authMiddleware, async (req, res) => {
@@ -41,5 +41,23 @@ router.post('/', authMiddleware, async (req, res) => {
 		return res.status(500).json({ message: 'Error server' });
 	}
 });
+
+router.get('/latest/:quizId', authMiddleware, async (req, res) => {
+	const { quizId } = req.params;
+	const studentId = req.user.id;
+
+	try {
+		const result = await QuizAttemptService.getLatestAttemptByQuizId(studentId, quizId);
+
+		if (!result) {
+			return res.status(404).json({ message: "Hasil quiz tdak ditemukan" })
+		}
+
+		return res.status(200).json({ data: result });
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ message: "Servre error" })
+	}
+})
 
 module.exports = router;

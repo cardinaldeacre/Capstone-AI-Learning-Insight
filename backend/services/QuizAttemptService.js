@@ -64,6 +64,32 @@ const QuizAttemptService = {
 			your_score: attempt.score,
 		};
 	},
+
+	getLatestAttemptByQuizId: async (studentId, quizId) => {
+		const attempt = await knex('quiz_attempts')
+			.join('quizzes', 'quiz_attempts.quiz_id', 'quizzes.id')
+			.join('modules', 'quizzes.module_id', 'modules.id')
+			.select(
+				'quiz_attempts.*',
+				'quizzes.min_score',
+				'quizzes.title as quiz_title',
+				'modules.class_id'
+			)
+			.where('quiz_attempts.student_id', studentId)
+			.where('quiz_attempts.quiz_id', quizId)
+			.orderBy('quiz_attempts.created_at', 'desc')
+			.first()
+
+		if (!attempt) return null;
+
+		const minScore = attempt.min_score || 0;
+		const isPassed = attempt.score >= minScore;
+
+		return {
+			...attempt,
+			is_passed: isPassed
+		};
+	}
 };
 
 module.exports = QuizAttemptService;
