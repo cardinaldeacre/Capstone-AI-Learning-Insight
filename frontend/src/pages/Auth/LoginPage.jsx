@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Lock, User, Monitor } from 'lucide-react';
+import { Eye, EyeOff, Monitor } from 'lucide-react'; // Hapus Lock dan User
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -55,17 +55,17 @@ const LoginPage = () => {
           AI Learning Insight
         </h1>
       </div>
-
-      <Card className="w-full max-w-md shadow-xl border-none z-10 rounded-3xl">
+      {/* Mengubah Card shadow dan padding */}
+      <Card className="w-full max-w-md shadow-2xl border-2 border-teal-500/20 z-10 rounded-3xl p-6">
         <CardHeader className="space-y-1 pb-2">
           <CardTitle className="text-3xl font-extrabold text-center text-gray-800">
             Login
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="grid gap-4 pt-6">
+        <CardContent className="grid gap-6 pt-8">
           {errorMessage && (
-            <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md text-center">
+            <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md text-center border border-red-100">
               {errorMessage}
             </div>
           )}
@@ -76,15 +76,13 @@ const LoginPage = () => {
               <Label className="text-gray-600 font-medium ml-1" htmlFor="email">
                 Email
               </Label>
-            </div>
-            <div className="relative">
-              <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="Enter your email here"
-                className="pl-10 h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-teal-600"
+                placeholder="enter your email address"
+                // Menghapus pl-10 karena ikon dihapus
+                className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-teal-600"
                 value={formData.email}
                 onChange={handleChange}
                 autoComplete="username"
@@ -101,13 +99,13 @@ const LoginPage = () => {
                 Password
               </Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                 <Input
                   id="password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
-                  className="pl-10 pr-10 h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-teal-600"
+                  placeholder="enter your password"
+                  // Menghapus pl-10
+                  className="pr-10 h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-teal-600"
                   value={formData.password}
                   onChange={handleChange}
                   autoComplete="current-password"
@@ -117,7 +115,7 @@ const LoginPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+                  className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600 focus:outline-none"
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5" />
@@ -130,7 +128,7 @@ const LoginPage = () => {
 
             <Button
               type="submit"
-              className="w-full h-12 text-lg font-semibold rounded-full bg-teal-700 hover:bg-teal-800 transition-colors shadow-lg shadow-teal-700/20"
+              className="w-full h-12 text-lg font-semibold rounded-xl bg-teal-700 hover:bg-teal-800 transition-colors shadow-lg shadow-teal-700/20"
               disabled={isLoading}
             >
               {isLoading ? 'Logging in...' : 'Login'}
