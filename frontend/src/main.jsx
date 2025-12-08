@@ -24,6 +24,7 @@ import LandingPage from './pages/LandingPage';
 import TeacherListAssigmentPage from './pages/Assigment/TeacherListAssigmentPage';
 import TeacherCreateAssignmentPage from './pages/Assigment/TeacherCreateAssigmentPage';
 import TakeQuizPage from './pages/Quiz/TakeQuizPage';
+import QuizResultPage from './pages/Quiz/QuizResultPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -82,6 +83,9 @@ createRoot(document.getElementById('root')).render(
                     </Route>
                   </Route>
                 </Route>
+
+                <Route path="quiz-result/:quizId" element={<QuizResultPage />} />
+                {/* get course */}
                 <Route path="classes">
                   <Route index element={<ClassListPage />} />
                 </Route>
