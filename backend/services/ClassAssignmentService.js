@@ -4,6 +4,7 @@ const ClassAssignmentService = {
   getByClassId: async classId => {
     return knex('class_assignment')
       .where({ class_id: classId })
+      .select('*')
       .orderBy('created_at', 'desc');
   },
 
