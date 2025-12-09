@@ -26,7 +26,7 @@ import TeacherCreateAssignmentPage from './pages/Assigment/TeacherCreateAssigmen
 import TeacherDetailAssigmentPage from './pages/Assigment/TeacherDetailAssigmentPage';
 import TakeQuizPage from './pages/Quiz/TakeQuizPage';
 import QuizResultPage from './pages/Quiz/QuizResultPage';
-import { TeacherDetailSubmissionPage } from './pages/Submission/TeacherDetailSubmissionPage';
+import TeacherDetailSubmissionPage from './pages/Submission/TeacherDetailSubmissionPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -75,10 +75,9 @@ createRoot(document.getElementById('root')).render(
                         path="create"
                         element={<TeacherCreateAssignmentPage />}
                       />
-                      <Route
-                        path=":assigmentId"
-                        element={<TeacherDetailAssigmentPage />}
-                      >
+                      <Route path=":assigmentId">
+                        <Route index element={<TeacherDetailAssigmentPage />} />
+
                         {/* submission */}
                         <Route
                           path="submission/list"
