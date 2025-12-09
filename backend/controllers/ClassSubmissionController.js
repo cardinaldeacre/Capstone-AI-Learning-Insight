@@ -209,4 +209,43 @@ router.get('/:assignmentId/download-all', authMiddleware, authorizeRole('admin',
 	}
 })
 
+router.delete('/:id', authMiddleware, async (req, res) => {
+	const { id } = req.params;
+	const userId = req.user.id;
+	const userRole = req.user.role;
+
+	try {
+		const submissionId = parseInt(id);
+		const submission = await ClassSubmissionService.getById(submissionId);
+
+		if (!submission) {
+			return res.status(404).json({ message: 'Submisi tidak ditemukan' });
+		}
+
+		if (userRole === 'student' && submission.student_id !== userId) {
+			return res.status(403).json({ message: 'Anda hanya boleh menghapus submisi milik sendiri.' });
+		}
+
+		if (submission.file_url) {
+			const cleanUrl = submission.file_url.startsWith('/') ? submission.file_url : '/' + submission.file_url;
+			const filePath = path.join(process.cwd(), 'public', cleanUrl);
+
+			if (fs.existsSync(filePath)) {
+				try {
+					fs.unlinkSync(filePath);
+					console.log(`Deleted file: ${filePath}`);
+				} catch (err) {
+					console.error("Gagal menghapus file,", err);
+				}
+			}
+		}
+
+		await ClassSubmissionService.delete(submissionId);
+		return res.status(200).json({ message: 'Submisi dan file berhasil dihapus' });
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ message: 'Server error' });
+	}
+})
+
 module.exports = router;
