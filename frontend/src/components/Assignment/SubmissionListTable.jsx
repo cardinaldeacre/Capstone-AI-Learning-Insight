@@ -76,24 +76,30 @@ const SubmissionListTable = ({ assignmentId }) => {
     );
   }
 
+  console.log(submissions);
+
   return (
     <>
-      <div className="overflow-x-auto rounded-lg border shadow-sm">
-        <Table className="min-w-full">
+      <div className="w-full overflow-x-auto lg:overflow-visible">
+        <Table className="hidden lg:table min-w-full">
           <TableHeader className="bg-gray-50">
             <TableRow>
+              <TableHead>ID</TableHead>
               <TableHead>Siswa</TableHead>
               <TableHead>Tanggal Submit</TableHead>
               <TableHead>Status Nilai</TableHead>
+              <TableHead>Min. Nilai</TableHead>
               <TableHead>Nilai</TableHead>
               <TableHead className="text-center">Aksi</TableHead>
             </TableRow>
           </TableHeader>
+
           <TableBody className="bg-white">
             {submissions.map(sub => (
               <TableRow key={sub.id} className="hover:bg-teal-50/50">
+                <TableCell className="font-medium">{sub.student_id}</TableCell>
                 <TableCell className="font-medium">
-                  {sub.studentName || `Siswa ID ${sub.student_id}`}
+                  {sub.student_name}
                 </TableCell>
                 <TableCell>
                   {new Date(sub.submitted_at).toLocaleString()}
@@ -104,6 +110,9 @@ const SubmissionListTable = ({ assignmentId }) => {
                   ) : (
                     <span className="text-yellow-600">Belum Dinilai</span>
                   )}
+                </TableCell>
+                <TableCell className="font-bold text-lg">
+                  {sub.min_score !== 0 ? sub.min_score : '-'}
                 </TableCell>
                 <TableCell className="font-bold text-lg">
                   {sub.score !== 0 ? sub.score : '-'}
@@ -131,6 +140,61 @@ const SubmissionListTable = ({ assignmentId }) => {
             ))}
           </TableBody>
         </Table>
+
+        <div className="space-y-4 lg:hidden">
+          {submissions.map(sub => (
+            <div
+              key={sub.id}
+              className="border rounded-xl p-4 bg-white shadow-sm space-y-2"
+            >
+              <div className="text-sm text-gray-500">ID: {sub.student_id}</div>
+              <div className="font-medium text-lg">{sub.student_name}</div>
+
+              <div className="text-sm">
+                <span className="text-gray-500">Tanggal Submit: </span>
+                {new Date(sub.submitted_at).toLocaleString()}
+              </div>
+
+              <div className="text-sm">
+                <span className="text-gray-500">Status Nilai: </span>
+                {sub.score !== 0 ? (
+                  <CheckCircle className="w-5 h-5 inline text-green-600" />
+                ) : (
+                  <span className="text-yellow-600">Belum Dinilai</span>
+                )}
+              </div>
+
+              <div className="text-sm">
+                <span className="text-gray-500">Min. Nilai: </span>
+                {sub.min_score !== 0 ? sub.min_score : '-'}
+              </div>
+
+              <div className="text-sm">
+                <span className="text-gray-500">Nilai: </span>
+                {sub.score !== 0 ? sub.score : '-'}
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleDownload(sub.id)}
+                >
+                  <Download className="w-4 h-4 mr-1" />
+                  Download
+                </Button>
+                <Button
+                  size="sm"
+                  className="bg-teal-600 hover:bg-teal-700"
+                  onClick={() => handleOpenGrade(sub)}
+                >
+                  <Edit3 className="w-4 h-4 mr-1" />
+                  Nilai
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {isModalOpen && selectedSubmission && (

@@ -131,15 +131,26 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
       const status =
         submission.score >= assignmentModule.min_score
           ? 'LULUS'
+          : submission.score === 0
+          ? 'BELUM DINILAI'
           : 'TIDAK LULUS';
       const color =
         status === 'LULUS'
           ? 'bg-teal-600 hover:bg-teal-700'
+          : status === 'BELUM DINILAI'
+          ? 'text-yellow-600 border-yellow-600 bg-yellow-50/50'
           : 'bg-red-500 hover:bg-red-600';
+
+      const Icon = status === 'BELUM DINILAI' ? Clock : CheckCircle;
+
+      const label =
+        status === 'BELUM DINILAI'
+          ? status
+          : `Dinilai: ${submission.score}/${assignmentModule.min_score} (${status})`;
       return (
         <Badge className={`mt-2 text-white ${color}`}>
-          <CheckCircle className="w-4 h-4 mr-1" />
-          Dinilai: {submission.score}/{assignmentModule.min_score} ({status})
+          <Icon className="w-5 h-5 mr-1" />
+          {label}
         </Badge>
       );
     }
@@ -150,7 +161,7 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
           className="mt-2 text-yellow-600 border-yellow-600 bg-yellow-50/50"
         >
           <Clock className="w-4 h-4 mr-1" />
-          Menunggu Penilaian
+          BELUM DINILAI
         </Badge>
       );
     }
