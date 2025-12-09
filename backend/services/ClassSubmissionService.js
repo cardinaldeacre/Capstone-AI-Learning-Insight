@@ -67,6 +67,19 @@ const ClassSubmissionService = {
     return newSubmission;
   },
 
+  updateFile: async (submissionId, fileUrl) => {
+    const [updated] = await knex('class_submission')
+      .where({ id: submissionId })
+      .update({
+        file_url: fileUrl,
+        submitted_at: knex.fn.now(),
+        status: 'submitted'
+      })
+      .returning('*');
+
+    return updated;
+  },
+
   update: async (id, data) => {
     const [updatedSubmission] = await knex('class_submission')
       .where('id', id)
