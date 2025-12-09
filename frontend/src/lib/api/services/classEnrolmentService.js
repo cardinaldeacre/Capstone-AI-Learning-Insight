@@ -2,7 +2,8 @@ import axiosClient from "../axiosClient";
 
 const ENROLL_ENPOINTS = {
     finishedCourse: '/enrolment/finished-classes',
-    joinClass: classId => `/enrolment/${classId}`
+    joinClass: classId => `/enrolment/${classId}`,
+    checkEnrollment: classId => `enrolment/check/${classId}`,
 }
 
 export const fetchFinishedCourses = async () => {
@@ -25,5 +26,15 @@ export const enrollClass = async (classId) => {
     } catch (error) {
         const msg = error.response?.data?.message || "Gagal mendaftar kelas";
         throw new Error(msg);
+    }
+};
+
+export const checkEnrollmentStatus = async (classId) => {
+    try {
+        const response = await axiosClient.get(ENROLL_ENPOINTS.checkEnrollment(classId));
+        return response.data;
+    } catch (error) {
+        console.error("Gagal cek status enrollment:", error);
+        return { enrolled: false };
     }
 };
