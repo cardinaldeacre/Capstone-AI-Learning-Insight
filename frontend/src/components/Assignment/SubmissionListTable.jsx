@@ -22,7 +22,8 @@ const SubmissionListTable = ({ assignmentId }) => {
     setLoading(true);
     try {
       const response = await fetchGetAllSubmissionsForTeacher(assignmentId);
-      setSubmissions(response.data || []);
+      console.log(response);
+      setSubmissions(Array.isArray(response) ? response : []);
     } catch (error) {
       console.error('gagal memmuat submissions: ', error);
       setSubmissions([]);
@@ -40,7 +41,6 @@ const SubmissionListTable = ({ assignmentId }) => {
     setIsModalOpen(true);
   };
 
-  //   nanti fetch ke download
   const handleDownload = submissionId => {
     alert(`Mendownload Submission ID: ${submissionId}`);
   };
@@ -87,14 +87,14 @@ const SubmissionListTable = ({ assignmentId }) => {
                   {new Date(sub.submitted_at).toLocaleString()}
                 </TableCell>
                 <TableCell>
-                  {sub.score !== null ? (
+                  {sub.score !== 0 ? (
                     <CheckCircle className="w-5 h-5 text-green-600" />
                   ) : (
                     <span className="text-yellow-600">Belum Dinilai</span>
                   )}
                 </TableCell>
                 <TableCell className="font-bold text-lg">
-                  {sub.score !== null ? sub.score : '-'}
+                  {sub.score !== 0 ? sub.score : '-'}
                 </TableCell>
                 <TableCell className="flex justify-center space-x-2">
                   <Button
