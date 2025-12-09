@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Download, Edit3, Loader2, CheckCircle } from 'lucide-react';
 import { fetchGetAllSubmissionsForTeacher } from '@/lib/api/services/submissionService';
 import GradeSubmissionDialog from './GradeSubmissionDialog';
+import { toast } from 'sonner';
 
 const SubmissionListTable = ({ assignmentId }) => {
   const [submissions, setSubmissions] = useState([]);
@@ -41,8 +42,19 @@ const SubmissionListTable = ({ assignmentId }) => {
     setIsModalOpen(true);
   };
 
+  const BASE = import.meta.env.VITE_BASE_URL_BACKEND || 'http://localhost:3000';
+
   const handleDownload = submissionId => {
-    alert(`Mendownload Submission ID: ${submissionId}`);
+    const sub = submissions.find(s => String(s.id) === String(submissionId));
+    if (!sub) {
+      return toast('Submission tidak ditemukan');
+    }
+
+    const base = BASE.endsWith('/') ? BASE.slice(0, -1) : BASE;
+    const fileUrl = sub.file_url.startsWith('/')
+      ? `${base}${sub.file_url}`
+      : `${base}/${sub.file_url}`;
+    window.open(fileUrl, '_blank');
   };
 
   if (loading) {
