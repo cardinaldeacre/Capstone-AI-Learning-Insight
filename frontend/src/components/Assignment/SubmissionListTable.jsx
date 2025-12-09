@@ -126,7 +126,7 @@ const SubmissionListTable = ({ assignmentId }) => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           submissionData={selectedSubmission}
-          onGradeSuccess={loadSubmissions} // Callback untuk me-refresh list
+          onGradeSuccess={loadSubmissions}
         />
       )}
     </>

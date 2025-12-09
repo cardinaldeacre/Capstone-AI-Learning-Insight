@@ -53,7 +53,8 @@ const GradeSubmissionDialog = ({
         </DialogHeader>
         <div className="space-y-4">
           <p className="text-sm text-gray-700">
-            Penilaian untuk Siswa: **{submissionData?.studentName}**
+            Penilaian untuk Siswa:{' '}
+            <span className="font-bold">{submissionData?.student_name}</span>
           </p>
           <div>
             <label className="text-sm font-medium">Nilai (Score)</label>
