@@ -3,13 +3,15 @@ const knex = require('../config/database');
 const ClassSubmissionService = {
   getAllByAssignment: async assignmentId => {
     return knex('class_submission')
-      .where('assignment_id', assignmentId)
+      .where('class_assignment.assignment_id', assignmentId)
       .select(
         'class_submission.*',
         'users.name as student_name',
-        'users.email as student_email'
+        'users.email as student_email',
+        'class_assignment.min_score'
       )
-      .join('users', 'class_submission.student_id', 'users.id');
+      .join('users', 'class_submission.student_id', 'users.id')
+      .join('class_assignment', 'class_submission.assignment_id', 'class_assignment.id')
   },
 
   getById: async id => {
