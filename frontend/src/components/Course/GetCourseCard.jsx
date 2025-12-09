@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { enrollClass } from "@/lib/api/services/classEnrolmentService";
+import { checkEnrollmentStatus, enrollClass } from "@/lib/api/services/classEnrolmentService";
 import { useNavigate } from "react-router";
 import { Loader2, BookOpen, CheckCircle } from "lucide-react";
 import { Separator } from "../ui/separator";
@@ -27,6 +27,7 @@ export default function GetCourseCard({ course }) {
     completed: 0,
     total: 0
   });
+  const [isUserEnrolled, setIsUserEnrolled] = useState(false);
   const [isEnrolling, setIsEnrolling] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingModules, setLoadingModules] = useState(false);
@@ -42,9 +43,16 @@ export default function GetCourseCard({ course }) {
       if (!classId) return;
 
       try {
-        const progress = await fetchClassProgress(classId);
-        if (isMounted && progress.stats) {
-          setProgressStats(progress.stats);
+        const [progress, status] = await Promise.all([
+          fetchClassProgress(classId).catch(() => ({ stats: null })),
+          checkEnrollmentStatus(classId)
+        ])
+        if (isMounted) {
+          if (progress?.stats) {
+            setProgressStats(progress.stats);
+          }
+          setIsUserEnrolled(status?.enrolled || false)
+
         }
       } catch (error) {
         console.error(error);
@@ -78,6 +86,11 @@ export default function GetCourseCard({ course }) {
   }, [isOpen, classId, modules.length]);
 
   const handleJoinClass = async () => {
+    if (isUserEnrolled) {
+      navigate(`/courses/${id}`);
+      return;
+    }
+
     setIsEnrolling(true);
     try {
       await enrollClass(id);
@@ -136,7 +149,7 @@ export default function GetCourseCard({ course }) {
           <Separator />
 
           <div className="space-y-2">
-            <h4 className="text-sm font-medium leading-none mb-3">Materi yang akan dipelajari:</h4>
+            <h4 className="text-sm font-medium leading-none mb-3">Materials to learn</h4>
 
             {loadingModules ? (
               <div className="flex justify-center py-4">
@@ -156,26 +169,34 @@ export default function GetCourseCard({ course }) {
                 </ul>
               </ScrollArea>
             ) : (
-              <p className="text-sm text-muted-foreground italic">Belum ada modul di kelas ini.</p>
+              <p className="text-sm text-muted-foreground italic">No modules yet.</p>
             )}
           </div>
         </div>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isEnrolling}>
-            Batal
+            Cancel
           </Button>
           <Button
-            className="bg-teal-600 hover:bg-teal-700 text-white"
+            className={
+              isUserEnrolled
+                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-teal-600 hover:bg-teal-700 text-white"
+            }
             onClick={handleJoinClass}
-            disabled={isEnrolling}
+            disabled={isEnrolling || loading}
           >
-            {isEnrolling ? (
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : isEnrolling ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Mendaftar...
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Proses...
               </>
+            ) : isUserEnrolled ? (
+              "Go to Course"
             ) : (
-              "Join Class Sekarang"
+              "Join Course"
             )}
           </Button>
         </DialogFooter>
