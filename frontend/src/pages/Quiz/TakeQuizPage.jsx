@@ -135,7 +135,7 @@ export default function TakeQuizPage() {
                 />
             </div>
             <main className="flex-1 flex flex-col h-screen overflow-hidden relative min-w-0">
-                <header className="h-16 bg-white border-b border-gray-200 shadow-sm z-10 flex items-center px-6 justify-between flex-shrink-0">
+                <header className="h-16 bg-white border-b border-gray-200 shadow-sm z-10 flex items-center px-6 justify-between shrink-0">
                     <div className="flex items-center gap-4">
                         <h1 className="font-bold text-lg text-gray-800">Ujian: Kuis #{quizId}</h1>
                     </div>
