@@ -5,6 +5,8 @@ const ClassSubmissionService = require('../services/ClassSubmissionService');
 const ClassAssignmentService = require('../services/ClassAssignmentService');
 const ClassesService = require('../services/ClassesService');
 const upload = require('../middleware/upload');
+const path = require('path');
+const fs = require('fs');
 const archiver = require('archiver');
 
 const authorizeGrader = async (req, res, next) => {
@@ -98,6 +100,20 @@ router.post('/', authMiddleware, authorizeRole('student'), upload.single('file')
 
 		const assignmentIdInt = parseInt(assignment_id);
 		const fileUrl = `/uploads/submissions/${req.file.filename}`;
+
+		const existing = await ClassSubmissionService.getByAssignmentAndStudent(assignmentIdInt, studentId);
+		if (existing) {
+			const oldPath = `public${existing.file_url}`;
+			if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+
+			const updated = await ClassSubmissionService.updateFile(existing.id, fileUrl);
+
+			return res.status(200).json({
+				message: 'Tugas berhasil di update',
+				submission: updated
+			})
+		}
+
 		const newSubmission = await ClassSubmissionService.create(assignmentIdInt, studentId, fileUrl);
 
 		res.status(201).json({
@@ -105,9 +121,6 @@ router.post('/', authMiddleware, authorizeRole('student'), upload.single('file')
 			submission: newSubmission,
 		});
 	} catch (error) {
-		if (error.code === '409') {
-			return res.status(409).json({ message: 'Anda sudah mensubmit tugas ini.' });
-		}
 		if (error.code === '23503')
 			return res.status(400).json({ message: 'Assignment ID tidak valid.' });
 

@@ -47,15 +47,16 @@ export const fetchUserDetail = async userId => {
 
 export const updateUser = async (userId, updateData) => {
     try {
-        const response = await axiosClient.put(USER_ENDPOINTS.update(userId), updateData);
+        const url = USER_ENDPOINTS.update(userId);
+        const response = await axiosClient.put(url, updateData);
         return response.data;
     } catch (error) {
-        console.error(`[UserService.updateUser] Error for ID ${userId}`, error);
+        console.error(`[UserService.updateUser] Error updating user ${userId}:`, error);
         throw new Error(
-            error.response?.data?.message || 'Failed to update user'
+            error.response?.data?.message || 'Gagal memperbarui profil'
         );
     }
-}
+};
 
 export const deleteUser = async userId => {
     try {
