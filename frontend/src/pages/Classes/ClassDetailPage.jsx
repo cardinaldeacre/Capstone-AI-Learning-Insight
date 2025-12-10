@@ -86,8 +86,8 @@ export default function ClassDetailPage() {
               {/* Card Status Belajar */}
               <div
                 className={`rounded-xl shadow-sm border p-6 transition-all duration-300 ${isCompleted
-                    ? 'bg-teal-50 border-teal-100'
-                    : 'bg-white border-gray-100'
+                  ? 'bg-teal-50 border-teal-100'
+                  : 'bg-white border-gray-100'
                   }`}
               >
                 <h3

@@ -11,6 +11,8 @@ import CourseModuleList from '@/components/Course/CourseModuleList';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal, Trophy, PartyPopper } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { generateCertificate } from '@/utils/certificate';
 
 export default function CourseDetailPage() {
   const { courseId } = useParams();
@@ -85,16 +87,14 @@ export default function CourseDetailPage() {
             <div className="sticky top-24 space-y-4">
               {/* Card Status Belajar */}
               <div
-                className={`rounded-xl shadow-sm border p-6 transition-all duration-300 ${
-                  isCompleted
-                    ? 'bg-teal-50 border-teal-100'
-                    : 'bg-white border-gray-100'
-                }`}
+                className={`rounded-xl shadow-sm border p-6 transition-all duration-300 ${isCompleted
+                  ? 'bg-teal-50 border-teal-100'
+                  : 'bg-white border-gray-100'
+                  }`}
               >
                 <h3
-                  className={`font-bold mb-4 flex items-center gap-2 ${
-                    isCompleted ? 'text-teal-800' : 'text-gray-800'
-                  }`}
+                  className={`font-bold mb-4 flex items-center gap-2 ${isCompleted ? 'text-teal-800' : 'text-gray-800'
+                    }`}
                 >
                   {isCompleted ? (
                     <Trophy className="text-yellow-500" size={20} />
@@ -136,9 +136,38 @@ export default function CourseDetailPage() {
                       </p>
                     </div>
 
-                    <button className="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-sm font-bold rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
-                      Unduh Sertifikat
-                    </button>
+                    <Button
+                      onClick={() => {
+                        const userName = course?.student?.name;
+                        const courseName = course?.title;
+                        const completedDate = new Date().toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric"
+                        });
+                        const certId = crypto.randomUUID().slice(0, 12).toUpperCase();
+                        const validUntil = "31 Desember 2028";
+
+                        const summary = {
+                          description: course?.summary || "Tidak ada deskripsi.",
+                          modules: modules?.map(m => ({
+                            title: m.title,
+                            duration: m.duration || "-"
+                          }))
+                        };
+
+                        generateCertificate({
+                          name: userName,
+                          courseName,
+                          completedAt: completedDate,
+                          validUntil,
+                          certId,
+                          summary
+                        });
+                      }}
+                    >
+                      Download Certificate
+                    </Button>
                   </div>
                 ) : (
                   <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
