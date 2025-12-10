@@ -1,7 +1,8 @@
 import os
 import pandas as pd
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Table, Column, Integer, Text, DateTime, ForeignKey, MetaData, func, insert
+from sqlalchemy.orm import Session
 from google import genai
 
 load_dotenv()
@@ -58,6 +59,27 @@ response = client.models.generate_content(
     contents=prompt,
 )
 
+data = []
 for row in response.text.split('\n'):
-    student_id, insight_text = row.split(';')
-    print(student_id, insight_text)
+    try:
+        student_id, insight_text = row.split(';')
+        data.append({
+            'student_id': student_id,
+            'insight_text': insight_text,
+        })
+    except ValueError:
+        pass
+
+with Session(engine) as session:
+    session.execute(insert(
+        Table(
+            'learning_insight',
+            MetaData(),
+            Column('id', Integer, primary_key=True),
+            Column('student_id', Integer, ForeignKey('users.id'), nullable=False),
+            Column('insight_text', Text, nullable=False),
+            Column('created_at', DateTime, server_default=func.now()),
+            Column('updated_at', DateTime, server_default=func.now(), onupdate=func.now()),
+        )
+    ), data)
+    session.commit()
