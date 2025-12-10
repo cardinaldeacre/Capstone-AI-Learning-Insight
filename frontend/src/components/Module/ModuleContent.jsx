@@ -105,14 +105,18 @@ const ModuleContent = ({
         )}
 
         {/* konten */}
-        <div className="py md:p-8 flex-1">
-          {/* panel submission */}
-          {!isTeacher && module.type === 'assignment' && (
-            <div>
-              <StudentSubmissionPanel assignmentModule={module} />
-            </div>
-          )}
-        </div>
+        {module.type !== 'assignment' && (
+          <div
+            className="p-6 md:p-6 prose max-w-none"
+            dangerouslySetInnerHTML={{ __html: module.content }}
+          />
+        )}
+
+        {!isTeacher && module.type === 'assignment' && (
+          <div>
+            <StudentSubmissionPanel assignmentModule={module} />
+          </div>
+        )}
 
         {isTeacher ? (
           <TeacherActionPanel
