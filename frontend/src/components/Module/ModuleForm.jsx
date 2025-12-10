@@ -63,7 +63,7 @@ export default function ModuleForm({
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full mx-auto">
       <CardHeader>
         <CardTitle>{initialData ? 'Edit Modul' : 'Buat Modul Baru'}</CardTitle>
         <CardDescription>
@@ -110,7 +110,11 @@ export default function ModuleForm({
             )}
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full bg-teal-600 hover:bg-teal-700"
+            disabled={isLoading}
+          >
             {isLoading
               ? 'Menyimpan...'
               : initialData

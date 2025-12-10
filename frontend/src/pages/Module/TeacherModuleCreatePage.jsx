@@ -5,6 +5,7 @@ import {
   fetchModulesByClass,
   fetchTeacherCreateModule
 } from '@/lib/api/services/moduleService';
+import { toast } from 'sonner';
 
 export default function TeacherModuleCreatePage() {
   const navigate = useNavigate();
@@ -40,11 +41,11 @@ export default function TeacherModuleCreatePage() {
 
       await fetchTeacherCreateModule(dataToSend);
 
-      alert('Modul berhasil dibuat!');
+      toast.success('Module berhasil dibuat');
       navigate(`/courses/${courseId}/modules/teacher`);
     } catch (error) {
       console.error('Gagal membuat modul:', error);
-      alert('Gagal membuat modul. Silakan periksa konsol.');
+      toast.error('Gagal membuat modul');
     } finally {
       setIsSubmitting(false);
     }
@@ -52,7 +53,7 @@ export default function TeacherModuleCreatePage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">Buat Modul Pembelajaran Baru</h1>
+      <h1 className="text-3xl font-bold mb-6 ">Buat Modul Pembelajaran Baru</h1>
       <ModuleForm onSubmit={handleSubmit} isLoading={isSubmitting} />
     </div>
   );
