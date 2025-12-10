@@ -6,13 +6,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton
 } from '@/components/ui/sidebar';
-import {
-  LayoutDashboard,
-  BookOpen,
-  Calendar,
-  Settings,
-  GraduationCap
-} from 'lucide-react';
+import { LayoutDashboard, BookOpen, GraduationCap } from 'lucide-react';
 import { Link } from 'react-router';
 import SidebarUserProfile from './SidebarUserProfile';
 
@@ -20,7 +14,7 @@ export default function AppSidebar() {
   const menuItems = [
     { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' },
     { title: 'My Course', icon: BookOpen, url: '/courses' },
-    { title: 'Get Course', icon: BookOpen, url: '/classes' },
+    { title: 'Get Course', icon: BookOpen, url: '/classes' }
   ];
 
   return (
@@ -37,7 +31,7 @@ export default function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="px-3 py-2">
         <SidebarMenu>
           {menuItems.map(item => (
             <SidebarMenuItem key={item.title}>

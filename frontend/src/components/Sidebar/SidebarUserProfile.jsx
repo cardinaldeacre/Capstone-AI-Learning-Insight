@@ -41,7 +41,7 @@ export default function SidebarUserProfile() {
               </SidebarMenuButton>
             </DropdownMenuTrigger>
 
-            {/* isi dropdown */}
+            {/* dropdown */}
             <DropdownMenuContent
               side="top"
               align="start"

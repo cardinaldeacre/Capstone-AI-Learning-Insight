@@ -4,11 +4,17 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
 import GetCourseCard from '@/components/Course/GetCourseCard';
+import { usePageTitle } from '@/contexts/PageTitleContext';
 
 export default function ClassListPage() {
+  const { setTitle } = usePageTitle();
   const [courses, setCourses] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setTitle('All Courses');
+  });
 
   useEffect(() => {
     const loadCourses = async () => {

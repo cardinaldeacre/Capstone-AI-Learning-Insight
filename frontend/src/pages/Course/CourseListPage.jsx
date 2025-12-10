@@ -4,11 +4,13 @@ import CourseCard from '@/components/Course/CourseCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
-import useAuth from '@/hooks/useAuth'; 
+import useAuth from '@/hooks/useAuth';
 import TeacherClassesPage from './TeacherClassesPage';
+import { usePageTitle } from '@/contexts/PageTitleContext';
 
 export default function CourseListPage() {
-  const { auth } = useAuth(); 
+  const { setTitle } = usePageTitle();
+  const { auth } = useAuth();
   const userRole = auth.user?.role;
   const isStudent = userRole === 'student' || !userRole;
 
@@ -17,12 +19,16 @@ export default function CourseListPage() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    setTitle('My Course');
+  });
+
+  useEffect(() => {
     const loadCourses = async () => {
       if (isStudent) {
         setIsLoading(true);
         setError(null);
         try {
-          const data = await fetchCourseStudentList(); 
+          const data = await fetchCourseStudentList();
           setCourses(Array.isArray(data) ? data : data.data || []);
         } catch (err) {
           setError(err.message);
@@ -76,7 +82,9 @@ export default function CourseListPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses && courses.length > 0 ? (
-          courses.map(course => <CourseCard key={course.id || course.class_id} course={course} />)
+          courses.map(course => (
+            <CourseCard key={course.id || course.class_id} course={course} />
+          ))
         ) : (
           <div className="col-span-full py-10 text-center">
             <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-300">

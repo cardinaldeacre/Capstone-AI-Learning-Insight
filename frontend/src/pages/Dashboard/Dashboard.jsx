@@ -1,7 +1,15 @@
-import SectionCard from "../../components/Dashboard/SectionCard";
-import HeaderCard from "../../components/Dashboard/HeaderCard";
+import SectionCard from '../../components/Dashboard/SectionCard';
+import HeaderCard from '../../components/Dashboard/HeaderCard';
+import { usePageTitle } from '@/contexts/PageTitleContext';
+import { useEffect } from 'react';
 
 export default function Dashboard() {
+  const { setTitle } = usePageTitle();
+
+  useEffect(() => {
+    setTitle('Dashboard');
+  }, [setTitle]);
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2 border border-gray-300 rounded-2xl p-3">

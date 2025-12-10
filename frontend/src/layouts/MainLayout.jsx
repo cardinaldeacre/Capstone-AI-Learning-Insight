@@ -1,32 +1,26 @@
-import { Outlet, NavLink } from 'react-router-dom';
-import AppSidebar from '@/components/Sidebar/AppSidebar.jsx';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { useLayout } from '@/hooks/useLayout';
+import { Outlet } from 'react-router-dom';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import AppSidebar from '@/components/Sidebar/AppSidebar';
+// import Header from '@/components/Header';
+import Header from '@/components/Sidebar/Header';
 
 export default function MainLayout() {
-  const { isSidebarVisible } = useLayout();
-  const sidebarWidth = '256px';
-  const marginClass = isSidebarVisible ? `sm:ml[${sidebarWidth}]` : 'sm:ml-0';
-
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* sidebar */}
-      {isSidebarVisible && (
-        <div className="hidden sm:block">
-          <SidebarProvider>
-            <AppSidebar />
-          </SidebarProvider>
-        </div>
-      )}
+    <SidebarProvider
+      style={{
+        '--sidebar-width': '260px',
+        '--header-height': '56px'
+      }}
+    >
+      <AppSidebar />
 
-      <main className="flex-1 pt-4">
-        {/* main layout */}
-        <div
-          className={`flex-1 p-8 transition-all duration-300 ease-in-out ${marginClass}`}
-        >
+      <SidebarInset>
+        <Header />
+
+        <main className="p-6">
           <Outlet />
-        </div>
-      </main>
-    </div>
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

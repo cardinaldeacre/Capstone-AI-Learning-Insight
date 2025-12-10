@@ -27,88 +27,94 @@ import TeacherDetailAssigmentPage from './pages/Assigment/TeacherDetailAssigment
 import TakeQuizPage from './pages/Quiz/TakeQuizPage';
 import QuizResultPage from './pages/Quiz/QuizResultPage';
 import TeacherDetailSubmissionPage from './pages/Submission/TeacherDetailSubmissionPage';
+import { PageTitleProvider } from './contexts/PageTitleContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <LayoutProvider>
-          <Toaster />
-          <Routes>
-            {/* publik */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+    <PageTitleProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <LayoutProvider>
+            <Toaster />
+            <Routes>
+              {/* publik */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
 
-            {/* private */}
-            <Route element={<ProtectedRoute />}>
-              <Route element={<MainLayout />}>
-                <Route path="/dashboard" element={<Dashboard />} />
+              {/* private */}
+              <Route element={<ProtectedRoute />}>
+                <Route element={<MainLayout />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
 
-                {/* courses */}
-                <Route path="courses">
-                  <Route index element={<CourseListPage />} />
+                  {/* courses */}
+                  <Route path="courses">
+                    <Route index element={<CourseListPage />} />
 
-                  <Route path=":courseId">
-                    <Route index element={<CourseDetailPage />} />
+                    <Route path=":courseId">
+                      <Route index element={<CourseDetailPage />} />
 
-                    {/* modules */}
-                    <Route path="modules">
-                      <Route index element={<ModuleListPage />} />
-                      <Route path="teacher">
-                        <Route index element={<TeacherModuleListPage />} />
+                      {/* modules */}
+                      <Route path="modules">
+                        <Route index element={<ModuleListPage />} />
+                        <Route path="teacher">
+                          <Route index element={<TeacherModuleListPage />} />
+                          <Route
+                            path="create"
+                            element={<TeacherModuleCreatePage />}
+                          />
+                          <Route
+                            path="edit/:moduleId"
+                            element={<TeacherModuleEditPage />}
+                          />
+                        </Route>
+                      </Route>
+
+                      {/* assigments */}
+                      <Route path="assigments">
+                        <Route index element={<TeacherListAssigmentPage />} />
                         <Route
                           path="create"
-                          element={<TeacherModuleCreatePage />}
+                          element={<TeacherCreateAssignmentPage />}
                         />
-                        <Route
-                          path="edit/:moduleId"
-                          element={<TeacherModuleEditPage />}
-                        />
+                        <Route path=":assigmentId">
+                          <Route
+                            index
+                            element={<TeacherDetailAssigmentPage />}
+                          />
+
+                          {/* submission */}
+                          <Route
+                            path="submission/list"
+                            element={<TeacherDetailSubmissionPage />}
+                          />
+                        </Route>
                       </Route>
-                    </Route>
 
-                    {/* assigments */}
-                    <Route path="assigments">
-                      <Route index element={<TeacherListAssigmentPage />} />
-                      <Route
-                        path="create"
-                        element={<TeacherCreateAssignmentPage />}
-                      />
-                      <Route path=":assigmentId">
-                        <Route index element={<TeacherDetailAssigmentPage />} />
-
-                        {/* submission */}
-                        <Route
-                          path="submission/list"
-                          element={<TeacherDetailSubmissionPage />}
-                        />
+                      {/* quiz */}
+                      <Route path="quiz">
+                        <Route path="create" element={<AppendQuizPage />} />
+                        <Route path=":quizId" element={<ManageQuizPage />} />
+                        <Route path=":quizId/take" element={<TakeQuizPage />} />
                       </Route>
-                    </Route>
-
-                    {/* quiz */}
-                    <Route path="quiz">
-                      <Route path="create" element={<AppendQuizPage />} />
-                      <Route path=":quizId" element={<ManageQuizPage />} />
-                      <Route path=":quizId/take" element={<TakeQuizPage />} />
                     </Route>
                   </Route>
-                </Route>
 
-                <Route
-                  path="quiz-result/:quizId"
-                  element={<QuizResultPage />}
-                />
-                {/* get course */}
-                <Route path="classes">
-                  <Route index element={<ClassListPage />} />
+                  <Route
+                    path="quiz-result/:quizId"
+                    element={<QuizResultPage />}
+                  />
+                  {/* get course */}
+                  <Route path="classes">
+                    <Route index element={<ClassListPage />} />
+                  </Route>
+                  <Route path="/profile" element={<Profile />} />
                 </Route>
-                <Route path="/profile" element={<Profile />} />
               </Route>
-            </Route>
-          </Routes>
-        </LayoutProvider>
-      </BrowserRouter>
-    </AuthProvider>
+            </Routes>
+          </LayoutProvider>
+        </BrowserRouter>
+      </AuthProvider>
+    </PageTitleProvider>
   </StrictMode>
 );
