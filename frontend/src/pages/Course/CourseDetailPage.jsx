@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-// import { fetchCourseDetail } from '@/data/courseMocks';
 import {
   fetchCourseStudentDetail,
   fetchCourseModules,
@@ -13,6 +12,9 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal, Trophy, PartyPopper } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { generateCertificate } from '@/utils/certificate';
+import useAuth from '@/hooks/useAuth';
+import { getBase64FromUrl } from '@/utils/base64';
+import logoWhite from '../../assets/logo-white.png';
 
 export default function CourseDetailPage() {
   const { courseId } = useParams();
@@ -21,6 +23,10 @@ export default function CourseDetailPage() {
   const [progressStats, setProgressStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const { auth } = useAuth();
+  const username = auth.user?.name;
+
 
   useEffect(() => {
     const loadDetailCourse = async () => {
@@ -46,7 +52,6 @@ export default function CourseDetailPage() {
       loadDetailCourse();
     }
   }, [courseId]);
-
   if (loading) {
     return (
       <div className="space-y-6">
@@ -137,32 +142,39 @@ export default function CourseDetailPage() {
                     </div>
 
                     <Button
-                      onClick={() => {
-                        const userName = course?.student?.name;
+                      onClick={async () => {
                         const courseName = course?.title;
                         const completedDate = new Date().toLocaleDateString("id-ID", {
                           day: "numeric",
                           month: "long",
                           year: "numeric"
                         });
-                        const certId = crypto.randomUUID().slice(0, 12).toUpperCase();
+                        const certId = self.crypto.randomUUID().slice(0, 12).toUpperCase();
                         const validUntil = "31 Desember 2028";
 
                         const summary = {
-                          description: course?.summary || "Tidak ada deskripsi.",
+                          description: course?.description || "Tidak ada deskripsi.",
                           modules: modules?.map(m => ({
                             title: m.title,
                             duration: m.duration || "-"
                           }))
                         };
 
+                        let logoBase64 = null;
+                        try {
+                          logoBase64 = await getBase64FromUrl(logoWhite);
+                        } catch (e) {
+                          console.error("Gagal load logo", e);
+                        }
+
                         generateCertificate({
-                          name: userName,
+                          name: username,
                           courseName,
                           completedAt: completedDate,
                           validUntil,
                           certId,
-                          summary
+                          summary,
+                          logo: logoBase64
                         });
                       }}
                     >
