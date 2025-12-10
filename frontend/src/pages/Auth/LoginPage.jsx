@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Eye, EyeOff, Monitor } from 'lucide-react'; // Hapus Lock dan User
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,7 @@ import useAuth from '@/hooks/useAuth';
 import { useNavigate, Link } from 'react-router-dom';
 
 const LoginPage = () => {
-  const { login } = useAuth();
+  const { login, auth, loading } = useAuth();
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +19,12 @@ const LoginPage = () => {
     email: '',
     password: ''
   });
+
+  useEffect(() => {
+    if (!loading && auth?.accessToken) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [auth, loading, navigate]);
 
   const handleChange = e => {
     setFormData({
@@ -136,7 +142,10 @@ const LoginPage = () => {
           </form>
           <div className="text-center text-sm text-gray-600 mt-4">
             didn't have an account?{' '}
-            <Link to="/register" className="text-teal-600 hover:underline font-medium">
+            <Link
+              to="/register"
+              className="text-teal-600 hover:underline font-medium"
+            >
               sign up
             </Link>
           </div>

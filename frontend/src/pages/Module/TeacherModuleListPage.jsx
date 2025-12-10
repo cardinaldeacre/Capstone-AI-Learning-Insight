@@ -8,6 +8,7 @@ import {
   fetchModulesByClass,
   fetchTeacherDeleteModule
 } from '@/lib/api/services/moduleService';
+import { toast } from 'sonner';
 
 export default function TeacherModuleListPage() {
   const { courseId } = useParams();
@@ -36,10 +37,10 @@ export default function TeacherModuleListPage() {
       await fetchTeacherDeleteModule(moduleId);
 
       setModules(prev => prev.filter(mod => mod.id !== moduleId));
-      alert(`Modul dengan ID ${moduleId} berhasil dihapus`);
+      toast.success(`Modul dengan ID ${moduleId} berhasil dihapus`);
     } catch (error) {
       console.error('Gagal menghapus modul:', error);
-      alert('Gagal menghapus modul. Silakan coba lagi.');
+      toast.error('Gagal menghapus modul. Silakan coba lagi.');
     }
   };
 
@@ -53,7 +54,8 @@ export default function TeacherModuleListPage() {
         <h1 className="text-3xl font-bold">Course Content</h1>
         <Button
           className="bg-teal-600 hover:bg-teal-700 text-white gap-2"
-          onClick={handleCreateClick}>
+          onClick={handleCreateClick}
+        >
           <Plus className="mr-2 h-4 w-4" /> Add new module
         </Button>
       </div>

@@ -18,6 +18,22 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    const handleStorage = () => {
+      const token = localStorage.getItem('accessToken');
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      if (token && user) {
+        setAuth({ user, accessToken: token });
+      } else {
+        setAuth([]);
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
   const login = async (email, password) => {
     const response = await axiosClient.post('/users/login', {
       email,

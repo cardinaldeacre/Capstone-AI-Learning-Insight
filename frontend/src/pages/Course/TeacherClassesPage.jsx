@@ -103,7 +103,10 @@ export default function TeacherClassesPage() {
         {/* MENGGANTI SHEET DENGAN DIALOG */}
         <Dialog open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <DialogTrigger asChild>
-            <Button onClick={handleOpenCreate}>
+            <Button
+              onClick={handleOpenCreate}
+              className="bg-teal-600 hover:bg-teal-700"
+            >
               <PlusCircle className="mr-2 h-4 w-4" />
               Buat Kelas Baru
             </Button>
