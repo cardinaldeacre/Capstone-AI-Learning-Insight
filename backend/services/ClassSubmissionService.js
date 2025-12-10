@@ -3,13 +3,15 @@ const knex = require('../config/database');
 const ClassSubmissionService = {
   getAllByAssignment: async assignmentId => {
     return knex('class_submission')
-      .where('assignment_id', assignmentId)
+      .where('class_submission.assignment_id', assignmentId)
       .select(
         'class_submission.*',
         'users.name as student_name',
-        'users.email as student_email'
+        'users.email as student_email',
+        'class_assignment.min_score'
       )
-      .join('users', 'class_submission.student_id', 'users.id');
+      .join('users', 'class_submission.student_id', 'users.id')
+      .join('class_assignment', 'class_submission.assignment_id', 'class_assignment.id')
   },
 
   getById: async id => {
@@ -65,6 +67,19 @@ const ClassSubmissionService = {
       .insert(data)
       .returning('*');
     return newSubmission;
+  },
+
+  updateFile: async (submissionId, fileUrl) => {
+    const [updated] = await knex('class_submission')
+      .where({ id: submissionId })
+      .update({
+        file_url: fileUrl,
+        submitted_at: knex.fn.now(),
+        status: 'submitted'
+      })
+      .returning('*');
+
+    return updated;
   },
 
   update: async (id, data) => {

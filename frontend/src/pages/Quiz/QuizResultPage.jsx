@@ -1,32 +1,48 @@
+import ModuleSidebar from "@/components/Module/ModuleSIdebar";
 import { Button } from "@/components/ui/button";
+import { fetchCourseModules } from "@/lib/api/services/courseService";
 import { fetchLatestQuizResult } from "@/lib/api/services/quizService";
 import { CheckCircle, XCircle } from "lucide-react";
 import React from "react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
 export default function QuizResultPage() {
     const { quizId } = useParams();
+    const nav = useNavigate();
+
     const [result, setResult] = useState(null);
+    const [modules, setModules] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loadResult = async () => {
+        const loadData = async () => {
             try {
-                const data = await fetchLatestQuizResult(quizId);
-                setResult(data);
+                const resultData = await fetchLatestQuizResult(quizId);
+                setResult(resultData);
+
+                if (resultData && resultData.class_id) {
+                    const modulesData = await fetchCourseModules(resultData.class_id);
+                    const sortedModules = (modulesData || []).sort((a, b) => a.order_number - b.order_number);
+                    setModules(sortedModules);
+                }
             } catch (error) {
                 toast.error("Failed getting result", {
                     description: error.message || "Ensure you have finished the quiz"
                 });
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
-        }
-
-        loadResult();
+        };
+        loadData();
     }, [quizId]);
+
+    const handleSidebarSelect = (index) => {
+        if (result?.class_id) {
+            nav(`/courses/${result.class_id}/modules`);
+        }
+    };
 
     if (loading) {
         return <div className="p-8 text-center">Loading quiz result...</div>;
@@ -42,6 +58,14 @@ export default function QuizResultPage() {
 
     return (
         <div className="max-w-xl mx-auto my-10 px-8 shadow-2xl rounded-2xl bg-white border border-teal-200">
+            <div className="w-80 shrink-0 h-full border-r border-gray-200 bg-white z-20 hidden md:block">
+                <ModuleSidebar
+                    modules={modules}
+                    currentIndex={-1}
+                    onSelect={handleSidebarSelect}
+                    progressStats={{ completed: 0, total: modules.length, percentage: 0 }}
+                />
+            </div>
             <div className={`text-center p-6 rounded-xl ${resultColor}`}>
                 {React.createElement(resultIcon, { className: 'w-16 h-16 mx-auto mb-4' })}
                 <h1 className="text-3xl font-extrabold mb-2">

@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Download, Edit3, Loader2, CheckCircle } from 'lucide-react';
 import { fetchGetAllSubmissionsForTeacher } from '@/lib/api/services/submissionService';
 import GradeSubmissionDialog from './GradeSubmissionDialog';
+import { toast } from 'sonner';
 
 const SubmissionListTable = ({ assignmentId }) => {
   const [submissions, setSubmissions] = useState([]);
@@ -22,7 +23,8 @@ const SubmissionListTable = ({ assignmentId }) => {
     setLoading(true);
     try {
       const response = await fetchGetAllSubmissionsForTeacher(assignmentId);
-      setSubmissions(response.data || []);
+      console.log(response);
+      setSubmissions(Array.isArray(response) ? response : []);
     } catch (error) {
       console.error('gagal memmuat submissions: ', error);
       setSubmissions([]);
@@ -40,9 +42,19 @@ const SubmissionListTable = ({ assignmentId }) => {
     setIsModalOpen(true);
   };
 
-  //   nanti fetch ke download
+  const BASE = import.meta.env.VITE_BASE_URL_BACKEND || 'http://localhost:3000';
+
   const handleDownload = submissionId => {
-    alert(`Mendownload Submission ID: ${submissionId}`);
+    const sub = submissions.find(s => String(s.id) === String(submissionId));
+    if (!sub) {
+      return toast('Submission tidak ditemukan');
+    }
+
+    const base = BASE.endsWith('/') ? BASE.slice(0, -1) : BASE;
+    const fileUrl = sub.file_url.startsWith('/')
+      ? `${base}${sub.file_url}`
+      : `${base}/${sub.file_url}`;
+    window.open(fileUrl, '_blank');
   };
 
   if (loading) {
@@ -64,37 +76,46 @@ const SubmissionListTable = ({ assignmentId }) => {
     );
   }
 
+  console.log(submissions);
+
   return (
     <>
-      <div className="overflow-x-auto rounded-lg border shadow-sm">
-        <Table className="min-w-full">
+      <div className="w-full overflow-x-auto lg:overflow-visible">
+        <Table className="hidden lg:table min-w-full">
           <TableHeader className="bg-gray-50">
             <TableRow>
+              <TableHead>ID</TableHead>
               <TableHead>Siswa</TableHead>
               <TableHead>Tanggal Submit</TableHead>
               <TableHead>Status Nilai</TableHead>
+              <TableHead>Min. Nilai</TableHead>
               <TableHead>Nilai</TableHead>
               <TableHead className="text-center">Aksi</TableHead>
             </TableRow>
           </TableHeader>
+
           <TableBody className="bg-white">
             {submissions.map(sub => (
               <TableRow key={sub.id} className="hover:bg-teal-50/50">
+                <TableCell className="font-medium">{sub.student_id}</TableCell>
                 <TableCell className="font-medium">
-                  {sub.studentName || `Siswa ID ${sub.student_id}`}
+                  {sub.student_name}
                 </TableCell>
                 <TableCell>
                   {new Date(sub.submitted_at).toLocaleString()}
                 </TableCell>
                 <TableCell>
-                  {sub.score !== null ? (
+                  {sub.score !== 0 ? (
                     <CheckCircle className="w-5 h-5 text-green-600" />
                   ) : (
                     <span className="text-yellow-600">Belum Dinilai</span>
                   )}
                 </TableCell>
                 <TableCell className="font-bold text-lg">
-                  {sub.score !== null ? sub.score : '-'}
+                  {sub.min_score !== 0 ? sub.min_score : '-'}
+                </TableCell>
+                <TableCell className="font-bold text-lg">
+                  {sub.score !== 0 ? sub.score : '-'}
                 </TableCell>
                 <TableCell className="flex justify-center space-x-2">
                   <Button
@@ -119,6 +140,61 @@ const SubmissionListTable = ({ assignmentId }) => {
             ))}
           </TableBody>
         </Table>
+
+        <div className="space-y-4 lg:hidden">
+          {submissions.map(sub => (
+            <div
+              key={sub.id}
+              className="border rounded-xl p-4 bg-white shadow-sm space-y-2"
+            >
+              <div className="text-sm text-gray-500">ID: {sub.student_id}</div>
+              <div className="font-medium text-lg">{sub.student_name}</div>
+
+              <div className="text-sm">
+                <span className="text-gray-500">Tanggal Submit: </span>
+                {new Date(sub.submitted_at).toLocaleString()}
+              </div>
+
+              <div className="text-sm">
+                <span className="text-gray-500">Status Nilai: </span>
+                {sub.score !== 0 ? (
+                  <CheckCircle className="w-5 h-5 inline text-green-600" />
+                ) : (
+                  <span className="text-yellow-600">Belum Dinilai</span>
+                )}
+              </div>
+
+              <div className="text-sm">
+                <span className="text-gray-500">Min. Nilai: </span>
+                {sub.min_score !== 0 ? sub.min_score : '-'}
+              </div>
+
+              <div className="text-sm">
+                <span className="text-gray-500">Nilai: </span>
+                {sub.score !== 0 ? sub.score : '-'}
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleDownload(sub.id)}
+                >
+                  <Download className="w-4 h-4 mr-1" />
+                  Download
+                </Button>
+                <Button
+                  size="sm"
+                  className="bg-teal-600 hover:bg-teal-700"
+                  onClick={() => handleOpenGrade(sub)}
+                >
+                  <Edit3 className="w-4 h-4 mr-1" />
+                  Nilai
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {isModalOpen && selectedSubmission && (
@@ -126,7 +202,7 @@ const SubmissionListTable = ({ assignmentId }) => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           submissionData={selectedSubmission}
-          onGradeSuccess={loadSubmissions} // Callback untuk me-refresh list
+          onGradeSuccess={loadSubmissions}
         />
       )}
     </>

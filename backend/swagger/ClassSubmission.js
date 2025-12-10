@@ -207,3 +207,30 @@
  *       404:
  *         description: Submisi tidak ditemukan
  */
+
+/**
+ * @swagger
+ * /api/submissions/{id}:
+ *   delete:
+ *     summary: Hapus submisi tugas (File & Data)
+ *     description: Menghapus data submisi dari database DAN menghapus file fisik (.zip) dari server.
+ *     tags: [Class Submissions]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID Submission
+ *     responses:
+ *       200:
+ *         description: Submisi berhasil dihapus
+ *       403:
+ *         description: Akses ditolak (Bukan pemilik submisi)
+ *       404:
+ *         description: Submisi tidak ditemukan
+ *       500:
+ *         description: Server error
+ */
