@@ -52,11 +52,9 @@ const LearningPage = () => {
             fetchGetModuleProgress(courseId),
             fetchGetAllAssigments(courseId)
           ]);
-        // console.log('ASSIGNMENT RESPONSE:', assignmentResponse);
 
         const progressList = progressResponse.data || [];
 
-        // matching data module dan data progress
         const mergedModules = modulesData.map(mod => {
           const progress = progressList.find(
             p => String(p.module_id) === String(mod.id)
@@ -98,7 +96,6 @@ const LearningPage = () => {
         );
         setAssignments(assignmentList);
 
-        // mulai module yg isCompleted == false
         const firstUnfinishedIndex = sortedModules.findIndex(
           m => !m.isCompleted
         );
@@ -113,7 +110,6 @@ const LearningPage = () => {
     fetchData();
   }, [courseId]);
 
-  // cek untuk pertama kali start module
   useEffect(() => {
     const markAsStarted = async () => {
       const currentModule = modules[currentIndex];

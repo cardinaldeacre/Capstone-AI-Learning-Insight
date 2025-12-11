@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -8,7 +8,7 @@
 /* @custom-variant dark (&:where(.dark, .dark *)); */
 
 :root {
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Inter', sans-serif; 
   line-height: 1.5;
   font-weight: 400;
 
@@ -142,7 +142,8 @@
 }
 
 /* Italic */
-.tiptap em i {
+.tiptap em, 
+.tiptap i {
   font-style: italic !important;
 }
 

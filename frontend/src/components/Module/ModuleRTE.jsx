@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Italic from '@tiptap/extension-italic';
+// Hapus: import Italic dari sini, karena kita akan menggunakan versi StarterKit
 import Heading from '@tiptap/extension-heading';
 
 import {
@@ -21,10 +21,12 @@ export default function ModuleRTE({
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        italic: false,
-        heading: false
+        // PERBAIKAN: Set italic: true agar Italic berfungsi melalui StarterKit
+        italic: true, 
+        // StarterKit menyertakan Bold secara default, tapi kita memastikan Italic diaktifkan
+        heading: false // Heading dikonfigurasi secara terpisah di bawah
       }),
-      Italic,
+      // Hapus Italic dari list ekstensi di sini untuk menghindari konflik
       Heading.configure({
         levels: [1, 2, 3]
       })
@@ -32,7 +34,8 @@ export default function ModuleRTE({
     content: initialContent,
     editorProps: {
       attributes: {
-        class: 'min-h-[300px] p-4 focus:outline-none tiptap'
+        // Pastikan class 'tiptap' ada untuk CSS styling global
+        class: 'min-h-[300px] p-4 focus:outline-none tiptap' 
       }
     }
   });
@@ -53,7 +56,7 @@ export default function ModuleRTE({
 
     editor.on('blur', handleBlur);
     return () => editor.off('blur', handleBlur);
-  }, [editor]);
+  }, [editor, onEditorReady, onContentBlur]); // Menambahkan dependencies
 
   if (!editor) return null;
 
