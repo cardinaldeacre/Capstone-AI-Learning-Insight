@@ -19,7 +19,9 @@ export default function Header() {
         </svg>
       </button>
 
-      <h1 className="ml-4 text-base font-semibold">{title}</h1>
+      <h1 className="ml-4 text-base font-semibold">
+        {title || 'AI Learning Insight'}
+      </h1>
     </header>
   );
 }
