@@ -7,6 +7,7 @@ import {
   fetchStartModuleProgress,
   fetchCompleteModuleProgress
 } from '@/lib/api/services/courseService';
+import { fetchGetAllMySubmissions } from '@/lib/api/services/submissionService';
 import { fetchGetAllAssigments } from '@/lib/api/services/assigmentService';
 import ModuleSidebar from '@/components/Module/ModuleSIdebar';
 import ModuleContent from '@/components/Module/ModuleContent';
@@ -73,20 +74,59 @@ const LearningPage = () => {
           (a, b) => a.order_number - b.order_number
         );
 
-        // assigment response
         const assignmentList = Array.isArray(assignmentResponse)
           ? assignmentResponse
           : [];
 
-        const assignmentModules = assignmentList.map(a => ({
-          navigationId: `assign-${a.id}`,
-          assignmentId: a.id,
-          order_number: 9999,
-          type: 'assignment',
-          title: a.title,
-          min_score: a.min_score,
-          content: a.content
-        }));
+        let submissionsResults = [];
+        if (!isTeacher && assignmentList.length > 0) {
+          const submissionPromises = assignmentList.map(a =>
+            fetchGetAllMySubmissions(a.id).catch(err => {
+              console.warn(
+                `Gagal fetch submission untuk assign ID ${a.id}`,
+                err
+              );
+              return null;
+            })
+          );
+          submissionsResults = await Promise.all(submissionPromises);
+        }
+
+        const assignmentModules = assignmentList.map((a, index) => {
+          const submissionResponse = submissionsResults[index];
+
+          let submissionData = null;
+          if (submissionResponse && submissionResponse.id) {
+            submissionData = submissionResponse;
+          } else if (
+            submissionResponse &&
+            Array.isArray(submissionResponse) &&
+            submissionResponse.length > 0
+          ) {
+            submissionData = submissionResponse[0];
+          }
+
+          const isSubmitted = !!submissionData;
+          const isGraded = isSubmitted && submissionData.score !== null;
+          const score = submissionData ? submissionData.score : null;
+          const isPassed = isGraded && score >= a.min_score;
+
+          return {
+            navigationId: `assign-${a.id}`,
+            assignmentId: a.id,
+            order_number: 9999,
+            type: 'assignment',
+            title: a.title,
+            min_score: a.min_score,
+            content: a.content,
+
+            isSubmitted: isSubmitted,
+            isGraded: isGraded,
+            submissionScore: submissionData ? submissionData.score : null,
+            isCompleted: isGraded,
+            isPassed: isPassed
+          };
+        });
 
         const combineModules = [...sortedModules, ...assignmentModules];
 
@@ -108,7 +148,7 @@ const LearningPage = () => {
     };
 
     fetchData();
-  }, [courseId]);
+  }, [courseId, isTeacher]);
 
   useEffect(() => {
     const markAsStarted = async () => {

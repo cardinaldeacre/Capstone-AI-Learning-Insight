@@ -28,17 +28,28 @@ const ModuleContent = ({
   const userRole = auth.user?.role;
   const isTeacher = userRole === 'teacher';
 
+  const isAssignment = module.type === 'assignment';
+  const assignmentIsSubmitted = isAssignment && module.isSubmitted;
+  const assignmentIsGraded = isAssignment && module.isGraded;
+
+  const isNavigationBlocked =
+    isAssignment && (!assignmentIsSubmitted || !assignmentIsGraded);
+
   useEffect(() => {
     const loadQuizzes = async () => {
-      if (module?.id) {
+      // HANYA panggil quiz jika memiliki ID dan BUKAN assignment
+      if (module?.id && !isAssignment) {
         const data = await fetchQuizByModule(module.id);
         setQuizzes(data || []);
+      } else {
+        setQuizzes([]);
       }
     };
     loadQuizzes();
-  }, [module]);
+  }, [module, isAssignment]);
 
   const handleFinishClick = async () => {
+    if (isAssignment) return;
     try {
       setIsSubmitting(true);
       await onComplete();
@@ -52,6 +63,8 @@ const ModuleContent = ({
   const handleEditModule = () => {};
 
   const isLastModule = currentIndex === totalModules - 1;
+
+  // console.log('module: ', module);
 
   return (
     <div className="w-full animate-in fade-in duration-500 pb-10">
@@ -125,7 +138,9 @@ const ModuleContent = ({
             onEditModule={handleEditModule}
           />
         ) : (
-          <StudentQuizPanel quizzes={quizzes} courseId={courseId} />
+          !isAssignment && (
+            <StudentQuizPanel quizzes={quizzes} courseId={courseId} />
+          )
         )}
 
         <div className="bg-gray-50 p-6 border-t border-gray-100 flex justify-between items-center sticky bottom-0 z-10">
@@ -146,7 +161,30 @@ const ModuleContent = ({
           )}
 
           <div className="flex gap-3">
-            {module.type === 'assignment' ? (
+            {isAssignment ? (
+              <button
+                onClick={onNext}
+                disabled={isLastModule || isNavigationBlocked}
+                className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm
+                ${
+                  isLastModule || isNavigationBlocked
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-teal-600 text-white hover:bg-teal-700'
+                }`}
+              >
+                {isNavigationBlocked
+                  ? assignmentIsSubmitted
+                    ? 'Menunggu Nilai Guru'
+                    : 'Submit Tugas Dahulu'
+                  : isLastModule
+                  ? 'End of modules'
+                  : 'Next Chapter'}
+
+                {!isLastModule && !isNavigationBlocked && (
+                  <ChevronRight size={18} />
+                )}
+              </button>
+            ) : module.isCompleted ? (
               <button
                 onClick={onNext}
                 disabled={isLastModule}
@@ -154,22 +192,8 @@ const ModuleContent = ({
                 ${
                   isLastModule
                     ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-teal-600 text-white hover:bg-teal-700'
+                    : 'bg-white border border-teal-200 text-teal-700 hover:bg-teal-50 hover:border-teal-300'
                 }`}
-              >
-                {isLastModule ? 'End of modules' : 'Next Assignment'}
-                {!isLastModule && <ChevronRight size={18} />}
-              </button>
-            ) : module.isCompleted ? (
-              <button
-                onClick={onNext}
-                disabled={isLastModule}
-                className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm
-              ${
-                isLastModule
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-white border border-teal-200 text-teal-700 hover:bg-teal-50 hover:border-teal-300'
-              }`}
               >
                 {isLastModule ? 'End of modules' : 'Next Chapter'}
                 {!isLastModule && <ChevronRight size={18} />}

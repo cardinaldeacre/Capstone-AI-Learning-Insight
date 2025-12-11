@@ -26,8 +26,7 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
             {progressStats?.total || modules.length} Modul Selesai
           </p>
           <span className="text-xs font-bold text-teal-600">
-            {progressStats?.percentage || 0}
-            %
+            {progressStats?.percentage || 0}%
           </span>
         </div>
 
@@ -52,10 +51,29 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
               index > 0 &&
               !modules[index - 1].isCompleted &&
               !isCompleted &&
-              !isActive;
+              !isActive &&
+              !isAssignment;
+
+            let isAssignmentLockedByPreviousAssignment = false;
+            if (isAssignment) {
+              const previousAssignments = modules
+                .slice(0, index)
+                .filter(m => m.type === 'assignment');
+
+              if (previousAssignments.length > 0) {
+                const hasFailedPreviousAssignment = previousAssignments.some(
+                  a => !a.isPassed
+                );
+
+                if (hasFailedPreviousAssignment) {
+                  isAssignmentLockedByPreviousAssignment = true;
+                }
+              }
+            }
 
             const isLocked = isAssignment
-              ? isAssignmentLockedByModules
+              ? isAssignmentLockedByModules ||
+                isAssignmentLockedByPreviousAssignment
               : previousModuleIncomplete;
 
             const uniqueKey = modul.navigationId || modul.id;
@@ -68,10 +86,10 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                   w-full text-left px-4 py-3 rounded-lg flex items-start gap-3 transition-all duration-200 group border
                   ${
                     isActive
-                      ? 'bg-teal-600 text-white border-teal-600 shadow-md' // Gaya aktif baru: solid teal, teks putih
+                      ? 'bg-teal-600 text-white border-teal-600 shadow-md'
                       : isLocked
                       ? 'bg-gray-50 text-gray-400 border-transparent cursor-not-allowed opacity-70'
-                      : 'bg-white text-gray-700 border-transparent hover:bg-gray-50 hover:text-gray-900' // Gaya default: teks lebih gelap
+                      : 'bg-white text-gray-700 border-transparent hover:bg-gray-50 hover:text-gray-900'
                   }
                 `}
               >
@@ -81,7 +99,7 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                     mt-0.5 shrink-0 transition-colors 
                     ${
                       isActive
-                        ? 'text-white' // Ikon putih saat aktif
+                        ? 'text-white'
                         : isCompleted
                         ? 'text-teal-500'
                         : 'text-gray-400 group-hover:text-gray-600'
@@ -100,11 +118,7 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                       className="fill-teal-100 stroke-teal-600"
                     />
                   ) : isActive ? (
-                    // Ikon PlayCircle putih saat aktif
-                    <PlayCircle
-                      size={18}
-                      className="fill-white stroke-white"
-                    />
+                    <PlayCircle size={18} className="fill-white stroke-white" />
                   ) : previousModuleIncomplete ? (
                     <Lock size={18} className="text-gray-300" />
                   ) : isStarted ? (
@@ -118,7 +132,9 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                   <p
                     className={`
                       text-[10px] font-bold mb-0.5 uppercase tracking-wider
-                      ${isActive ? 'text-teal-200' : 'text-gray-400'} // Text sekunder lebih cerah
+                      ${
+                        isActive ? 'text-teal-200' : 'text-gray-400'
+                      } // Text sekunder lebih cerah
                     `}
                   >
                     {isAssignment
@@ -129,7 +145,9 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                   <h3
                     className={`
                       text-sm font-medium leading-snug truncate
-                      ${isActive ? 'text-white' : 'text-gray-700'} // Text utama putih
+                      ${
+                        isActive ? 'text-white' : 'text-gray-700'
+                      } // Text utama putih
                     `}
                   >
                     {modul.title}
