@@ -10,7 +10,7 @@ import { fetchOptionsByQuestion } from "@/lib/api/services/optionService";
 import { createFullQuestion, deleteQuestion, fetchQuestionsByQuiz, updateFullQuestion } from "@/lib/api/services/questionService";
 import { fetchQuizById } from "@/lib/api/services/quizService";
 import { ArrowLeft, CheckCircle2, Circle, Pencil, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Link, useParams } from "react-router";
 import { toast } from 'sonner'
 
@@ -59,7 +59,7 @@ const QuestionItem = ({ question, index, onEdit, onDelete, refreshTrigger }) => 
 }
 
 export default function ManageQuizPage() {
-    const { courseId, quizId } = useParams();
+    const { quizId } = useParams();
 
     const [quizInfo, setQuizInfo] = useState(null);
     const [questions, setQuestions] = useState(null);
@@ -79,7 +79,7 @@ export default function ManageQuizPage() {
     const [editingId, setEditingId] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
 
-    const loadData = async () => {
+    const loadData = useCallback(async () => {
         try {
             const [quiz, qList] = await Promise.all([
                 fetchQuizById(quizId),
@@ -93,11 +93,11 @@ export default function ManageQuizPage() {
         } finally {
             setLoading(false);
         }
-    }
+    }, [quizId]);
 
     useEffect(() => {
         loadData();
-    }, [quizId]);
+    }, [loadData]);
 
     const handleAddClick = () => {
         setEditingId(null);
@@ -224,15 +224,14 @@ export default function ManageQuizPage() {
             <div className="max-w-4xl mx-auto space-y-6">
 
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <Link to={`/courses/${courseId}/modules/teacher`} className="p-2 rounded-full hover:bg-gray-200">
-                            <ArrowLeft className="w-5 h-5 text-gray-600" />
-                        </Link>
+                        <div className="flex items-center gap-4">
+                        {/* ... Link ArrowLeft ... */}
                         <div>
                             <h1 className="text-2xl font-bold text-gray-800">{quizInfo?.title}</h1>
                             <div className="flex gap-3 text-sm text-gray-500 mt-1">
-                                <Badge variant="outline">{quizInfo?.data.timer} Minutes</Badge>
-                                <Badge variant="outline">Min score: {quizInfo?.data.min_score}</Badge>
+                                {/* Menerapkan variant="info" untuk estetika yang lebih baik */}
+                                <Badge variant="info">{quizInfo?.data.timer} Minutes</Badge>
+                                <Badge variant="info">Min score: {quizInfo?.data.min_score}</Badge>
                             </div>
                         </div>
                     </div>
@@ -301,21 +300,21 @@ export default function ManageQuizPage() {
                                     <Trash2 className="w-5 h-5" /> Hapus Soal?
                                 </DialogTitle>
                                 <DialogDescription className="pt-2">
-                                    Apakah Anda yakin ingin menghapus soal ini?
+                                    Are you sure you want to delete this question?
                                     <br />
-                                    Tindakan ini <strong>tidak dapat dibatalkan</strong>.
+                                    This Action <strong>cannot be cancelled</strong>.
                                 </DialogDescription>
                             </DialogHeader>
                             <DialogFooter className="mt-4">
                                 <Button variant="outline" onClick={() => setDeleteId(null)}>
-                                    Batal
+                                    cancel
                                 </Button>
                                 <Button
                                     variant="destructive"
                                     onClick={onConfirmDelete}
                                     className="bg-red-600 hover:bg-red-700"
                                 >
-                                    Ya, Hapus
+                                    Yes , delete
                                 </Button>
                             </DialogFooter>
                         </DialogContent>

@@ -38,7 +38,7 @@ export default function QuizResultPage() {
         loadData();
     }, [quizId]);
 
-    const handleSidebarSelect = (index) => {
+    const handleSidebarSelect = () => {
         if (result?.class_id) {
             nav(`/courses/${result.class_id}/modules`);
         }
