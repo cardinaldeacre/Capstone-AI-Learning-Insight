@@ -7,19 +7,17 @@ import {
 import { Brain, Sparkles } from "lucide-react"
 import { Activity } from "react"
 import { ScrollArea } from "../ui/scroll-area"
+import CourseAds from "../Course/CourseAds"
 
 export default function HeaderCard() {
     return (
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
             <div className="grid auto-rows-min gap-4 md:grid-cols-2">
-                <div className="bg-muted/50 aspect-video rounded-xl" >
-                    <Card className="w-full border border-neutral-200 shadow-sm rounded-xl bg-white">
-                        <CardHeader>
-                            <CardTitle className="text-lg font-semibold text-neutral-900 flex items-center gap-2">
-                                Iklan Courses
-                            </CardTitle>
-                        </CardHeader>
-                    </Card>
+                <div className="bg-muted/50 border-2 border-neutral-200 aspect-video rounded-xl" >
+                    <section className="px-6 py-2">
+                        <h2 className="text-xl font-semibold mb-4">Featured Courses</h2>
+                        <CourseAds />
+                    </section>
                 </div>
                 <div className="bg-muted/50 aspect-video rounded-xl" >
                     <Card className="w-full border border-neutral-200 shadow-sm rounded-xl bg-white">
