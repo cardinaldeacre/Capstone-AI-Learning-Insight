@@ -2,6 +2,7 @@ import axiosClient from '../axiosClient';
 
 const MODULE_ENDPOINT = {
   getClassModules: classId => `/modules/class/${classId}`,
+  getModulesSubmission: classId => `/modules/course/${classId}`,
   postTeacherCreateModule: '/modules',
   getModuleById: moduleId => `/modules/${moduleId}`,
   putTeacherUpdateModule: id => `/modules/${id}`,
@@ -12,6 +13,21 @@ export const fetchModulesByClass = async classId => {
   try {
     if (!classId) throw new Error('Class ID is required');
     const url = MODULE_ENDPOINT.getClassModules(classId);
+    const response = await axiosClient.get(url);
+    console.log(classId);
+    return response.data;
+  } catch (error) {
+    console.error('[CourseService.getProgress] API Error : ', error);
+    const errorMessage =
+      error.response?.data?.message || 'Gagal mengambil data';
+    throw new Error(errorMessage);
+  }
+};
+
+export const fetchModuleSubmissionByClass = async classId => {
+  try {
+    if (!classId) throw new Error('Class ID is required');
+    const url = MODULE_ENDPOINT.getModulesSubmission(classId);
     const response = await axiosClient.get(url);
     console.log(classId);
     return response.data;

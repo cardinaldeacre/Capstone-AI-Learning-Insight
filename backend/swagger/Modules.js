@@ -83,6 +83,82 @@
 
 /**
  * @swagger
+ * /api/modules/course/{classId}:
+ *   get:
+ *     summary: Ambil Materi Lengkap (Modul + Status Quiz/Tugas)
+ *     description: Mengambil daftar modul dalam kelas, lengkap dengan status pengerjaan Kuis dan Tugas (Assignment) untuk user yang sedang login.
+ *     tags: [Modules]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: classId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID Kelas
+ *     responses:
+ *       200:
+ *         description: Data berhasil diambil
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       title:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       order_number:
+ *                         type: integer
+ *                       quiz_info:
+ *                         type: object
+ *                         nullable: true
+ *                         description: Data kuis jika ada
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                           title:
+ *                             type: string
+ *                           is_passed:
+ *                             type: boolean
+ *                             description: Apakah user sudah lulus kuis ini?
+ *                           user_score:
+ *                             type: number
+ *                             nullable: true
+ *                       assignment_info:
+ *                         type: object
+ *                         nullable: true
+ *                         description: Data tugas jika ada
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                           title:
+ *                             type: string
+ *                           min_score:
+ *                             type: integer
+ *                           user_score:
+ *                             type: number
+ *                             nullable: true
+ *                           status:
+ *                             type: string
+ *                             enum: [not_started, submitted, graded]
+ *                           is_passed:
+ *                             type: boolean
+ *                             description: Apakah tugas dianggap selesai/lulus?
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
  * /api/modules/{id}:
  *   get:
  *     summary: Ambil detail satu modul
