@@ -11,10 +11,13 @@ import { Link } from 'react-router';
 import SidebarUserProfile from './SidebarUserProfile';
 
 export default function AppSidebar() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const isTeacher = user?.role === 'teacher';
+
   const menuItems = [
     { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' },
     { title: 'My Course', icon: BookOpen, url: '/courses' },
-    { title: 'Get Course', icon: BookOpen, url: '/classes' }
+    ...(!isTeacher ? [{ title: 'Get Course', icon: BookOpen, url: '/classes' }] : []),
   ];
 
   return (
