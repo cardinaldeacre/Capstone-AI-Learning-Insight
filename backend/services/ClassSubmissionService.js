@@ -75,7 +75,8 @@ const ClassSubmissionService = {
       .update({
         file_url: fileUrl,
         submitted_at: knex.fn.now(),
-        status: 'submitted'
+        status: 'submitted',
+        score: 0.0,
       })
       .returning('*');
 
