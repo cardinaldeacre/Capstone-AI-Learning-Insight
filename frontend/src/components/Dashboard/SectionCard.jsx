@@ -26,7 +26,6 @@ export default function SectionCard() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                
                 const courseData = await fetchCourseStudentList(role, userId);
                 setMyCourse(Array.isArray(courseData) ? courseData : courseData.data || []);
 
@@ -64,16 +63,12 @@ export default function SectionCard() {
                     </div>
                 )}
             </div>
-            
-            
             <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm">
                 <h1 className="text-2xl px-6 font-semibold mb-4">
                     Class Finished
                 </h1>
-                
                 {finishedCourse.length > 0 ? (
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-6">
+                    <div className="grid gap-4 px-6">
                         {finishedCourse.map((item) => (
                             <Link key={item.class_id} to={`/courses/${item.class_id}`} className="block h-full w-full">
                                 <Card className="@container/card h-full transition-shadow hover:shadow-lg">
@@ -90,8 +85,7 @@ export default function SectionCard() {
                                     </CardHeader>
 
                                     <div className="px-6 py-2">
-                                        
-                                        <div 
+                                        <div
                                             className="line-clamp-2 text-sm text-gray-600"
                                             dangerouslySetInnerHTML={{ __html: item.description }}
                                         />
@@ -107,11 +101,11 @@ export default function SectionCard() {
 
                                         {item.stats ? (
                                             <div className="flex gap-4 text-xs text-gray-500 mt-2">
-                                                <span>📚 Modul: **{item.stats.modules}** Completed</span>
-                                                <span>📝 Asigments: **{item.stats.assignments}** Completed</span>
+                                                <span>📚 Modul: {item.stats.modules} Completed</span>
+                                                <span>📝 Asigments: {item.stats.assignments} Completed</span>
                                             </div>
                                         ) : (
-                                            <div className="flex gap-4 text-xs text-gray-500 mt-2 text-muted-foreground">
+                                            <div className="flex gap-4 text-xs text-gray-500 mt-2">
                                                 <span>Statistik modul tidak tersedia</span>
                                             </div>
                                         )}
@@ -119,7 +113,7 @@ export default function SectionCard() {
                                 </Card>
                             </Link>
                         ))
-                    }
+                        }
                     </div>
                 ) : (
                     <p className="px-6 text-gray-500">No Class Completed</p>
