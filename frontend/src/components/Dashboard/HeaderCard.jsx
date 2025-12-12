@@ -7,7 +7,7 @@ import {
 import { Brain, Sparkles } from "lucide-react"
 import { Activity } from "react"
 import { ScrollArea } from "../ui/scroll-area"
-import CourseAds from "../Course/CourseAds"
+import CourseAds from "./CourseAds"
 
 export default function HeaderCard() {
     return (
