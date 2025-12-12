@@ -17,6 +17,7 @@ const ClassesController = require('./controllers/ClassesController');
 const ClassAssignmentController = require('./controllers/ClassAsignmentControler');
 const ClassSubmissionController = require('./controllers/ClassSubmissionController');
 const ClassEnrolmentController = require('./controllers/ClassEnrolmentController');
+const DashboardController = require('./controllers/DashboardController')
 
 // Middleware
 app.use(express.json());
@@ -43,6 +44,7 @@ app.use('/api/classes', ClassesController);
 app.use('/api/assignments', ClassAssignmentController);
 app.use('/api/submissions', ClassSubmissionController);
 app.use('/api/enrolment', ClassEnrolmentController);
+app.use('/api/dashboard', DashboardController);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
