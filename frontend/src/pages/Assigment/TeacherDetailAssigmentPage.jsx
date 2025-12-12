@@ -47,7 +47,7 @@ export default function TeacherDetailAssigmentPage() {
   };
 
   if (loading && !detail) {
-    return <p className="p-6">Memuat Detail...</p>;
+    return <p className="p-6">Loadin Detail...</p>;
   }
 
   return (
@@ -64,7 +64,7 @@ export default function TeacherDetailAssigmentPage() {
             className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
-            Kembali
+            Return
           </Button>
         </CardHeader>
 
