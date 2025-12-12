@@ -20,7 +20,7 @@ export default function CourseModuleList({ modules }) {
     );
   }
 
-  // supaya urut
+ 
   const sortedModules = [...modules].sort(
     (a, b) => a.order_number - b.order_number
   );
@@ -73,7 +73,13 @@ export default function CourseModuleList({ modules }) {
                       Deskripsi:
                     </span>
                   </div>
-                  {module.content.slice(0, 150)}.....
+                 
+                  <div
+                    className="prose prose-sm max-w-none text-gray-600"
+                    dangerouslySetInnerHTML={{
+                      __html: module.content.slice(0, 150) + '.....'
+                    }}
+                  />
                   {/* <div className="mt-4">
                     <button className="text-sm text-teal-600 font-medium hover:underline">
                       Lihat Materi Lengkap &rarr;
