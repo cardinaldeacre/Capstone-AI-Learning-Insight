@@ -66,7 +66,7 @@ Create a PostgreSQL database (e.g., `lms_db`).
 ### 2. Backend Setup
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/cardinaldeacre/Capstone-AI-Learning-Insight.git
 cd backend
 
 # Install dependencies
