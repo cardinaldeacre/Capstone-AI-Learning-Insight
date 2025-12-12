@@ -47,7 +47,7 @@ export default function AssigmentForm({ initialData, onSubmit, loading }) {
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Title */}
       <div>
-        <label className="font-medium text-teal-600">Judul</label>
+        <label className="font-medium text-teal-600">Title</label>
         <Input
           name="title"
           value={formData.title}
@@ -62,7 +62,7 @@ export default function AssigmentForm({ initialData, onSubmit, loading }) {
 
       {/* Content */}
       <div>
-        <label className="font-medium text-teal-600">Konten</label>
+        <label className="font-medium text-teal-600">Content</label>
         <Textarea
           name="content"
           value={formData.content}
@@ -77,7 +77,7 @@ export default function AssigmentForm({ initialData, onSubmit, loading }) {
 
       {/* Min Score */}
       <div>
-        <label className="font-medium text-teal-600">Minimum Score</label>
+        <label className="font-medium text-teal-600">Min Score</label>
         <Input
           name="min_score"
           type="number"

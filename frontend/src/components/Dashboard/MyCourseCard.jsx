@@ -49,7 +49,7 @@ export default function MyCourseCard() {
                                     {course.description || "Tidak ada deskripsi"}
                                 </p>
                                 <Button className="w-full bg-teal-50 text-teal-700 hover:bg-teal-100 hover:text-teal-800 border border-teal-200" asChild>
-                                    <Link to={`/courses/${course.id}`}>
+                                    <Link to={`/courses/`}>
                                         Manage Class<ArrowRight className="ml-2 w-4 h-4" />
                                     </Link>
                                 </Button>
