@@ -27,7 +27,7 @@ export default function TeacherCreateAssignmentPage() {
     <div className="p-6">
       <Card className="bg-white border-teal-600/20 shadow-md">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-teal-600">Buat Assignment Baru</CardTitle>
+          <CardTitle className="text-teal-600">Create New Assignment</CardTitle>
 
           <Button
             variant="outline"
@@ -35,7 +35,7 @@ export default function TeacherCreateAssignmentPage() {
             className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
-            Kembali
+            Return
           </Button>
         </CardHeader>
 
