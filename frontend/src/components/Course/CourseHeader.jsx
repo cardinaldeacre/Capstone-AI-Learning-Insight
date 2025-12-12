@@ -50,7 +50,7 @@ export default function CourseHeader({ course }) {
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-gray-400" />
                 <span className="text-gray-500">
-                  Diperbarui: {formatDate(course.updated_at)}
+                  Updated at: {formatDate(course.updated_at)}
                 </span>
               </div>
             </div>
