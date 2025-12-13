@@ -103,7 +103,7 @@ const StudentQuizItem = ({ quiz, courseId }) => {
                 <Card className="flex flex-col justify-between border-l-4 border-l-teal-500 shadow-md">
                     <div>
                         <CardHeader>
-                            <CardTitle className="text-lg">Quiz Details</CardTitle>
+                            <CardTitle className="text-lg">Quiz Detail</CardTitle>
                         </CardHeader>
 
                         <CardContent className="space-y-4">

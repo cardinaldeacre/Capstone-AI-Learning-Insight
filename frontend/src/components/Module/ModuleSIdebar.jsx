@@ -16,14 +16,14 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
     <aside className="fixed top-0 left-0 w-80 bg-white border-r border-gray-200 h-screen flex-col shadow-lg z-10 hidden md:flex">
       {/* Header */}
       <div className="p-6 border-b border-gray-100 bg-white shrink-0">
-        <h2 className="text-lg font-extrabold text-gray-800 tracking-tight">
-          Daftar Modul
+        <h2 className="text-lg font-bold text-gray-800 tracking-tight">
+          List of Module
         </h2>
 
         <div className="flex justify-between items-end mt-2">
           <p className="text-xs text-gray-500 font-medium">
-            {progressStats?.completed || 0} dari{' '}
-            {progressStats?.total || modules.length} Modul Selesai
+            {progressStats?.completed || 0} of{' '}
+            {progressStats?.total || modules.length} module finished
           </p>
           <span className="text-xs font-bold text-teal-600">
             {progressStats?.percentage || 0}%
@@ -73,7 +73,7 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
 
             const isLocked = isAssignment
               ? isAssignmentLockedByModules ||
-                isAssignmentLockedByPreviousAssignment
+              isAssignmentLockedByPreviousAssignment
               : previousModuleIncomplete;
 
             const uniqueKey = modul.navigationId || modul.id;
@@ -84,10 +84,9 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                 disabled={isLocked}
                 className={`
                   w-full text-left px-4 py-3 rounded-lg flex items-start gap-3 transition-all duration-200 group border
-                  ${
-                    isActive
-                      ? 'bg-teal-600 text-white border-teal-600 shadow-md'
-                      : isLocked
+                  ${isActive
+                    ? 'bg-teal-600 text-white border-teal-600 shadow-md'
+                    : isLocked
                       ? 'bg-gray-50 text-gray-400 border-transparent cursor-not-allowed opacity-70'
                       : 'bg-white text-gray-700 border-transparent hover:bg-gray-50 hover:text-gray-900'
                   }
@@ -97,10 +96,9 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                 <div
                   className={`
                     mt-0.5 shrink-0 transition-colors 
-                    ${
-                      isActive
-                        ? 'text-white'
-                        : isCompleted
+                    ${isActive
+                      ? 'text-white'
+                      : isCompleted
                         ? 'text-teal-500'
                         : 'text-gray-400 group-hover:text-gray-600'
                     }
@@ -132,8 +130,7 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                   <p
                     className={`
                       text-[10px] font-bold mb-0.5 uppercase tracking-wider
-                      ${
-                        isActive ? 'text-teal-200' : 'text-gray-400'
+                      ${isActive ? 'text-teal-200' : 'text-gray-400'
                       } // Text sekunder lebih cerah
                     `}
                   >
@@ -145,8 +142,7 @@ const ModuleSidebar = ({ modules, currentIndex, onSelect, progressStats }) => {
                   <h3
                     className={`
                       text-sm font-medium leading-snug truncate
-                      ${
-                        isActive ? 'text-white' : 'text-gray-700'
+                      ${isActive ? 'text-white' : 'text-gray-700'
                       } // Text utama putih
                     `}
                   >

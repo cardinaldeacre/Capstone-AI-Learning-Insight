@@ -119,7 +119,7 @@ export default function TakeQuizPage() {
             setLoading(false);
         }
     }
-    if (loading) return <div className="p-10 text-center">Memuat Kuis...</div>;
+    if (loading) return <div className="p-10 text-center">Loading Quiz...</div>;
 
     const currentQuestion = questions[currentQuestionIdx];
     const selectedAnswerId = answers[currentQuestion?.id];
@@ -137,7 +137,7 @@ export default function TakeQuizPage() {
             <main className="flex-1 flex flex-col h-screen overflow-hidden relative min-w-0">
                 <header className="h-16 bg-white border-b border-gray-200 shadow-sm z-10 flex items-center px-6 justify-between shrink-0">
                     <div className="flex items-center gap-4">
-                        <h1 className="font-bold text-lg text-gray-800">Ujian: Kuis #{quizId}</h1>
+                        <h1 className="font-bold text-lg text-gray-800">Exam: Quis #{quizId}</h1>
                     </div>
 
                     {timeLeft !== null && totalQ > 0 && (
@@ -152,17 +152,17 @@ export default function TakeQuizPage() {
 
                         {totalQ === 0 ? (
                             <div className="flex flex-col items-center justify-center h-64 text-center border-2 border-dashed border-gray-300 rounded-xl bg-gray-50/50">
-                                <p className="text-lg font-medium text-gray-500">Soal tidak ditemukan.</p>
-                                <p className="text-sm text-gray-400">Silakan hubungi pengajar Anda.</p>
+                                <p className="text-lg font-medium text-gray-500">Questions not found.</p>
+                                <p className="text-sm text-gray-400">Please contact your instructor.</p>
                                 <Button variant="outline" className="mt-4" onClick={() => nav(-1)}>
-                                    Kembali
+                                    Back
                                 </Button>
                             </div>
                         ) : (
                             <div className="flex flex-col-reverse md:flex-row gap-6 items-start">
 
                                 <Card className="w-full md:w-64 shrink-0 p-4 shadow-sm border-gray-200">
-                                    <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Navigasi Soal</h3>
+                                    <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Navigation Panel</h3>
                                     <div className="grid grid-cols-5 gap-2">
                                         {questions.map((q, idx) => {
                                             const isAnswered = answers[q.id] !== undefined;
@@ -182,7 +182,7 @@ export default function TakeQuizPage() {
 
                                 <Card className="flex-1 w-full p-6 shadow-md border-t-4 border-t-teal-500">
                                     <div className="mb-6">
-                                        <span className="text-xs font-bold text-gray-400 uppercase">Pertanyaan {currentQuestionIdx + 1}</span>
+                                        <span className="text-xs font-bold text-gray-400 uppercase">Question {currentQuestionIdx + 1}</span>
                                         <p className="text-xl font-medium text-gray-800 mt-2 leading-relaxed">
                                             {currentQuestion?.question_text}
                                         </p>
@@ -208,11 +208,11 @@ export default function TakeQuizPage() {
                                     </div>
 
                                     <div className="flex justify-between pt-8 mt-8 border-t border-gray-100">
-                                        <Button onClick={handlePrevious} disabled={isFirstQ} variant="outline">Sebelumnya</Button>
+                                        <Button onClick={handlePrevious} disabled={isFirstQ} variant="outline">Back</Button>
                                         {isLastQ ? (
-                                            <Button onClick={handleSubmitQuiz} className="bg-green-600 hover:bg-green-700 text-white">Selesai</Button>
+                                            <Button onClick={handleSubmitQuiz} className="bg-green-600 hover:bg-green-700 text-white">Finish</Button>
                                         ) : (
-                                            <Button onClick={handleNext} className="bg-teal-600 hover:bg-teal-700 text-white">Selanjutnya</Button>
+                                            <Button onClick={handleNext} className="bg-teal-600 hover:bg-teal-700 text-white">Next</Button>
                                         )}
                                     </div>
                                 </Card>
@@ -224,23 +224,25 @@ export default function TakeQuizPage() {
             <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle className="text-xl text-red-600">⚠️ Perhatian: Selesaikan Kuis?</AlertDialogTitle>
+                        <AlertDialogTitle className="text-xl text-red-600">
+                            ⚠️ Warning: Submit Quiz?
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                            Anda akan mengumpulkan **{totalQ}** jawaban. Setelah dikumpulkan, jawaban tidak dapat diubah lagi.
+                            You are about to submit {totalQ} answers. After submission, your answers can no longer be changed.
                             <br />
                             <br />
-                            Apakah Anda yakin ingin menyelesaikan kuis ini sekarang?
+                            Are you sure you want to finish this quiz now?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel onClick={() => setIsConfirmOpen(false)}>
-                            Batal, Periksa Lagi
+                            Cancel, Review Again
                         </AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleConfirmSubmit}
                             className="bg-red-600 hover:bg-red-700"
                         >
-                            Ya, Kumpulkan Sekarang
+                            Yes, Submit Now
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
@@ -249,22 +251,25 @@ export default function TakeQuizPage() {
             <AlertDialog open={isExitOpen} onOpenChange={setIsExitOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle className="text-red-600">Keluar dari Kuis?</AlertDialogTitle>
+                        <AlertDialogTitle className="text-red-600">
+                            Exit the Quiz?
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                            Peringatan: Jawaban Anda saat ini <strong>mungkin hilang</strong> atau belum tersimpan jika Anda keluar sekarang.
+                            Warning: Your current answers <strong>may be lost</strong> or not saved if you exit now.
                             <br /><br />
-                            Apakah Anda yakin ingin kembali ke halaman materi?
+                            Are you sure you want to return to the course material page?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleConfirmExit}
                             className="bg-red-600 hover:bg-red-700 text-white"
                         >
-                            Ya, Keluar
+                            Yes, Exit
                         </AlertDialogAction>
                     </AlertDialogFooter>
+
                 </AlertDialogContent>
             </AlertDialog>
         </div >

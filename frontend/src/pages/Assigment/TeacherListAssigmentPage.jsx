@@ -36,7 +36,7 @@ export default function TeacherListAssigmentPage() {
   }, [courseId]);
 
   const handleDelete = async (id, title) => {
-    if (!window.confirm(`Hapus assigment "${title}" ?`)) return;
+    if (!window.confirm(`delete assignment "${title}" ?`)) return;
 
     try {
       setLoading(true);
@@ -85,7 +85,7 @@ export default function TeacherListAssigmentPage() {
         </CardHeader>
 
         <CardContent>
-          {loading && <p className="text-gray-500">Memuat data assignment…</p>}
+          {loading && <p className="text-gray-500">Loading data assignment…</p>}
 
           {!loading && assignments.length === 0 && (
             <p className="text-gray-600 italic">
@@ -103,12 +103,12 @@ export default function TeacherListAssigmentPage() {
                 <div>
                   <h3 className="font-semibold text-gray-800">{item.title}</h3>
                   <p className="text-gray-500 text-sm">
-                    Nilai Minimal: {item.min_score ?? '-'}
+                    Min Score: {item.min_score ?? '-'}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-1">
-                  
+
                   <Button
                     variant="ghost"
                     asChild

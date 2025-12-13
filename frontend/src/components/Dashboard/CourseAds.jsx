@@ -11,7 +11,11 @@ export default function CourseAds() {
     const [latestCourses, setLatestCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const plugin = useRef(
-        Autoplay({ delay: 4000, stopOnInteraction: true })
+        Autoplay({
+            delay: 2300,
+            stopOnInteraction: true,
+            stopOnMouseEnter: true,
+        })
     );
 
     useEffect(() => {
@@ -53,8 +57,9 @@ export default function CourseAds() {
             <Carousel
                 plugins={[plugin.current]}
                 className="w-full"
-                onMouseEnter={plugin.current.stop}
-                onMouseLeave={plugin.current.reset}
+                options={{ loop: true }}
+                onMouseEnter={() => plugin.current.stop()}
+                onMouseLeave={() => plugin.current.play()}
             >
                 <CarouselContent>
                     {latestCourses.map((course) => (

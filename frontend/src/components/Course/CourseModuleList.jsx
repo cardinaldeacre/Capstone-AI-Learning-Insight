@@ -14,13 +14,13 @@ export default function CourseModuleList({ modules }) {
     return (
       <Card className="border-dashed border-2 shadow-none bg-gray-50">
         <CardContent className="flex flex-col items-center justify-center h-32 text-gray-400">
-          <p>Belum ada materi tersedia.</p>
+          <p>No materials available yet.</p>
         </CardContent>
       </Card>
     );
   }
 
-  // supaya urut
+
   const sortedModules = [...modules].sort(
     (a, b) => a.order_number - b.order_number
   );
@@ -29,7 +29,7 @@ export default function CourseModuleList({ modules }) {
     <Card className="border-none shadow-md">
       <CardHeader>
         <CardTitle className="text-xl font-bold text-gray-800">
-          Materi Pembelajaran
+          Learning Materials
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
@@ -60,7 +60,7 @@ export default function CourseModuleList({ modules }) {
                     className="hidden sm:flex border-teal-200 text-teal-700 font-normal ml-2"
                   >
                     <BookOpen className="w-3 h-3 mr-1" />
-                    Bacaan
+                    Reading
                   </Badge>
                 </div>
               </AccordionTrigger>
@@ -70,15 +70,16 @@ export default function CourseModuleList({ modules }) {
                   <div className="flex items-start gap-2 mb-2">
                     <FileText className="w-4 h-4 text-gray-400 mt-1" />
                     <span className="font-semibold text-gray-700">
-                      Deskripsi:
+                      Description:
                     </span>
                   </div>
-                  {module.content.slice(0, 150)}.....
-                  {/* <div className="mt-4">
-                    <button className="text-sm text-teal-600 font-medium hover:underline">
-                      Lihat Materi Lengkap &rarr;
-                    </button>
-                  </div> */}
+
+                  <div
+                    className="prose prose-sm max-w-none text-gray-600"
+                    dangerouslySetInnerHTML={{
+                      __html: module.content.slice(0, 150) + '.....'
+                    }}
+                  />
                 </div>
               </AccordionContent>
             </AccordionItem>

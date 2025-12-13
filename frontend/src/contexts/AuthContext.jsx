@@ -41,12 +41,13 @@ export const AuthProvider = ({ children }) => {
     });
 
     // response
-    const { user, accessToken, refreshToken } = response.data;
+    const { user, role, accessToken, refreshToken } = response.data;
 
     setAuth({ user, accessToken });
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
     localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('role', JSON.stringify(role));
 
     return true;
   };

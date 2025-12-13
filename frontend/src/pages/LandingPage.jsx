@@ -1,15 +1,52 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Monitor, Briefcase, Code, User, Send, Linkedin } from 'lucide-react';
+// Hapus Briefcase dan Code dari import
+import { Monitor, User, Send, Linkedin } from 'lucide-react'; 
 
 export default function LandingPage() {
   const teamMembers = [
-    { name: 'Rizky Cahyono', role: 'Frontend Lead', expertise: 'React, Tailwind CSS' },
-    { name: 'Iqbal Maulana', role: 'Backend Developer', expertise: 'Node.js, Knex, Express' },
-    { name: 'Muhammad Ibadurrohman', role: 'UX/UI Designer', expertise: 'Shadcn UI, Prototyping' },
-    { name: 'Edward Christian Rufus', role: 'AI Engineer', expertise: 'Phyton, Training' },
-    { name: 'Muhammad Alvino Dienova', role: 'AI Engineer', expertise: 'Phyton, Dataset' },
-    { name: 'Rindra Satriatama Putra', role: 'AI Engineer', expertise: 'Phyton, Model' },
+    { 
+      name: 'Rizky Cahyono', 
+      role: 'Frontend Lead', 
+      expertise: 'React & Backend Developer',
+      linkedin: 'https://www.linkedin.com/in/rizky-cahyono-67367a2a0/',
+      email: 'rizky.cahyono@example.com' // Tambahkan Email
+    },
+    { 
+      name: 'Iqbal Maulana', 
+      role: 'Backend Developer', 
+      expertise: 'React & Backend Developer',
+      linkedin: 'https://www.linkedin.com/in/iqbal-maulana-dev/',
+      email: 'iqbal.maulana@example.com'
+    },
+    { 
+      name: 'Muhammad Ibadurrohman', 
+      role: 'React & Backend Developer', 
+      expertise: 'Shadcn UI, Prototyping',
+      linkedin: 'https://www.linkedin.com/in/muhammad-ibadurrohman-53bb40367', 
+      email: 'muhammad.ibadurrohman@example.com'
+    },
+    { 
+      name: 'Edward Christian Rufus', 
+      role: 'AI Engineer', 
+      expertise: 'Phyton, Training',
+      linkedin: 'https://www.linkedin.com/in/edward-christian-rufus-a1a0a7226',
+      email: 'edward.rufus@example.com'
+    },
+    { 
+      name: 'Muhammad Alvino Dienova', 
+      role: 'AI Engineer', 
+      expertise: 'Phyton, Dataset',
+      linkedin: 'https://www.linkedin.com/in/alvino-dienova/',
+      email: 'muhammad.alvino@example.com'
+    },
+    { 
+      name: 'Rindra Satriatama Putra', 
+      role: 'AI Engineer', 
+      expertise: 'Phyton, Model',
+      linkedin: 'http://www.linkedin.com/in/rindra-satriatama-495106381',
+      email: 'rindra.putra@example.com'
+    },
   ];
 
   return (
@@ -72,15 +109,27 @@ export default function LandingPage() {
                 <p className="text-sm text-gray-500 mb-4">Keahlian: {member.expertise}</p>
                 
                 <div className="flex space-x-3 mt-4">
-                  <a href="#" className="text-gray-400 hover:text-teal-600 transition-colors" aria-label="LinkedIn">
+                  {/* LinkedIn */}
+                  <a 
+                    href={member.linkedin} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-teal-600 transition-colors" 
+                    aria-label="LinkedIn"
+                  >
                     <Linkedin size={20} />
                   </a>
-                  <a href="#" className="text-gray-400 hover:text-teal-600 transition-colors" aria-label="Portfolio">
-                    <Briefcase size={20} />
-                  </a>
-                  <a href="#" className="text-gray-400 hover:text-teal-600 transition-colors" aria-label="Email">
+                  
+                  {/* Email (Menggunakan mailto:) */}
+                  <a 
+                    href={`mailto:${member.email}`} 
+                    className="text-gray-400 hover:text-teal-600 transition-colors" 
+                    aria-label="Email"
+                  >
                     <Send size={20} />
                   </a>
+                  
+                  {/* Portfolio / Briefcase Dihapus */}
                 </div>
               </div>
             ))}

@@ -13,14 +13,14 @@ exports.authMiddleware = async (req, res, next) => {
 		}
 
 		if (!token) {
-			return res.status(401).json({message: 'Token tidak ditemukan', code: 'NO_TOKEN'});
+			return res.status(401).json({ message: 'Token tidak ditemukan', code: 'NO_TOKEN' });
 		}
 
-		const blacklisted = await knex('token_blacklist').where({token}).first();
+		const blacklisted = await knex('token_blacklist').where({ token }).first();
 		if (blacklisted) {
 			return res
 				.status(401)
-				.json({message: 'Token tidak valid (sudah logout)', code: 'BLACKLISTED'});
+				.json({ message: 'Token tidak valid (sudah logout)', code: 'BLACKLISTED' });
 		}
 
 		const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -28,18 +28,16 @@ exports.authMiddleware = async (req, res, next) => {
 		req.user = decoded;
 		req.token = token;
 
-		console.log('✅ Token valid:', token);
-		console.log('🧩 Decoded payload:', decoded);
 
 		next();
 	} catch (error) {
 		console.error('❌ Auth error:', error);
 
 		if (error.name === 'TokenExpiredError') {
-			return res.status(401).json({message: 'Token kadaluarsa', code: 'TOKEN_EXPIRED'});
+			return res.status(401).json({ message: 'Token kadaluarsa', code: 'TOKEN_EXPIRED' });
 		}
 
-		return res.status(401).json({message: 'Token tidak valid', code: 'INVALID_TOKEN'});
+		return res.status(401).json({ message: 'Token tidak valid', code: 'INVALID_TOKEN' });
 	}
 };
 

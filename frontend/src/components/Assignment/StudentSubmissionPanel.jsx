@@ -61,7 +61,7 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
     if (selectedFile && selectedFile.name.endsWith('.zip')) {
       setFile(selectedFile);
     } else {
-      toast.error('Pilih harus dalam format .zip');
+      toast.error('Required file format .zip');
       setFile(null);
     }
   };
@@ -80,7 +80,7 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
 
   const handleUpload = async () => {
     if (!file) {
-      toast.warning('Pilih file .zip terlebih dahulu');
+      toast.warning('Choose file .zip first!');
       return;
     }
 
@@ -93,7 +93,7 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
     try {
       const response = await fetchPostSubmission(formData);
       setSubmission(response.submission);
-      toast.success('Submission berhasil diunggah');
+      toast.success('Submission succesfully uploaded');
     } catch (error) {
       console.error('Upload submission gagal: ', error);
       throw error;
@@ -130,23 +130,23 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
     if (isGraded) {
       const status =
         submission.score >= assignmentModule.min_score
-          ? 'LULUS'
+          ? 'PASSED'
           : submission.score === 0
-          ? 'BELUM DINILAI'
-          : 'TIDAK LULUS';
+            ? 'NOT EVALUATED'
+            : 'NOT PASSED';
       const color =
-        status === 'LULUS'
+        status === 'PASSED'
           ? 'bg-teal-600 hover:bg-teal-700'
-          : status === 'BELUM DINILAI'
-          ? 'text-yellow-600 border-yellow-600 bg-yellow-50/50'
-          : 'bg-red-500 hover:bg-red-600';
+          : status === 'NOT EVALUATED'
+            ? 'text-yellow-600 border-yellow-600 bg-yellow-50/50'
+            : 'bg-red-500 hover:bg-red-600';
 
-      const Icon = status === 'BELUM DINILAI' ? Clock : CheckCircle;
+      const Icon = status === 'NOT EVALUATED' ? Clock : CheckCircle;
 
       const label =
-        status === 'BELUM DINILAI'
+        status === 'NOT EVALUATED'
           ? status
-          : `Dinilai: ${submission.score}/${assignmentModule.min_score} (${status})`;
+          : `Evaluated: ${submission.score}/${assignmentModule.min_score} (${status})`;
       return (
         <Badge className={`mt-2 text-white ${color}`}>
           <Icon className="w-5 h-5 mr-1" />
@@ -161,14 +161,14 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
           className="mt-2 text-yellow-600 border-yellow-600 bg-yellow-50/50"
         >
           <Clock className="w-4 h-4 mr-1" />
-          BELUM DINILAI
+          NOT EVALUATED
         </Badge>
       );
     }
     return (
       <Badge className="mt-2 bg-gray-400 text-white">
         <FileUp className="w-4 h-4 mr-1" />
-        Belum Mengunggah
+        Not uploaded yet
       </Badge>
     );
   };
@@ -195,7 +195,7 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
       </div>
       {file && (
         <p className="text-sm text-gray-500">
-          File terpilih: <span className="font-bold">{file.name}</span>
+          Choosen file: <span className="font-bold">{file.name}</span>
         </p>
       )}
     </form>
@@ -222,25 +222,11 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
 
           {isSubmitted && (
             <div className="p-4 bg-teal-50/50 border border-teal-200 rounded-lg mb-4">
-              <p className="font-medium text-teal-800">Submission Terakhir:</p>
+              <p className="font-medium text-teal-800">Current Submission:</p>
               <p className="text-sm text-gray-600">
-                Diunggah pada:{' '}
+                Uploaded at:{' '}
                 {new Date(submission.submitted_at).toLocaleString()}
               </p>
-              {/* {isGraded && (
-              <p className="text-sm mt-2 text-gray-700">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleDownload}
-                  title="Download ZIP Submission"
-                >
-                  <Download className="w-4 h-4 mr-1" />
-                </Button>
-
-                <span className="pl-2">Download Submission</span>
-              </p>
-            )} */}
               <p className="text-sm  text-gray-700 mt-5">
                 <Button
                   variant="outline"
@@ -257,7 +243,7 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
           )}
 
           <p className="text-sm text-gray-500 mb-2">
-            Unggah file ZIP tugas Anda di sini.
+            Upload your .zip file here
           </p>
           {renderSubmissionForm()}
         </CardContent>
@@ -269,20 +255,19 @@ const StudentSubmissionPanel = ({ assignmentModule }) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Overwrite Submission?</AlertDialogTitle>
             <AlertDialogDescription>
-              Anda sudah pernah mengirim file sebelumnya. Jika Anda melanjutkan,
-              file lama akan digantikan dengan yang baru.
+              Current submission exist, overwrite current submission?
             </AlertDialogDescription>
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
 
             <AlertDialogAction
               onClick={() => {
                 handleUpload();
               }}
             >
-              Ya, Overwrite
+              Overwrite
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

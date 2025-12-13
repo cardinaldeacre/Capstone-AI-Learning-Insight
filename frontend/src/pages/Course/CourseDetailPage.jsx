@@ -104,7 +104,7 @@ export default function CourseDetailPage() {
                   {isCompleted ? (
                     <Trophy className="text-yellow-500" size={20} />
                   ) : null}
-                  Status Belajar
+                  Learning Progress
                 </h3>
 
                 {/* Progress Bar Visual */}
@@ -134,10 +134,10 @@ export default function CourseDetailPage() {
                     <div className="bg-white/80 p-3 rounded-lg border border-teal-100 mb-3 shadow-sm">
                       <PartyPopper className="w-8 h-8 text-teal-600 mx-auto mb-2" />
                       <p className="text-sm font-bold text-teal-800">
-                        Selamat! Anda Lulus.
+                        Congratulations! You Passed.
                       </p>
                       <p className="text-xs text-teal-600 mt-1">
-                        Anda telah menyelesaikan semua materi di kursus ini.
+                        You've completed all the materials in this course.
                       </p>
                     </div>
 
@@ -184,12 +184,11 @@ export default function CourseDetailPage() {
                 ) : (
                   <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
                     <p className="text-sm text-gray-500 leading-relaxed">
-                      Selesaikan{' '}
+                      Finish{' '}
                       <b>
-                        {progressStats?.total - progressStats?.completed} modul
-                        lagi
+                        {progressStats?.total - progressStats?.completed} more modules
                       </b>{' '}
-                      untuk menyelesaikan kelas ini dan mendapatkan sertifikat.
+                      to complete this class and receive your certificate.
                     </p>
                   </div>
                 )}

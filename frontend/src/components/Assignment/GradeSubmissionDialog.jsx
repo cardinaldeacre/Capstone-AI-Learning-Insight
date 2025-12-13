@@ -25,7 +25,7 @@ const GradeSubmissionDialog = ({
 
   const handleSubmit = async () => {
     if (!score || score < 0) {
-      toast.error('Nilai tidak boleh kosong atau negatif');
+      toast.error('Score cannot be null or negatif');
       return;
     }
 
@@ -34,12 +34,12 @@ const GradeSubmissionDialog = ({
       const payload = { score: parseInt(score), feedback };
       await fetchPutGradeSubmission(submissionData.id, payload);
 
-      toast.success('Nilai berhasil disimpan');
+      toast.success('Score saved succesfully');
       onGradeSuccess();
       onClose();
     } catch (error) {
       console.error('Gagal fetch grade submission: ', error);
-      toast.error('Gagal menyimpan nilai');
+      toast.error('Failed to save score');
     } finally {
       setLoading(false);
     }
@@ -49,15 +49,15 @@ const GradeSubmissionDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-teal-600">Nilai Submission</DialogTitle>
+          <DialogTitle className="text-teal-600">Submission Score</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <p className="text-sm text-gray-700">
-            Penilaian untuk Siswa:{' '}
+            Score for student:{' '}
             <span className="font-bold">{submissionData?.student_name}</span>
           </p>
           <div>
-            <label className="text-sm font-medium">Nilai (Score)</label>
+            <label className="text-sm font-medium">Score</label>
             <Input
               type="number"
               value={score}
@@ -76,7 +76,7 @@ const GradeSubmissionDialog = ({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose} disabled={loading}>
-            Batal
+            Cancel
           </Button>
           <Button
             onClick={handleSubmit}
@@ -86,7 +86,7 @@ const GradeSubmissionDialog = ({
             {loading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              'Simpan Nilai'
+              'Confirm & Save'
             )}
           </Button>
         </DialogFooter>

@@ -47,7 +47,7 @@ const SubmissionListTable = ({ assignmentId }) => {
   const handleDownload = submissionId => {
     const sub = submissions.find(s => String(s.id) === String(submissionId));
     if (!sub) {
-      return toast('Submission tidak ditemukan');
+      return toast('Submission not found');
     }
 
     const base = BASE.endsWith('/') ? BASE.slice(0, -1) : BASE;
@@ -61,7 +61,7 @@ const SubmissionListTable = ({ assignmentId }) => {
     return (
       <div className="p-10 text-center">
         <Loader2 className="w-6 h-6 animate-spin text-teal-600 mx-auto" />
-        <p className="mt-2 text-gray-500">Memuat data submissions...</p>
+        <p className="mt-2 text-gray-500">Loadin submissions data...</p>
       </div>
     );
   }
@@ -70,7 +70,7 @@ const SubmissionListTable = ({ assignmentId }) => {
     return (
       <div className="p-10 text-center border rounded-lg bg-white shadow-sm">
         <p className="text-gray-600 font-medium">
-          Belum ada siswa yang mensubmit tugas ini.
+          No any assignment submitted yet.
         </p>
       </div>
     );
@@ -85,12 +85,12 @@ const SubmissionListTable = ({ assignmentId }) => {
           <TableHeader className="bg-gray-50">
             <TableRow>
               <TableHead>ID</TableHead>
-              <TableHead>Siswa</TableHead>
-              <TableHead>Tanggal Submit</TableHead>
-              <TableHead>Status Nilai</TableHead>
-              <TableHead>Min. Nilai</TableHead>
-              <TableHead>Nilai</TableHead>
-              <TableHead className="text-center">Aksi</TableHead>
+              <TableHead>Student</TableHead>
+              <TableHead>Submitted at</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Min Score</TableHead>
+              <TableHead>Score</TableHead>
+              <TableHead className="text-center">Action</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -108,7 +108,7 @@ const SubmissionListTable = ({ assignmentId }) => {
                   {sub.score !== 0 ? (
                     <CheckCircle className="w-5 h-5 text-green-600" />
                   ) : (
-                    <span className="text-yellow-600">Belum Dinilai</span>
+                    <span className="text-yellow-600">Not Evaluated</span>
                   )}
                 </TableCell>
                 <TableCell className="font-bold text-lg">
@@ -133,7 +133,7 @@ const SubmissionListTable = ({ assignmentId }) => {
                     title="Beri Nilai"
                   >
                     <Edit3 className="w-4 h-4 mr-1" />
-                    Nilai
+                    Score
                   </Button>
                 </TableCell>
               </TableRow>
@@ -151,26 +151,26 @@ const SubmissionListTable = ({ assignmentId }) => {
               <div className="font-medium text-lg">{sub.student_name}</div>
 
               <div className="text-sm">
-                <span className="text-gray-500">Tanggal Submit: </span>
+                <span className="text-gray-500">Submitted at: </span>
                 {new Date(sub.submitted_at).toLocaleString()}
               </div>
 
               <div className="text-sm">
-                <span className="text-gray-500">Status Nilai: </span>
+                <span className="text-gray-500">Status: </span>
                 {sub.score !== 0 ? (
                   <CheckCircle className="w-5 h-5 inline text-green-600" />
                 ) : (
-                  <span className="text-yellow-600">Belum Dinilai</span>
+                  <span className="text-yellow-600">Not Evaluated</span>
                 )}
               </div>
 
               <div className="text-sm">
-                <span className="text-gray-500">Min. Nilai: </span>
+                <span className="text-gray-500">Min Score: </span>
                 {sub.min_score !== 0 ? sub.min_score : '-'}
               </div>
 
               <div className="text-sm">
-                <span className="text-gray-500">Nilai: </span>
+                <span className="text-gray-500">Score: </span>
                 {sub.score !== 0 ? sub.score : '-'}
               </div>
 
@@ -189,7 +189,7 @@ const SubmissionListTable = ({ assignmentId }) => {
                   onClick={() => handleOpenGrade(sub)}
                 >
                   <Edit3 className="w-4 h-4 mr-1" />
-                  Nilai
+                  Score
                 </Button>
               </div>
             </div>
