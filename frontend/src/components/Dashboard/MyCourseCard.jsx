@@ -23,7 +23,7 @@ export default function MyCourseCard() {
         }
 
         loadCourses();
-    })
+    }, [])
 
     if (loading) {
         return <div className="p-4"><Skeleton className="h-40 w-full" /></div>;
