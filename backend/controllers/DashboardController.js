@@ -13,4 +13,14 @@ router.get('/teacher-stats', authMiddleware, authorizeRole('teacher', 'admin'), 
     }
 });
 
+router.get('/learning-insight', authMiddleware, authorizeRole('student'), async (req, res) => {
+    try {
+        const learningInsight = await DashboardService.getLearningInsight(req.user.id);
+        res.json({ data: learningInsight });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 module.exports = router;
