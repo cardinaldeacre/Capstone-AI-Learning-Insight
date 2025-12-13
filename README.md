@@ -23,6 +23,12 @@ A comprehensive full-stack Learning Management System built with the PERN stack 
 - **Carousel:** Embla Carousel (with Autoplay plugin)
 - **Routing:** React Router DOM
 
+### AI
+
+- **Language:** Python
+- **Data Analysis:** Pandas
+- **AI/LLM:** Google Gemini (`google-genai`)
+
 ---
 
 ## ✨ Key Features
@@ -50,6 +56,8 @@ A comprehensive full-stack Learning Management System built with the PERN stack 
   - View grades and feedback.
   - **Re-upload/Revision:** Ability to fix rejected submissions.
 - **Progress Tracking:** Visual indicators for completed modules and course progress.
+- **Learning Insights:** AI generated supportive message highlighting their progress, achievements, and areas for improvement.
+
 
 ---
 
@@ -104,6 +112,27 @@ VITE_API_BASE_URL=http://localhost:3000/api
 # Start Application
 npm run dev
 ```
+
+### 4. AI Setup
+```bash
+cd model
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Environment Variables
+# Create a .env file and add:
+DB_HOST=localhost
+DB_USER=postgres
+DB_PASSWORD=yourpassword
+DB_NAME=lms_db
+DB_PORT=5432
+DB_CLIENT=postgresql
+GEMINI_API_KEY=your_gemini_api_key
+
+# Generate learning insights
+python main.py
+````
 
 ### API Documentation
 This project includes a complete Swagger documentation. After starting the backend server, visit:
