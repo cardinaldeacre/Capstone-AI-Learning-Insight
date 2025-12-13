@@ -31,6 +31,8 @@ import {
 } from '@/components/ui/dialog';
 import ClassForm from '@/components/Course/ClassForm';
 import { Link } from 'react-router-dom';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { toast } from 'sonner';
 
 export default function TeacherClassesPage() {
   const [classes, setClasses] = useState([]);
@@ -38,6 +40,7 @@ export default function TeacherClassesPage() {
   const [error, setError] = useState(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [editingClass, setEditingClass] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
 
   const loadClasses = async () => {
     setIsLoading(true);
@@ -63,18 +66,20 @@ export default function TeacherClassesPage() {
   };
 
   const handleDelete = async classId => {
-    if (
-      !window.confirm(
-        'Apakah Anda yakin ingin menghapus kelas ini? Tindakan ini tidak dapat dibatalkan.'
-      )
-    )
-      return;
-
+    if (!deleteId) return;
     try {
       await deleteClass(classId);
+      setDeleteId(null)
       loadClasses();
+      toast.success("Course Deleted")
     } catch (err) {
-      alert('Gagal menghapus kelas: ' + err.message);
+      return (
+        <Alert variant="destructive">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>Failed to delete courses: {error}</AlertDescription>
+        </Alert>
+      )
     }
   };
 
@@ -88,7 +93,7 @@ export default function TeacherClassesPage() {
       <Alert variant="destructive">
         <Terminal className="h-4 w-4" />
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription>Gagal memuat daftar kelas: {error}</AlertDescription>
+        <AlertDescription>Failed to load courses: {error}</AlertDescription>
       </Alert>
     );
   }
@@ -97,7 +102,7 @@ export default function TeacherClassesPage() {
     <div className="space-y-6">
       <header className="flex justify-between items-center pb-4 border-b">
         <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-          Manajemen Kelas Anda
+          Course Management
         </h1>
 
         {/* MENGGANTI SHEET DENGAN DIALOG */}
@@ -202,8 +207,8 @@ export default function TeacherClassesPage() {
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => handleDelete(kelas.id || kelas.class_id)}
-                      title="Hapus Kelas"
+                      onClick={() => setDeleteId(kelas.id || kelas.class_id)}
+                      title="Delete Course"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -214,6 +219,32 @@ export default function TeacherClassesPage() {
           </Table>
         </div>
       )}
+      <AlertDialog
+        open={!!deleteId}
+        onOpenChange={(isOpen) => !isOpen && setDeleteId(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-600">
+              Delete Course?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Warning: This action cannot be canceled once you confirm it
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Yes, Delete
+            </AlertDialogAction>
+
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
