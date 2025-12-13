@@ -9,7 +9,7 @@ class ModuleProgressRepository:
         query = '''
         select users.name, modules_progress.* from modules_progress
         join users on modules_progress.student_id = users.id
-        where started_at >= current_date at time zone 'Asia/Jakarta' - interval '7 days'
+        where completed_at::date >= current_date - interval '7 days' and completed_at::date < current_date
         '''
         df = pd.read_sql(text(query), session.bind)
         return df

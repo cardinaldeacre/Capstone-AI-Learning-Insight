@@ -8,9 +8,12 @@ class LLMService:
 
     def generate_insights(self, df):
         prompt = (
-            "Berdasarkan data CSV ini, untuk setiap siswa, buatlah satu kalimat ringkas yang menggambarkan siswa tersebut.\n"
-            "Tujukan kalimat ke siswa secara langsung dengan pesan pencapaian yang dipersonalisasi.\n"
-            "Output berupa daftar pasangan student_id;personalized_description yang dipisahkan baris baru.\n\n"
+            "Based on this CSV data, for each student, create a personalized, detailed motivational message,"
+            "highlighting their greatest achievement, milestone, or progress in their learning."
+            "Use a positive, supportive, and inspiring style."
+            "Include specific details from the data if relevant"
+            "(e.g., new records, improvements, modules completed, best days to study, favorite study times, etc.)."
+            "The output will be a line-separated list of student_id;personalized_message pairs.\n\n"
         )
         prompt += df.to_csv(index=False)
         response = self.client.models.generate_content(

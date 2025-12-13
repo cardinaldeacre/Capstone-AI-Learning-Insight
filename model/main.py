@@ -13,6 +13,7 @@ def main():
         llm = LLMService()
         insights = llm.generate_insights(df)
         LearningInsightRepository.save(session, insights)
+        print(f"Learning insights for {len(insights)} students successfully generated.")
     finally:
         session.close()
 
