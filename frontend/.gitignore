@@ -7,7 +7,7 @@ node_modules/
 coverage/
 
 # --- Production Build (Hasil Build) ---
-dist/       # Folder build default untuk Vite
+dist
 dist-ssr/
 build/      # Folder build default untuk Create React App
 
