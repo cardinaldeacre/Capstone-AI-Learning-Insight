@@ -105,7 +105,6 @@ export default function TeacherClassesPage() {
           Course Management
         </h1>
 
-        {/* MENGGANTI SHEET DENGAN DIALOG */}
         <Dialog open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <DialogTrigger asChild>
             <Button
@@ -113,7 +112,7 @@ export default function TeacherClassesPage() {
               className="bg-teal-600 hover:bg-teal-700"
             >
               <PlusCircle className="mr-2 h-4 w-4" />
-              Buat Kelas Baru
+              Create new course
             </Button>
           </DialogTrigger>
 
@@ -144,10 +143,10 @@ export default function TeacherClassesPage() {
       ) : classes.length === 0 ? (
         <div className="py-10 text-center border-dashed border-2 rounded-xl bg-gray-50">
           <h3 className="text-xl font-semibold text-gray-600">
-            Anda belum memiliki kelas.
+            You don’t have any classes yet.
           </h3>
           <p className="text-muted-foreground mt-2">
-            Klik "Buat Kelas Baru" untuk memulai.
+            Click "Create New Class" to get started.
           </p>
         </div>
       ) : (
@@ -155,12 +154,12 @@ export default function TeacherClassesPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Judul Kelas</TableHead>
-                <TableHead>Deskripsi</TableHead>
+                <TableHead>Title</TableHead>
+                <TableHead>Description</TableHead>
                 <TableHead className="w-[150px] text-center">
-                  Tanggal Dibuat
+                  Created at
                 </TableHead>
-                <TableHead className="w-[200px] text-center">Aksi</TableHead>
+                <TableHead className="w-[200px] text-center">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
